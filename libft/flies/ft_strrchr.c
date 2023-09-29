@@ -1,29 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.c                                        :+:      :+:    :+:   */
+/*   ft_strrchr.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/09/21 18:54:21 by azhadan           #+#    #+#             */
-/*   Updated: 2023/09/29 02:57:39 by azhadan          ###   ########.fr       */
+/*   Created: 2023/04/14 17:04:33 by azhadan           #+#    #+#             */
+/*   Updated: 2023/06/15 02:40:43 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../h_files/minishell.h"
+#include "libft.h"
 
-int	main(int argc, char **argv, char **envp)
+char	*ft_strrchr(const char *s, int c)
 {
-	char *input;
+	int	i;
 
-	while ((input = readline("minishell> ")) != NULL)
+	i = ft_strlen(s);
+	while (i >= 0)
 	{
-		add_history(input);
-		if (ft_strncmp(input, "exit", 4) == 0)
-		{
-			free(input);
-			break;
-		}
+		if (s[i] == (unsigned char)c)
+			return ((char *)(s + i));
+		i--;
 	}
-	return (0);
+	return (NULL);
 }
+// int	main(void)
+// {
+// 	const char	*str;
+// 	str = "Hello, world!";
+// 	char *ptr1, *ptr2;
+// 	ptr1 = strrchr(str, 'a');
+// 	ptr2 = ft_strrchr(str, 'a');
+// 	printf("origin:%p\n", ptr1);
+// 	printf("    my:%p\n", ptr2);
+// }

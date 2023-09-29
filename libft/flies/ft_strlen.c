@@ -1,29 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.c                                        :+:      :+:    :+:   */
+/*   ft_strlen.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/09/21 18:54:21 by azhadan           #+#    #+#             */
-/*   Updated: 2023/09/29 02:57:39 by azhadan          ###   ########.fr       */
+/*   Created: 2023/04/13 17:11:14 by azhadan           #+#    #+#             */
+/*   Updated: 2023/04/13 23:44:57 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../h_files/minishell.h"
+#include "libft.h"
 
-int	main(int argc, char **argv, char **envp)
+size_t	ft_strlen(const char *s)
 {
-	char *input;
+	unsigned int	i;
 
-	while ((input = readline("minishell> ")) != NULL)
-	{
-		add_history(input);
-		if (ft_strncmp(input, "exit", 4) == 0)
-		{
-			free(input);
-			break;
-		}
-	}
-	return (0);
+	i = 0;
+	while (s[i] != '\0')
+		i++;
+	return (i);
 }
+
+/* int main(int argc, char **argv)
+{
+	printf("origin:%d\n", strlen(argv[1]));
+	printf("my:%d\n", ft_strlen(argv[1]));
+	return (0);
+} */

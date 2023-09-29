@@ -4,12 +4,14 @@ CFILES = file/minishell.c
 OFILES = $(CFILES:.c=.o)
 
 CC = cc
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror 
+LIBFT = libft/libft.a
 
 all: $(NAME)
 
 $(NAME): $(OFILES)
-	@$(CC) $(CFLAGS) $(OFILES) -o $(NAME)
+	@make -C libft/
+	@$(CC) $(CFLAGS) $(OFILES) $(LIBFT) -o $(NAME) -lreadline
 
 clean:
 	@rm -f $(OFILES)

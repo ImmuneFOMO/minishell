@@ -1,29 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.c                                        :+:      :+:    :+:   */
+/*   ft_atoi.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/09/21 18:54:21 by azhadan           #+#    #+#             */
-/*   Updated: 2023/09/29 02:57:39 by azhadan          ###   ########.fr       */
+/*   Created: 2023/04/15 00:05:29 by azhadan           #+#    #+#             */
+/*   Updated: 2023/07/02 20:33:12 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../h_files/minishell.h"
-
-int	main(int argc, char **argv, char **envp)
+long long	ft_atoi(const char *nptr)
 {
-	char *input;
+	int			s;
+	long long	num;
 
-	while ((input = readline("minishell> ")) != NULL)
+	s = 1;
+	num = 0;
+	while ((*nptr >= 9 && *nptr <= 13) || (*nptr == ' '))
+		nptr++;
+	if (*nptr == '-' || *nptr == '+')
 	{
-		add_history(input);
-		if (ft_strncmp(input, "exit", 4) == 0)
-		{
-			free(input);
-			break;
-		}
+		if (*nptr == '-')
+			s *= -1;
+		nptr++;
 	}
-	return (0);
+	while (*nptr >= '0' && *nptr <= '9')
+	{
+		num = num * 10 + (*nptr - '0');
+		nptr++;
+	}
+	return (num * s);
 }
