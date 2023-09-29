@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 18:26:57 by azhadan           #+#    #+#             */
-/*   Updated: 2023/09/21 23:39:49 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/09/29 02:31:52 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,6 @@
 #include <readline/readline.h> /* readline, rl_clear_history, rl_on_new_line,
                                rl_replace_line, rl_redisplay, add_history */
 #include <term.h> // tgetent, tgetflag, tgetnum, tgetstr, tgoto, tputs
-
+#include "../libft/libft.h"
 
 #endif
