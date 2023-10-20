@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 18:54:21 by azhadan           #+#    #+#             */
-/*   Updated: 2023/10/19 20:24:30 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/10/20 08:23:29 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,7 @@ int runcmd(struct cmd *cmd)
      write(2, "minishell> ", 11); 
    ft_memset(buf, 0, nbuf); 
    fgets(buf, nbuf, stdin); 
-   if (buf[0] == 0) // EOF 
+   if (buf[0] == 0)
      return -1; 
    return 0; 
  } 
@@ -339,7 +339,6 @@ int runcmd(struct cmd *cmd)
  { 
    char *buf; 
    int r; 
-   rl_initialize(); 
    while ((buf = readline("minishell> ")) != NULL) 
    { 
       if (!buf[0])
@@ -361,6 +360,7 @@ int runcmd(struct cmd *cmd)
      wait(&r); 
      free(buf); 
    }
+   free(buf);
    rl_clear_history();
    return 0; 
  }
