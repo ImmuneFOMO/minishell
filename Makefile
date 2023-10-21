@@ -1,6 +1,7 @@
 NAME = minishell
 
-CFILES = file/minishell.c
+CFILES = file/cmnds.c file/get_token.c file/minishell.c file/parsing.c  \
+
 OFILES = $(CFILES:.c=.o)
 
 CC = cc
