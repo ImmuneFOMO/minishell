@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: idlbltv <idlbltv@student.42.fr>            +#+  +:+       +#+        */
+/*   By: idelibal <idelibal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 18:54:21 by azhadan           #+#    #+#             */
-/*   Updated: 2023/10/20 23:35:53 by idlbltv          ###   ########.fr       */
+/*   Updated: 2023/10/21 13:17:40 by idelibal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,6 +88,6 @@ int main(void)
 		free(buf);
 	}
 	free(buf);
-	clear_history();
+	rl_clear_history();
 	return 0;
 }

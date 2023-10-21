@@ -1,6 +1,6 @@
 NAME = minishell
 
-CFILES = file/cmnds.c file/get_token.c file/minishell.c file/parsing.c  \
+CFILES = c_files/cmnds.c c_files/get_token.c c_files/minishell.c c_files/parsing.c  \
 
 OFILES = $(CFILES:.c=.o)
 

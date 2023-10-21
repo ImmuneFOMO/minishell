@@ -3,19 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: idlbltv <idlbltv@student.42.fr>            +#+  +:+       +#+        */
+/*   By: idelibal <idelibal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 23:30:37 by idlbltv           #+#    #+#             */
-/*   Updated: 2023/10/20 23:36:38 by idlbltv          ###   ########.fr       */
+/*   Updated: 2023/10/21 12:55:02 by idelibal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../h_files/minishell.h"
 
-struct cmd *parsecmd(char *s)
+struct cmd	*parsecmd(char *s)
 {
-	char *es;
-	struct cmd *cmd;
+	char		*es;
+	struct cmd	*cmd;
 
 	es = s + ft_strlen(s);
 	cmd = parseline(&s, es);
@@ -25,19 +25,20 @@ struct cmd *parsecmd(char *s)
 		write(2, "leftovers: %s\n", 14);
 		exit(-1);
 	}
-	return cmd;
+	return (cmd);
 }
 
-struct cmd *parseline(char **ps, char *es)
+struct cmd	*parseline(char **ps, char *es)
 {
-	struct cmd *cmd;
+	struct cmd	*cmd;
+
 	cmd = parsepipe(ps, es);
-	return cmd;
+	return (cmd);
 }
 
-struct cmd *parsepipe(char **ps, char *es)
+struct cmd	*parsepipe(char **ps, char *es)
 {
-	struct cmd *cmd;
+	struct cmd	*cmd;
 
 	cmd = parseexec(ps, es);
 	if (peek(ps, es, "|"))
@@ -45,13 +46,14 @@ struct cmd *parsepipe(char **ps, char *es)
 		gettoken(ps, es, 0, 0);
 		cmd = pipecmd(cmd, parsepipe(ps, es));
 	}
-	return cmd;
+	return (cmd);
 }
 
-struct cmd *parseredirs(struct cmd *cmd, char **ps, char *es)
+struct cmd	*parseredirs(struct cmd *cmd, char **ps, char *es)
 {
-	int tok;
-	char *q, *eq;
+	int		tok;
+	char	*q;
+	char	*eq;
 
 	while (peek(ps, es, "<>"))
 	{
@@ -71,10 +73,10 @@ struct cmd *parseredirs(struct cmd *cmd, char **ps, char *es)
 			break;
 		}
 	}
-	return cmd;
+	return (cmd);
 }
 
-struct cmd *parseexec(char **ps, char *es)
+struct cmd	*parseexec(char **ps, char *es)
 {
 	char *q, *eq;
 	int tok, argc;
@@ -105,5 +107,5 @@ struct cmd *parseexec(char **ps, char *es)
 		ret = parseredirs(ret, ps, es);
 	}
 	cmd->argv[argc] = 0;
-	return ret;
+	return (ret);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: idlbltv <idlbltv@student.42.fr>            +#+  +:+       +#+        */
+/*   By: idelibal <idelibal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 18:26:57 by azhadan           #+#    #+#             */
-/*   Updated: 2023/10/21 10:34:36 by idlbltv          ###   ########.fr       */
+/*   Updated: 2023/10/21 15:23:55 by idelibal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,8 +79,10 @@ struct cmd *parseline(char **, char *);
 struct cmd *parsepipe(char **, char *);
 struct cmd *parseexec(char **, char *);
 // add prototypes
-void executeCommand(struct cmd *cmd);
-void redirectCommand(struct redircmd *rcmd);
-void pipeCommand(struct pipecmd *pcmd);
+void execute_command(struct cmd *cmd);
+void redirect_command(struct redircmd *rcmd);
+void pipe_command(struct pipecmd *pcmd);
+void	setup_pipe(int fd_pipe[2]);
+void create_pipe_process(struct pipecmd *pcmd, int fd_pipe[2]);
 
 #endif
