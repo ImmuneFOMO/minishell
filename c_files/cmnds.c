@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmnds.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: idelibal <idelibal@student.42.fr>          +#+  +:+       +#+        */
+/*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 23:30:46 by idlbltv           #+#    #+#             */
-/*   Updated: 2023/10/21 15:50:56 by idelibal         ###   ########.fr       */
+/*   Updated: 2023/10/22 10:29:15 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,25 +45,28 @@ void	execute_command(struct cmd *cmd)
 
 void	redirect_command(struct redircmd *rcmd)
 {
-	int	fd_redirect;
+	int fd_redirect;
+	int flags;
 
-	fd_redirect = 0;
-	if (rcmd->type == '>' || rcmd->type == '<')
+	if (rcmd->type == '>')
+		flags = O_WRONLY | O_CREAT | O_TRUNC;
+	else if (rcmd->type == '<')
+		flags = O_RDONLY;
+	else
+		flags = O_WRONLY | O_CREAT | O_APPEND;
+	fd_redirect = open(rcmd->file, flags, 0666);
+	if (fd_redirect < 0)
 	{
-		if ((fd_redirect = open(rcmd->file, rcmd->mode, 0666) < 0))
-		{
-			write(STDERR_FILENO, "open ", 5);
-			write(STDERR_FILENO, rcmd->file, ft_strlen(rcmd->file));
-			write(STDERR_FILENO, " has failed\n", 11);
-			exit(0);
-		}
+		perror("open");
+		exit(0);
 	}
 	if (dup2(fd_redirect, rcmd->fd) < 0)
 	{
-		write(2, "dup2 has failed\n", 15);
+		perror("dup2");
 		exit(0);
 	}
 	runcmd(rcmd->cmd);
+	close(fd_redirect);
 }
 
 void	pipe_command(struct pipecmd *pcmd)
