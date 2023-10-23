@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   cmnds1.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: idelibal <idelibal@student.42.fr>          +#+  +:+       +#+        */
+/*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 23:30:46 by idlbltv           #+#    #+#             */
-/*   Updated: 2023/10/23 20:25:24 by idelibal         ###   ########.fr       */
+/*   Updated: 2023/10/23 21:56:34 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../h_files/minishell.h"
 
-int	runcmd(struct cmd *cmd)
+int	runcmd(struct s_cmd *cmd)
 {
 	char	type;
 
@@ -22,9 +22,9 @@ int	runcmd(struct cmd *cmd)
 	if (type == ' ')
 		execute_command(cmd);
 	else if (type == '>' || type == '<')
-		redirect_command((struct redircmd *)cmd);
+		redirect_command((struct s_redircmd *)cmd);
 	else if (type == '|')
-		pipe_command((struct pipecmd *)cmd);
+		pipe_command((struct s_pipecmd *)cmd);
 	else
 	{
 		write(2, "unknown runcmd\n", 15);
@@ -33,17 +33,17 @@ int	runcmd(struct cmd *cmd)
 	return (1);
 }
 
-void	execute_command(struct cmd *cmd)
+void	execute_command(struct s_cmd *cmd)
 {
-	struct execcmd	*ecmd;
+	struct s_execcmd	*ecmd;
 
-	ecmd = (struct execcmd *)cmd;
+	ecmd = (struct s_execcmd *)cmd;
 	if (ecmd->argv[0] == 0)
 		exit(0);
 	execvp(ecmd->argv[0], ecmd->argv);
 }
 
-void	redirect_command(struct redircmd *rcmd)
+void	redirect_command(struct s_redircmd *rcmd)
 {
 	int	fd_redirect;
 	int	flags;
@@ -69,7 +69,7 @@ void	redirect_command(struct redircmd *rcmd)
 	close(fd_redirect);
 }
 
-void	pipe_command(struct pipecmd *pcmd)
+void	pipe_command(struct s_pipecmd *pcmd)
 {
 	int	fd_pipe[2];
 
