@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 18:54:21 by azhadan           #+#    #+#             */
-/*   Updated: 2023/10/23 10:52:39 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/10/23 13:37:00 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,8 +67,8 @@ int main(void)
 	char *buf;
 	int r;
 
-	signal(SIGINT, handle_sigint);
-    signal(SIGQUIT, handle_sigquit);
+	signal(SIGINT, handle_c);
+    signal(SIGQUIT, SIG_IGN);
 	while ((buf = readline("minishell> ")) != NULL)
 	{
 		if (!buf[0])
