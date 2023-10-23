@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
+/*   By: idelibal <idelibal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 18:26:57 by azhadan           #+#    #+#             */
-/*   Updated: 2023/10/23 13:36:56 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/10/23 20:15:09 by idelibal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,6 @@ struct cmd *parseexec(char **ps, char *es);
 struct cmd *parseline(char **, char *);
 struct cmd *parsepipe(char **, char *);
 struct cmd *parseexec(char **, char *);
-// add prototypes
 void execute_command(struct cmd *cmd);
 void redirect_command(struct redircmd *rcmd);
 void pipe_command(struct pipecmd *pcmd);
@@ -86,5 +85,8 @@ void	setup_pipe(int fd_pipe[2]);
 void create_pipe_process(struct pipecmd *pcmd, int fd_pipe[2]);
 //signals.c
 void handle_c(int signum);
+void	skip_non_special_tokens(char **s, char *es);
+void	process_special_tokens(char **s, int *token);
+int	is_whitespace(char c);
 
 #endif
