@@ -6,44 +6,87 @@
 /*   By: idelibal <idelibal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 23:30:14 by idlbltv           #+#    #+#             */
-/*   Updated: 2023/10/21 16:02:31 by idelibal         ###   ########.fr       */
+/*   Updated: 2023/10/23 20:15:18 by idelibal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../h_files/minishell.h"
 
-int gettoken(char **ps, char *es, char **q, char **eq)
+int	is_whitespace(char c)
 {
-	char *s;
-	int ret;
-	char whitespace[6] = " \t\r\n\v";
-	char symbols[4] = "<|>";
+	if (c == ' ' || c == '\t' || c == '\n' || c == '\v' || c == '\f'
+		|| c == '\r')
+		return (1);
+	return (0);
+}
+
+void	process_special_tokens(char **s, int *token)
+{
+	if (*token == '\0')
+		*token = '\0';
+	else if (*token == '|')
+		(*s)++;
+	else if (*token == '>')
+	{
+		(*s)++;
+		if (**s == '>')
+		{
+			*token = '+';
+			(*s)++;
+		}
+	}
+	else if (*token == '<')
+	{
+		(*s)++;
+		if (**s == '<')
+		{
+			*token = '%';
+			(*s)++;
+		}
+	}
+	else
+		*token = 'a';
+}
+
+void	skip_non_special_tokens(char **s, char *es)
+{
+	while (*s < es && !is_whitespace(**s) && !ft_strchr("<|>", **s))
+	{
+		if (**s == '\"')
+		{
+			(*s)++;
+			while (*s < es && **s != '\"')
+				(*s)++;
+		}
+		else if (**s == '\'')
+		{
+			(*s)++;
+			while (*s < es && **s != '\'')
+				(*s)++;
+		}
+		if (*s < es)
+			(*s)++;
+	}
+}
+
+int	gettoken(char **ps, char *es, char **q, char **eq)
+{
+	int		token;
+	char	*s;
 
 	s = *ps;
-	while (s < es && ft_strchr(whitespace, *s))
+	while (s < es && is_whitespace(*s))
 		s++;
 	if (q)
 		*q = s;
-	ret = *s;
-
-	if (*s == 0)
-	{
-	}
-	else if (*s == '|' || *s == '<')
-		s++;
-	else if (*s == '>')
-		s++;
-	else
-	{
-		ret = 'a';
-		while (s < es && !ft_strchr(whitespace, *s) && !ft_strchr(symbols, *s))
-			s++;
-	}
+	token = *s;
+	process_special_tokens(&s, &token);
+	if (token == 'a')
+		skip_non_special_tokens(&s, es);
 	if (eq)
 		*eq = s;
-
-	while (s < es && ft_strchr(whitespace, *s))
+	while (s < es && is_whitespace(*s))
 		s++;
 	*ps = s;
-	return ret;
+	return (token);
 }

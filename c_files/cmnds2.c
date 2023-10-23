@@ -1,0 +1,95 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   cmnds2.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: idelibal <idelibal@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/10/23 20:22:16 by idelibal          #+#    #+#             */
+/*   Updated: 2023/10/23 20:25:42 by idelibal         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../h_files/minishell.h"
+
+void	create_pipe_process(struct pipecmd *pcmd, int fd_pipe[2])
+{
+	int	p_id;
+
+	p_id = fork();
+	if (p_id < 0)
+	{
+		write(2, "fork has failed\n", 14);
+		exit(0);
+	}
+	else if (p_id == 0)
+	{
+		close(fd_pipe[1]);
+		dup2(fd_pipe[0], STDIN_FILENO);
+		runcmd(pcmd->right);
+		close(fd_pipe[0]);
+	}
+	else
+	{
+		close(fd_pipe[0]);
+		dup2(fd_pipe[1], STDOUT_FILENO);
+		runcmd(pcmd->left);
+		close(fd_pipe[1]);
+		wait(&p_id);
+	}
+}
+
+int	getcmd(char *buf, int nbuf)
+{
+	if (isatty(fileno(stdin)))
+		write(2, "minishell> ", 11);
+	ft_memset(buf, 0, nbuf);
+	fgets(buf, nbuf, stdin);
+	if (buf[0] == 0)
+		return (-1);
+	return (0);
+}
+
+struct cmd	*execcmd(void)
+{
+	struct execcmd	*cmd;
+
+	cmd = malloc(sizeof(*cmd));
+	ft_memset(cmd, 0, sizeof(*cmd));
+	cmd->type = ' ';
+	return ((struct cmd *)cmd);
+}
+
+struct cmd	*redircmd(struct cmd *subcmd, char *file, int type)
+{
+	struct redircmd	*cmd;
+
+	cmd = malloc(sizeof(*cmd));
+	ft_memset(cmd, 0, sizeof(*cmd));
+	cmd->type = type;
+	cmd->cmd = subcmd;
+	cmd->file = file;
+	if (type == '<')
+	{
+		cmd->mode = O_RDONLY;
+		cmd->fd = 0;
+	}
+	else
+	{
+		cmd->mode = O_WRONLY | O_CREAT | O_TRUNC;
+		cmd->fd = 1;
+	}
+	return ((struct cmd *)cmd);
+}
+
+struct cmd	*pipecmd(struct cmd *left, struct cmd *right)
+{
+	struct pipecmd	*cmd;
+
+	cmd = malloc(sizeof(*cmd));
+	ft_memset(cmd, 0, sizeof(*cmd));
+	cmd->type = '|';
+	cmd->left = left;
+	cmd->right = right;
+	return ((struct cmd *)cmd);
+}
