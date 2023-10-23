@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: idelibal <idelibal@student.42.fr>          +#+  +:+       +#+        */
+/*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 18:26:57 by azhadan           #+#    #+#             */
-/*   Updated: 2023/10/21 15:23:55 by idelibal         ###   ########.fr       */
+/*   Updated: 2023/10/23 10:52:30 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,5 +84,8 @@ void redirect_command(struct redircmd *rcmd);
 void pipe_command(struct pipecmd *pcmd);
 void	setup_pipe(int fd_pipe[2]);
 void create_pipe_process(struct pipecmd *pcmd, int fd_pipe[2]);
+//signals.c
+void handle_sigint(int signum);
+void handle_sigquit(int signum);
 
 #endif
