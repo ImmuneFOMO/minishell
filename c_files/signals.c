@@ -3,16 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
+/*   By: idelibal <idelibal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/23 10:51:06 by azhadan           #+#    #+#             */
-/*   Updated: 2023/10/23 13:37:01 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/10/23 15:11:57 by idelibal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../h_files/minishell.h"
 
-void handle_c(int signum) {
-    (void)signum;
-    write(1, "\nminishell> ", 12);
+void	handle_c(int signum)
+{
+	(void)signum;
+	write(1, "\nminishell> ", 12);
 }

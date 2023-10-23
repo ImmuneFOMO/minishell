@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
+/*   By: idelibal <idelibal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 23:30:37 by idlbltv           #+#    #+#             */
-/*   Updated: 2023/10/22 12:46:49 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/10/23 20:04:28 by idelibal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,14 +63,9 @@ struct cmd	*parseredirs(struct cmd *cmd, char **ps, char *es)
 			write(2, "missing file for redirection\n", 28);
 			exit(-1);
 		}
-		switch (tok)
+		if (tok == '<' || tok == '>')
 		{
-		case '<':
-			cmd = redircmd(cmd, mkcopy(q, eq), '<');
-			break;
-		case '>':
-			cmd = redircmd(cmd, mkcopy(q, eq), '>');
-			break;
+			cmd = redircmd(cmd, mkcopy(q, eq), tok);
 		}
 	}
 	return (cmd);
@@ -78,20 +73,21 @@ struct cmd	*parseredirs(struct cmd *cmd, char **ps, char *es)
 
 struct cmd	*parseexec(char **ps, char *es)
 {
-	char *q, *eq;
-	int tok, argc;
-	struct execcmd *cmd;
-	struct cmd *ret;
+	char			*q;
+	char			*eq;
+	int				tok;
+	int				argc;
+	struct execcmd	*cmd;
+	struct cmd		*ret;
 
 	ret = execcmd();
 	cmd = (struct execcmd *)ret;
-
 	argc = 0;
 	ret = parseredirs(ret, ps, es);
 	while (!peek(ps, es, "|"))
 	{
 		if ((tok = gettoken(ps, es, &q, &eq)) == 0)
-			break;
+			break ;
 		if (tok != 'a')
 		{
 			write(2, "syntax error\n", 12);
