@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: idelibal <idelibal@student.42.fr>          +#+  +:+       +#+        */
+/*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 18:54:21 by azhadan           #+#    #+#             */
-/*   Updated: 2023/10/21 13:17:40 by idelibal         ###   ########.fr       */
+/*   Updated: 2023/10/23 13:37:00 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,9 @@ int main(void)
 {
 	char *buf;
 	int r;
+
+	signal(SIGINT, handle_c);
+    signal(SIGQUIT, SIG_IGN);
 	while ((buf = readline("minishell> ")) != NULL)
 	{
 		if (!buf[0])
