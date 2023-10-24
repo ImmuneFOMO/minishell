@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   cmnds2.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: idelibal <idelibal@student.42.fr>          +#+  +:+       +#+        */
+/*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/23 20:22:16 by idelibal          #+#    #+#             */
-/*   Updated: 2023/10/23 20:25:42 by idelibal         ###   ########.fr       */
+/*   Updated: 2023/10/23 21:55:09 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../h_files/minishell.h"
 
-void	create_pipe_process(struct pipecmd *pcmd, int fd_pipe[2])
+void	create_pipe_process(struct s_pipecmd *pcmd, int fd_pipe[2])
 {
 	int	p_id;
 
@@ -50,19 +50,19 @@ int	getcmd(char *buf, int nbuf)
 	return (0);
 }
 
-struct cmd	*execcmd(void)
+struct s_cmd	*execcmd(void)
 {
-	struct execcmd	*cmd;
+	struct s_execcmd	*cmd;
 
 	cmd = malloc(sizeof(*cmd));
 	ft_memset(cmd, 0, sizeof(*cmd));
 	cmd->type = ' ';
-	return ((struct cmd *)cmd);
+	return ((struct s_cmd *)cmd);
 }
 
-struct cmd	*redircmd(struct cmd *subcmd, char *file, int type)
+struct s_cmd	*redircmd(struct s_cmd *subcmd, char *file, int type)
 {
-	struct redircmd	*cmd;
+	struct s_redircmd	*cmd;
 
 	cmd = malloc(sizeof(*cmd));
 	ft_memset(cmd, 0, sizeof(*cmd));
@@ -79,17 +79,17 @@ struct cmd	*redircmd(struct cmd *subcmd, char *file, int type)
 		cmd->mode = O_WRONLY | O_CREAT | O_TRUNC;
 		cmd->fd = 1;
 	}
-	return ((struct cmd *)cmd);
+	return ((struct s_cmd *)cmd);
 }
 
-struct cmd	*pipecmd(struct cmd *left, struct cmd *right)
+struct s_cmd	*pipecmd(struct s_cmd *left, struct s_cmd *right)
 {
-	struct pipecmd	*cmd;
+	struct s_pipecmd	*cmd;
 
 	cmd = malloc(sizeof(*cmd));
 	ft_memset(cmd, 0, sizeof(*cmd));
 	cmd->type = '|';
 	cmd->left = left;
 	cmd->right = right;
-	return ((struct cmd *)cmd);
+	return ((struct s_cmd *)cmd);
 }
