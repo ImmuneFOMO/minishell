@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 18:26:57 by azhadan           #+#    #+#             */
-/*   Updated: 2023/10/24 17:31:48 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/10/24 18:53:32 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,6 +87,8 @@ struct s_cmd		*parseexec(char **ps, char *es);
 char				*mkcopy(char *s, char *es);
 /*minishell.c*/
 
+void 				free_cmd(struct s_cmd *command);
+/*get_token.c*/
 void				execute_command(struct s_cmd *cmd);
 /*cmnds1.c*/
 void				redirect_command(struct s_redircmd *rcmd);
