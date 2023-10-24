@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 18:54:21 by azhadan           #+#    #+#             */
-/*   Updated: 2023/10/23 23:44:54 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/10/24 16:17:37 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,7 @@ int	main(void)
 		}
 		wait(&r);
 		free(buf);
-		buf = readline("minishell> ");
+		buf = readline("minishell: ");
 	}
 	free(buf);
 	rl_clear_history();

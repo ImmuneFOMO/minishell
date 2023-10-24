@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 18:26:57 by azhadan           #+#    #+#             */
-/*   Updated: 2023/10/23 23:39:37 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/10/24 17:31:48 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,34 +68,55 @@ struct				s_pipecmd
 };
 
 struct s_cmd		*execcmd(void);
+/*cmnds2.c*/
 struct s_cmd		*redircmd(struct s_cmd *subcmd, char *file, int type);
+/*cmnds2.c*/
 struct s_cmd		*pipecmd(struct s_cmd *left, struct s_cmd *right);
+/*cmnds2.c*/
 struct s_cmd		*parsecmd(char *s);
-struct s_cmd		*parsecmd(char *s);
+/*parsing.c*/
 struct s_cmd		*parseline(char **ps, char *es);
+/*parsing.c*/
 struct s_cmd		*parsepipe(char **ps, char *es);
+/*parsing.c*/
 struct s_cmd		*parseredirs(struct s_cmd *cmd, char **ps, char *es);
+/*parsing.c*/
 struct s_cmd		*parseexec(char **ps, char *es);
-struct s_cmd		*parseline(char **ps, char *es);
-struct s_cmd		*parsepipe(char **ps, char *es);
-struct s_cmd		*parseexec(char **ps, char *es);
+/*parsing.c*/
 
 char				*mkcopy(char *s, char *es);
+/*minishell.c*/
 
 void				execute_command(struct s_cmd *cmd);
+/*cmnds1.c*/
 void				redirect_command(struct s_redircmd *rcmd);
+/*cmnds1.c*/
 void				pipe_command(struct s_pipecmd *pcmd);
+/*cmnds1.c*/
 void				setup_pipe(int fd_pipe[2]);
+/*cmnds1.c*/
 void				create_pipe_process(struct s_pipecmd *pcmd, int fd_pipe[2]);
+/*cmnds2.c*/
 void				handle_c(int signum);
+/*signals.c*/
 void				skip_non_special_tokens(char **s, char *es);
+/*get_token.c*/
 void				process_special_tokens(char **s, int *token);
+/*get_token.c*/
 
 int					fork1(void);
+/*minishell.c*/
 int					runcmd(struct s_cmd *cmd);
+/*cmnds1.c*/
 int					getcmd(char *buf, int nbuf);
+/*cmnds2.c*/
 int					gettoken(char **ps, char *es, char **q, char **eq);
+/*get_token.c*/
 int					peek(char **ps, char *es, char *toks);
+/*minishell.c*/
 int					is_whitespace(char c);
+/*get_token.c*/
+int					ft_cd(char *buf);
+/*minishell.c*/
 
 #endif
