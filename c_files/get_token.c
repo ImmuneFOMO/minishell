@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_token.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: idelibal <idelibal@student.42.fr>          +#+  +:+       +#+        */
+/*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 23:30:14 by idlbltv           #+#    #+#             */
-/*   Updated: 2023/10/23 20:15:18 by idelibal         ###   ########.fr       */
+/*   Updated: 2023/10/24 19:04:26 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,4 +89,33 @@ int	gettoken(char **ps, char *es, char **q, char **eq)
 		s++;
 	*ps = s;
 	return (token);
+}
+
+void free_cmd(struct s_cmd *command) 
+{
+	struct s_pipecmd *pcmd;
+	struct s_execcmd *ecmd;
+	int i;
+
+	i = 0;
+    if (!command) return;
+
+    if (command->type == ' ') {
+        /*Handle execcmd*/
+        ecmd = (struct s_execcmd *)command;
+		while(ecmd->argv[i])
+		{
+			free(ecmd->argv[i]);
+			i++;
+		}
+        
+    } 
+    else if (command->type == '|') {
+        /*Handle pipecmd*/
+        pcmd = (struct s_pipecmd *)command;
+        free_cmd(pcmd->left);
+        free_cmd(pcmd->right);
+    }
+
+    free(command);
 }
