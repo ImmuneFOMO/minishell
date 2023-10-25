@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/23 20:22:16 by idelibal          #+#    #+#             */
-/*   Updated: 2023/10/23 21:55:09 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/10/25 17:43:17 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ void	create_pipe_process(struct s_pipecmd *pcmd, int fd_pipe[2])
 int	getcmd(char *buf, int nbuf)
 {
 	if (isatty(fileno(stdin)))
-		write(2, "minishell> ", 11);
+		write(2, "minishell: ", 11);
 	ft_memset(buf, 0, nbuf);
 	fgets(buf, nbuf, stdin);
 	if (buf[0] == 0)
