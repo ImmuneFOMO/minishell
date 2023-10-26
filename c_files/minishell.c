@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 18:54:21 by azhadan           #+#    #+#             */
-/*   Updated: 2023/10/25 18:26:07 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/10/26 21:06:03 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,9 +33,6 @@ int	peek(char **ps, char *es, char *toks)
 	return (*s && ft_strchr(toks, *s));
 }
 
-// make a copy of the characters in 
-// the input buffer, starting from s through es.
-// null-terminate the copy to make it a string.
 char	*mkcopy(char *s, char *es)
 {
 	int		n;

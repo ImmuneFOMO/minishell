@@ -6,11 +6,13 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 23:30:46 by idlbltv           #+#    #+#             */
-/*   Updated: 2023/10/23 21:56:34 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/10/26 21:16:07 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../h_files/minishell.h"
+
+extern char **environ;
 
 int	runcmd(struct s_cmd *cmd)
 {
@@ -33,14 +35,64 @@ int	runcmd(struct s_cmd *cmd)
 	return (1);
 }
 
-void	execute_command(struct s_cmd *cmd)
+char *find_in_path(const char *cmd)
 {
-	struct s_execcmd	*ecmd;
+    char *path;
+    char *temp;
+    char *dir;
+    char *full_path;
+    struct stat st;
 
-	ecmd = (struct s_execcmd *)cmd;
-	if (ecmd->argv[0] == 0)
-		exit(0);
-	execvp(ecmd->argv[0], ecmd->argv);
+    path = getenv("PATH");
+    if (!path)
+        return NULL;
+
+    temp = strdup(path);
+    if (!temp)
+        return NULL;
+
+    dir = strtok(temp, ":");
+    while (dir)
+    {
+        full_path = malloc(strlen(dir) + strlen(cmd) + 2);
+        if (!full_path)
+        {
+            free(temp);
+            return NULL;
+        }
+        sprintf(full_path, "%s/%s", dir, cmd);
+
+        if (stat(full_path, &st) == 0 && (st.st_mode & S_IXUSR))
+        {
+            free(temp);
+            return full_path;
+        }
+        free(full_path);
+        dir = strtok(NULL, ":");
+    }
+
+    free(temp);
+    return NULL;
+}
+
+void execute_command(struct s_cmd *cmd)
+{
+    struct s_execcmd *ecmd;
+    char *full_path;
+
+    ecmd = (struct s_execcmd *)cmd;
+    if (ecmd->argv[0] == 0)
+        exit(0);
+    full_path = find_in_path(ecmd->argv[0]);
+    if (full_path)
+    {
+        execve(full_path, ecmd->argv, environ);
+        free(full_path);
+    }
+    else
+    {
+        execve(ecmd->argv[0], ecmd->argv, environ);
+    }
 }
 
 void	redirect_command(struct s_redircmd *rcmd)
