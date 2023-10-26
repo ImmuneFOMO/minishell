@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 18:26:57 by azhadan           #+#    #+#             */
-/*   Updated: 2023/10/24 19:20:51 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/10/26 15:07:14 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,8 +38,6 @@ rl_replace_line, rl_redisplay, add_history */
 /* tgetent, tgetflag, tgetnum, tgetstr, tgoto, tputs */
 # include "../libft/libft.h"
 
-# define MAXARGS 10
-
 struct				s_cmd
 {
 	int				type;
@@ -48,7 +46,7 @@ struct				s_cmd
 struct				s_execcmd
 {
 	int				type;
-	char			*argv[MAXARGS];
+	char			**argv;
 };
 
 struct				s_redircmd
