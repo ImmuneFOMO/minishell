@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 23:30:37 by idlbltv           #+#    #+#             */
-/*   Updated: 2023/10/26 15:08:07 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/10/26 23:37:21 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,7 +114,7 @@ struct s_cmd *parseexec(char **ps, char *es)
 
     ret = parseredirs(ret, ps, es);
     argc = ft_count_argc(&ps_clone, es_clone);
-	cmd->argv = (char **)malloc(sizeof(char *) * argc);
+	cmd->argv = (char **)malloc(sizeof(char *) * (argc + 1));
 	argc = 0;
     while (!peek(ps, es, "|"))
     {
