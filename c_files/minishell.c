@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 18:54:21 by azhadan           #+#    #+#             */
-/*   Updated: 2023/10/26 21:06:03 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/10/27 15:23:19 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ int	ft_cd(char *buf)
 	return (flag);
 }
 
-int	main(void)
+int	main(int argc, char **argv, char **envp)
 {
 	char	*buf;
 	int		r;
