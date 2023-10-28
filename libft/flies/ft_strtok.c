@@ -6,36 +6,37 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/27 10:33:08 by azhadan           #+#    #+#             */
-/*   Updated: 2023/10/28 21:03:30 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/10/28 22:50:58 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../libft.h"
 
-char	*ft_strtok(char *str, char sepa)
+char	*ft_strtok(char *str,const char *sepa)
 {
-	static char	*stock = NULL;
-	char		*ptr;
-	int		i;
+	static char	*saveptr;
+	char		*end;
 
-	i = 0;
-	ptr = NULL;
-	if (str != NULL)
-		stock = ft_strdup(str);
-	while (*stock != '\0')
+	if (!str)
+		str = saveptr;
+	if (!str)
+		return (NULL);
+	while (*str && ft_strchr(sepa, *str))
+		str++;
+	if (!*str)
 	{
-		if (i == 0 && *stock != sepa)
-		{
-			i = 1;
-			ptr = stock;
-		}
-		else if (i == 1 && *stock == sepa)
-		{
-			*stock = '\0';
-			stock += 1;
-			break ;
-		}
-		stock++;
+		saveptr = NULL;
+		return (NULL);
 	}
-	return (ptr);
+	end = str;
+	while (*end && !ft_strchr(sepa, *end))
+		end++;
+	if (*end)
+	{
+		*end = '\0';
+		saveptr = end + 1;
+	}
+	else
+		saveptr = NULL;
+	return (str);
 }

@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 23:30:46 by idlbltv           #+#    #+#             */
-/*   Updated: 2023/10/28 21:54:29 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/10/28 22:51:26 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ char *find_in_path(const char *cmd)
     temp = ft_strdup(path);
     if (!temp)
         return (NULL);
-    dir = ft_strtok(temp, ':');
+    dir = ft_strtok(temp, ":");
     while (dir)
     {
         temp_path = ft_strjoin(dir, "/");
@@ -78,7 +78,7 @@ char *find_in_path(const char *cmd)
             return (full_path);
         }
         free(full_path);
-        dir = ft_strtok(NULL, ':');
+        dir = ft_strtok(NULL, ":");
     }
     ft_printf("four free\n");
     free(dir);

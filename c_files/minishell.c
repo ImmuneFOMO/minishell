@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 18:54:21 by azhadan           #+#    #+#             */
-/*   Updated: 2023/10/28 22:01:08 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/10/28 22:17:35 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ int	main()
 	int		r;
 	struct s_cmd *parse_cmd;
 
-	buf = readline("minishell: ");
+	buf = "";
 	signal(SIGINT, handle_c);
 	signal(SIGQUIT, SIG_IGN);
 	while (buf != NULL)
