@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 23:30:46 by idlbltv           #+#    #+#             */
-/*   Updated: 2023/10/27 11:56:38 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/10/28 19:26:49 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,27 +41,32 @@ char *find_in_path(const char *cmd)
     char *temp;
     char *dir;
     char *full_path;
+    char *slash = "/";
+    char *temp_path;
     struct stat st;
 
     path = getenv("PATH");
     if (!path)
         return NULL;
-
-    temp = strdup(path);
+    temp = ft_strdup(path);
     if (!temp)
         return NULL;
-
-    dir =ft_strtok(temp, ':');
+    dir = ft_strtok(temp, ':');
     while (dir)
     {
-        full_path = malloc(strlen(dir) + strlen(cmd) + 2);
+        temp_path = ft_strjoin(dir, slash);
+        if (!temp_path)
+        {
+            free(temp);
+            return (NULL);
+        }
+        full_path = ft_strjoin(temp_path, cmd);
+        free(temp_path);
         if (!full_path)
         {
             free(temp);
             return NULL;
         }
-        sprintf(full_path, "%s/%s", dir, cmd);
-
         if (stat(full_path, &st) == 0 && (st.st_mode & S_IXUSR))
         {
             free(temp);
@@ -70,7 +75,6 @@ char *find_in_path(const char *cmd)
         free(full_path);
         dir = ft_strtok(NULL, ':');
     }
-
     free(temp);
     return NULL;
 }

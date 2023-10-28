@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 18:54:21 by azhadan           #+#    #+#             */
-/*   Updated: 2023/10/27 15:23:19 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/10/28 19:22:28 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ int	ft_cd(char *buf)
 	return (flag);
 }
 
-int	main(int argc, char **argv, char **envp)
+int	main()
 {
 	char	*buf;
 	int		r;
@@ -93,8 +93,7 @@ int	main(int argc, char **argv, char **envp)
 			exit(0);
 		}
 		wait(&r);
-		if (buf)
-			free(buf);
+		free(buf);
 		buf = readline("minishell: ");
 	}
 	rl_clear_history();
