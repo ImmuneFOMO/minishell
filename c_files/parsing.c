@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 23:30:37 by idlbltv           #+#    #+#             */
-/*   Updated: 2023/10/26 23:37:21 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/10/28 20:43:45 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,11 +77,8 @@ int ft_count_argc(char **ps, char *es)
 	char				*eq;
 	int					tok;
 	int					argc;
-	struct s_cmd		*ret;
 
-	ret = execcmd();
 	argc = 0;
-	ret = parseredirs(ret, ps, es);
 	while (!peek(ps, es, "|"))
 	{
 		if ((tok = gettoken(ps, es, &q, &eq)) == 0)
