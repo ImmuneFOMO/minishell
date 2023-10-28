@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 18:54:21 by azhadan           #+#    #+#             */
-/*   Updated: 2023/10/28 19:45:33 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/10/28 22:01:08 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,8 +74,10 @@ int	main()
 	signal(SIGQUIT, SIG_IGN);
 	while (buf != NULL)
 	{
+		buf = readline("minishell: ");
 		if (!buf[0])
 		{
+			ft_printf("buf[0] free\n");
 			free(buf);
 			continue ;
 		}
@@ -89,12 +91,13 @@ int	main()
 			parse_cmd = parsecmd(buf);
 			runcmd(parse_cmd);
 			free_cmd(parse_cmd);
+			ft_printf("fork1 free\n");
 			//free(buf);
 			exit(0);
 		}
 		wait(&r);
+		ft_printf("end main free\n");
 		// free(buf);
-		buf = readline("minishell: ");
 	}
 	rl_clear_history();
 	return (0);

@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 18:26:57 by azhadan           #+#    #+#             */
-/*   Updated: 2023/10/28 20:42:16 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/10/28 21:53:35 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,6 +96,7 @@ int					fork1(void);
 char				*mkcopy(char *s, char *es);
 
 /*cmnds1.c*/
+char 				*find_in_path(const char *cmd);
 int					runcmd(struct s_cmd *cmd);
 void				execute_command(struct s_cmd *cmd);
 void				redirect_command(struct s_redircmd *rcmd);

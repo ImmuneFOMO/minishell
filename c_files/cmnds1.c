@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 23:30:46 by idlbltv           #+#    #+#             */
-/*   Updated: 2023/10/28 19:26:49 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/10/28 21:54:29 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,22 +41,23 @@ char *find_in_path(const char *cmd)
     char *temp;
     char *dir;
     char *full_path;
-    char *slash = "/";
     char *temp_path;
     struct stat st;
 
     path = getenv("PATH");
     if (!path)
-        return NULL;
+        return (NULL);
     temp = ft_strdup(path);
     if (!temp)
-        return NULL;
+        return (NULL);
     dir = ft_strtok(temp, ':');
     while (dir)
     {
-        temp_path = ft_strjoin(dir, slash);
+        temp_path = ft_strjoin(dir, "/");
         if (!temp_path)
         {
+            ft_printf("first free\n");
+            free(dir);
             free(temp);
             return (NULL);
         }
@@ -64,19 +65,25 @@ char *find_in_path(const char *cmd)
         free(temp_path);
         if (!full_path)
         {
+            ft_printf("second free\n");
+            free(dir);
             free(temp);
-            return NULL;
+            return (NULL);
         }
         if (stat(full_path, &st) == 0 && (st.st_mode & S_IXUSR))
         {
+            ft_printf("third free\n");
+            //free(dir);
             free(temp);
-            return full_path;
+            return (full_path);
         }
         free(full_path);
         dir = ft_strtok(NULL, ':');
     }
+    ft_printf("four free\n");
+    free(dir);
     free(temp);
-    return NULL;
+    return (NULL);
 }
 
 void execute_command(struct s_cmd *cmd)
@@ -91,6 +98,7 @@ void execute_command(struct s_cmd *cmd)
     if (full_path)
     {
         execve(full_path, ecmd->argv, environ);
+        ft_printf("full path free\n");
         free(full_path);
     }
     else
