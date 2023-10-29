@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 23:30:14 by idlbltv           #+#    #+#             */
-/*   Updated: 2023/10/28 21:33:44 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/10/29 14:13:55 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,7 @@ void free_cmd(struct s_cmd *command)
 			free(ecmd->argv[i]);
 			i++;
 		}
-        
+        free(ecmd->argv);
     } 
     else if (command->type == '|') {
         /*Handle pipecmd*/
