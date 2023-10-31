@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 18:26:57 by azhadan           #+#    #+#             */
-/*   Updated: 2023/10/28 21:53:35 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/10/31 14:44:34 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,8 @@ struct s_cmd		*execcmd(void);
 
 /*signals.c*/
 void				handle_c(int signum);
+void				print_something();
+int					builtins(char *command);
 
 /*get_token.c*/
 int					is_whitespace(char c);
