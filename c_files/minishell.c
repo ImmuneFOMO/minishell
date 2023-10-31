@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 18:54:21 by azhadan           #+#    #+#             */
-/*   Updated: 2023/10/29 14:29:08 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/10/31 22:33:48 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,15 +69,13 @@ int	main()
 	int		r;
 	struct s_cmd *parse_cmd;
 
-	buf = "";
 	signal(SIGINT, handle_c);
 	signal(SIGQUIT, SIG_IGN);
-	while (buf != NULL)
+	while (1)
 	{
 		buf = readline("minishell: ");
 		if (!buf[0])
 		{
-			//ft_printf("buf[0] free\n");
 			free(buf);
 			continue ;
 		}
@@ -91,13 +89,9 @@ int	main()
 			parse_cmd = parsecmd(buf);
 			runcmd(parse_cmd);
 			free_cmd(parse_cmd);
-			//ft_printf("fork1 free\n");
-			//free(buf);
 			exit(0);
 		}
 		wait(&r);
-		//ft_printf("end main free\n");
-		// free(buf);
 	}
 	rl_clear_history();
 	return (0);

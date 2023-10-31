@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/23 10:51:06 by azhadan           #+#    #+#             */
-/*   Updated: 2023/10/31 14:45:01 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/10/31 17:03:46 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,16 +18,21 @@ void	handle_c(int signum)
 	write(1, "\nminishell: ", 12);
 }
 
-void print_something() 
+void builtin_pwd()
 {
-    printf("something\n");
+	char dir[2000];
+	
+	if (getcwd(dir, sizeof(dir)) != NULL)
+		ft_printf("%s\n", dir);
+	else
+		perror("pwd");
 }
 
 int builtins(char *command)
 {
-	if (!ft_strncmp(command, "test", 4))
+	if (!ft_strncmp(command, "pwd", 3))
 	{
-		print_something();
+		builtin_pwd();
 		return (1);
 	}
 	return (0);

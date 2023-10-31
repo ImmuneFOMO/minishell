@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 23:30:37 by idlbltv           #+#    #+#             */
-/*   Updated: 2023/10/28 21:57:59 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/10/31 22:49:53 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ int ft_count_argc(char **ps, char *es)
 	int					argc;
 
 	argc = 0;
-	while (!peek(ps, es, "|"))
+	while (!peek(ps, es, "|") && !peek(ps, es, ">") && !peek(ps, es, "<"))
 	{
 		if ((tok = gettoken(ps, es, &q, &eq)) == 0)
 			break ;

@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 23:30:46 by idlbltv           #+#    #+#             */
-/*   Updated: 2023/10/31 14:44:22 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/10/31 22:32:59 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,6 @@ char *find_in_path(const char *cmd)
         temp_path = ft_strjoin(dir, "/");
         if (!temp_path)
         {
-            //ft_printf("first free\n");
             free(dir);
             free(temp);
             return (NULL);
@@ -65,22 +64,18 @@ char *find_in_path(const char *cmd)
         free(temp_path);
         if (!full_path)
         {
-            //ft_printf("second free\n");
             free(dir);
             free(temp);
             return (NULL);
         }
         if (stat(full_path, &st) == 0 && (st.st_mode & S_IXUSR))
         {
-            //ft_printf("third free\n");
-            //free(dir);
             free(temp);
             return (full_path);
         }
         free(full_path);
         dir = ft_strtok(NULL, ":");
     }
-    //ft_printf("four free\n");
     free(dir);
     free(temp);
     return (NULL);
@@ -95,12 +90,11 @@ void execute_command(struct s_cmd *cmd)
     if (ecmd->argv[0] == 0)
         exit(0);
     if (builtins(ecmd->argv[0]))
-        exit(0);
+        return ;
     full_path = find_in_path(ecmd->argv[0]);
     if (full_path)
     {
         execve(full_path, ecmd->argv, environ);
-        //ft_printf("full path free\n");
         free(full_path);
     }
     else
