@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/23 10:51:06 by azhadan           #+#    #+#             */
-/*   Updated: 2023/10/31 17:03:46 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/10/31 23:28:22 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void builtin_pwd()
 
 int builtins(char *command)
 {
-	if (!ft_strncmp(command, "pwd", 3))
+	if (!ft_strncmp(command, "pwd", 4))
 	{
 		builtin_pwd();
 		return (1);
