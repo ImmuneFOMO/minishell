@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 18:26:57 by azhadan           #+#    #+#             */
-/*   Updated: 2023/10/31 17:04:19 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/11/01 13:18:17 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,7 @@ struct s_cmd		*execcmd(void);
 void				handle_c(int signum);
 int					builtins(char *command);
 void 				builtin_pwd();
+char				*trim_spaces(char *str);
 
 
 /*get_token.c*/

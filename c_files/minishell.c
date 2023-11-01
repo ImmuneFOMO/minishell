@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 18:54:21 by azhadan           #+#    #+#             */
-/*   Updated: 2023/10/31 23:10:24 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/11/01 13:17:54 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,17 +50,35 @@ char	*mkcopy(char *s, char *es)
 	return (c);
 }
 
-int	ft_cd(char *buf)
-{
-	int	flag;
+int ft_cd(char *buf) {
+    int flag;
+    char *home_dir;
+    char *trimmed_buf;
 
-	flag = 0;
-	if (buf[0] == 'c' && buf[1] == 'd' && buf[2] == ' ')
-	{
-		if (chdir(buf + 3) < 0)
-			ft_printf("cannot cd \n");
-	}
-	return (flag);
+    flag = 0;
+    trimmed_buf = trim_spaces(buf);
+
+    // Check if command is 'cd' possibly followed by spaces
+    if (ft_strncmp(trimmed_buf, "cd", 4) == 0) {
+        home_dir = getenv("HOME");
+        if (home_dir == NULL) {
+            perror("ft_cd: HOME not set");
+            flag = 1;
+        } else {
+            if (chdir(home_dir) < 0) {
+                perror("ft_cd");
+                flag = 1;
+            }
+        }
+    } else if (ft_strncmp(trimmed_buf, "cd ", 3) == 0) {
+        // Move to the directory specified after "cd "
+        if (chdir(trimmed_buf + 3) < 0) {
+            perror("ft_cd");
+            flag = 1;
+        }
+    }
+
+    return flag;
 }
 
 int	main()
