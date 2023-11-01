@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 18:54:21 by azhadan           #+#    #+#             */
-/*   Updated: 2023/11/01 13:17:54 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/11/01 15:44:59 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,6 @@ int ft_cd(char *buf) {
     flag = 0;
     trimmed_buf = trim_spaces(buf);
 
-    // Check if command is 'cd' possibly followed by spaces
     if (ft_strncmp(trimmed_buf, "cd", 4) == 0) {
         home_dir = getenv("HOME");
         if (home_dir == NULL) {
@@ -71,7 +70,6 @@ int ft_cd(char *buf) {
             }
         }
     } else if (ft_strncmp(trimmed_buf, "cd ", 3) == 0) {
-        // Move to the directory specified after "cd "
         if (chdir(trimmed_buf + 3) < 0) {
             perror("ft_cd");
             flag = 1;
@@ -92,6 +90,8 @@ int	main()
 	while (1)
 	{
 		buf = readline("minishell: ");
+		if (!buf)
+			break ;
 		if (!buf[0])
 		{
 			free(buf);
