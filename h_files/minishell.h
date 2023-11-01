@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 18:26:57 by azhadan           #+#    #+#             */
-/*   Updated: 2023/11/01 13:18:17 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/11/01 17:03:51 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,17 +41,20 @@ rl_replace_line, rl_redisplay, add_history */
 struct				s_cmd
 {
 	int				type;
+	char			**envp;
 };
 
 struct				s_execcmd
 {
 	int				type;
+	char			**envp;
 	char			**argv;
 };
 
 struct				s_redircmd
 {
 	int				type;
+	char			**envp;
 	struct s_cmd	*cmd;
 	char			*file;
 	int				mode;
@@ -61,6 +64,7 @@ struct				s_redircmd
 struct				s_pipecmd
 {
 	int				type;
+	char			**envp;
 	struct s_cmd	*left;
 	struct s_cmd	*right;
 };

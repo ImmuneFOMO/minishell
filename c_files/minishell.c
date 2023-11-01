@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 18:54:21 by azhadan           #+#    #+#             */
-/*   Updated: 2023/11/01 15:44:59 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/11/01 15:57:46 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ int ft_cd(char *buf) {
     return flag;
 }
 
-int	main()
+int	main(int argc, char **argv, char **envp)
 {
 	char	*buf;
 	int		r;
@@ -87,6 +87,8 @@ int	main()
 
 	signal(SIGQUIT, SIG_IGN);
 	signal(SIGINT, handle_c);
+	(void)argc;
+	(void)argv;
 	while (1)
 	{
 		buf = readline("minishell: ");
@@ -105,6 +107,7 @@ int	main()
 		if (fork1() == 0)
 		{
 			parse_cmd = parsecmd(buf);
+			parse_cmd->envp = envp;
 			runcmd(parse_cmd);
 			free_cmd(parse_cmd);
 			exit(0);

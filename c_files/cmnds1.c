@@ -6,13 +6,11 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 23:30:46 by idlbltv           #+#    #+#             */
-/*   Updated: 2023/10/31 22:32:59 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/11/01 17:22:25 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../h_files/minishell.h"
-
-extern char **environ;
 
 int	runcmd(struct s_cmd *cmd)
 {
@@ -94,12 +92,12 @@ void execute_command(struct s_cmd *cmd)
     full_path = find_in_path(ecmd->argv[0]);
     if (full_path)
     {
-        execve(full_path, ecmd->argv, environ);
+        execve(full_path, ecmd->argv, ecmd->envp);
         free(full_path);
     }
     else
     {
-        execve(ecmd->argv[0], ecmd->argv, environ);
+        execve(ecmd->argv[0], ecmd->argv, ecmd->envp);
     }
 }
 

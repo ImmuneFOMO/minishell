@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 23:30:14 by idlbltv           #+#    #+#             */
-/*   Updated: 2023/10/31 22:33:21 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/11/01 16:03:17 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,6 +102,7 @@ void free_cmd(struct s_cmd *command)
 
     if (command->type == ' ') {
         /*Handle execcmd*/
+		ft_printf("Handle execcmd\n");
         ecmd = (struct s_execcmd *)command;
 		while(ecmd->argv[i])
 		{
@@ -111,6 +112,7 @@ void free_cmd(struct s_cmd *command)
         free(ecmd->argv);
     } 
     else if (command->type == '|') {
+		ft_printf("Handle pipecmd\n");
         /*Handle pipecmd*/
         pcmd = (struct s_pipecmd *)command;
         free_cmd(pcmd->left);
