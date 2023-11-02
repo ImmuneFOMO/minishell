@@ -21,8 +21,10 @@ function test_command() {
 }
 
 make re
+make clean
+clear
 
-test_command "clear"
 test_command "ls"
 test_command "ls | cat"
+test_command "wait 1"
 test_command "ls < fdsfdsfdsf"

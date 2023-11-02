@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 23:30:46 by idlbltv           #+#    #+#             */
-/*   Updated: 2023/11/02 15:18:43 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/11/02 23:15:54 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,7 +125,6 @@ void	redirect_command(struct s_redircmd *rcmd)
 	}
 	runcmd(rcmd->cmd);
 	close(fd_redirect);
-    ft_printf("redirect finish\n");
 }
 
 void	pipe_command(struct s_pipecmd *pcmd)
