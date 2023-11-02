@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 18:26:57 by azhadan           #+#    #+#             */
-/*   Updated: 2023/11/01 17:03:51 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/11/01 18:42:34 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ struct s_cmd		*execcmd(void);
 
 /*signals.c*/
 void				handle_c(int signum);
-int					builtins(char *command);
+int					builtins(char **argv);
 void 				builtin_pwd();
 char				*trim_spaces(char *str);
 

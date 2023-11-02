@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 23:30:46 by idlbltv           #+#    #+#             */
-/*   Updated: 2023/11/01 17:22:25 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/11/02 15:18:43 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ void execute_command(struct s_cmd *cmd)
     ecmd = (struct s_execcmd *)cmd;
     if (ecmd->argv[0] == 0)
         exit(0);
-    if (builtins(ecmd->argv[0]))
+    if (builtins(ecmd->argv))
         return ;
     full_path = find_in_path(ecmd->argv[0]);
     if (full_path)
@@ -116,7 +116,7 @@ void	redirect_command(struct s_redircmd *rcmd)
 	if (fd_redirect < 0)
 	{
 		perror("open");
-		exit(0);
+		return ;
 	}
 	if (dup2(fd_redirect, rcmd->fd) < 0)
 	{
@@ -125,6 +125,7 @@ void	redirect_command(struct s_redircmd *rcmd)
 	}
 	runcmd(rcmd->cmd);
 	close(fd_redirect);
+    ft_printf("redirect finish\n");
 }
 
 void	pipe_command(struct s_pipecmd *pcmd)
