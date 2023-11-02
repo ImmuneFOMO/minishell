@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 18:54:21 by azhadan           #+#    #+#             */
-/*   Updated: 2023/10/24 18:22:50 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/11/01 15:57:46 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,9 +33,6 @@ int	peek(char **ps, char *es, char *toks)
 	return (*s && ft_strchr(toks, *s));
 }
 
-// make a copy of the characters in 
-// the input buffer, starting from s through es.
-// null-terminate the copy to make it a string.
 char	*mkcopy(char *s, char *es)
 {
 	int		n;
@@ -53,30 +50,50 @@ char	*mkcopy(char *s, char *es)
 	return (c);
 }
 
-int	ft_cd(char *buf)
-{
-	int	flag;
+int ft_cd(char *buf) {
+    int flag;
+    char *home_dir;
+    char *trimmed_buf;
 
-	flag = 0;
-	if (buf[0] == 'c' && buf[1] == 'd' && buf[2] == ' ')
-	{
-		if (chdir(buf + 3) < 0)
-			write(2, "cannot cd %s\n", 13);
-	}
-	return (flag);
+    flag = 0;
+    trimmed_buf = trim_spaces(buf);
+
+    if (ft_strncmp(trimmed_buf, "cd", 4) == 0) {
+        home_dir = getenv("HOME");
+        if (home_dir == NULL) {
+            perror("ft_cd: HOME not set");
+            flag = 1;
+        } else {
+            if (chdir(home_dir) < 0) {
+                perror("ft_cd");
+                flag = 1;
+            }
+        }
+    } else if (ft_strncmp(trimmed_buf, "cd ", 3) == 0) {
+        if (chdir(trimmed_buf + 3) < 0) {
+            perror("ft_cd");
+            flag = 1;
+        }
+    }
+
+    return flag;
 }
 
-int	main(void)
+int	main(int argc, char **argv, char **envp)
 {
 	char	*buf;
 	int		r;
 	struct s_cmd *parse_cmd;
 
-	buf = readline("minishell> ");
-	signal(SIGINT, handle_c);
 	signal(SIGQUIT, SIG_IGN);
-	while (buf != NULL)
+	signal(SIGINT, handle_c);
+	(void)argc;
+	(void)argv;
+	while (1)
 	{
+		buf = readline("minishell: ");
+		if (!buf)
+			break ;
 		if (!buf[0])
 		{
 			free(buf);
@@ -90,16 +107,14 @@ int	main(void)
 		if (fork1() == 0)
 		{
 			parse_cmd = parsecmd(buf);
+			parse_cmd->envp = envp;
 			runcmd(parse_cmd);
 			free_cmd(parse_cmd);
-			free(buf);
 			exit(0);
 		}
 		wait(&r);
 		free(buf);
-		buf = readline("minishell: ");
 	}
-	free(buf);
 	rl_clear_history();
 	return (0);
 }

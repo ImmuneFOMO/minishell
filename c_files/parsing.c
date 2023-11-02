@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 23:30:37 by idlbltv           #+#    #+#             */
-/*   Updated: 2023/10/23 23:55:40 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/10/31 22:49:53 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,20 +71,15 @@ struct s_cmd	*parseredirs(struct s_cmd *cmd, char **ps, char *es)
 	return (cmd);
 }
 
-struct s_cmd	*parseexec(char **ps, char *es)
+int ft_count_argc(char **ps, char *es)
 {
 	char				*q;
 	char				*eq;
 	int					tok;
 	int					argc;
-	struct s_execcmd	*cmd;
-	struct s_cmd		*ret;
 
-	ret = execcmd();
-	cmd = (struct s_execcmd *)ret;
 	argc = 0;
-	ret = parseredirs(ret, ps, es);
-	while (!peek(ps, es, "|"))
+	while (!peek(ps, es, "|") && !peek(ps, es, ">") && !peek(ps, es, "<"))
 	{
 		if ((tok = gettoken(ps, es, &q, &eq)) == 0)
 			break ;
@@ -93,15 +88,44 @@ struct s_cmd	*parseexec(char **ps, char *es)
 			write(2, "syntax error\n", 12);
 			exit(-1);
 		}
-		cmd->argv[argc] = mkcopy(q, eq);
 		argc++;
-		if (argc >= MAXARGS)
-		{
-			write(2, "too many args\n", 14);
-			exit(-1);
-		}
-		ret = parseredirs(ret, ps, es);
 	}
-	cmd->argv[argc] = 0;
-	return (ret);
+	return (argc);
+}
+
+struct s_cmd *parseexec(char **ps, char *es)
+{
+    char 				*q;
+    char				*eq;
+    int 				tok;
+    int 				argc;
+    struct s_execcmd 	*cmd;
+    struct s_cmd 		*ret;
+	char 				*ps_clone;
+	char 				*es_clone;
+    
+    ps_clone = *ps;
+    es_clone = es;
+    ret = execcmd();
+    cmd = (struct s_execcmd *)ret;
+
+    ret = parseredirs(ret, ps, es);
+    argc = ft_count_argc(&ps_clone, es_clone);
+	cmd->argv = (char **)malloc(sizeof(char *) * (argc + 1));
+	argc = 0;
+    while (!peek(ps, es, "|"))
+    {
+        if ((tok = gettoken(ps, es, &q, &eq)) == 0)
+            break;
+        if (tok != 'a')
+        {
+            write(2, "syntax error\n", 12);
+            exit(-1);
+        }
+        cmd->argv[argc] = mkcopy(q, eq);
+        argc++;
+        ret = parseredirs(ret, ps, es);
+    }
+    cmd->argv[argc] = 0;
+    return (ret);
 }

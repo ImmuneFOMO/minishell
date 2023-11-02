@@ -23,4 +23,7 @@ fclean: clean
 
 re: fclean all
 
-.PHONY: re, fclean, clean, all
+test: $(NAME)
+	@./test_minishell.sh
+
+.PHONY: re, fclean, clean, all test

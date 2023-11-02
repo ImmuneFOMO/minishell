@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 18:26:57 by azhadan           #+#    #+#             */
-/*   Updated: 2023/10/24 19:20:51 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/11/01 18:42:34 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,22 +38,23 @@ rl_replace_line, rl_redisplay, add_history */
 /* tgetent, tgetflag, tgetnum, tgetstr, tgoto, tputs */
 # include "../libft/libft.h"
 
-# define MAXARGS 10
-
 struct				s_cmd
 {
 	int				type;
+	char			**envp;
 };
 
 struct				s_execcmd
 {
 	int				type;
-	char			*argv[MAXARGS];
+	char			**envp;
+	char			**argv;
 };
 
 struct				s_redircmd
 {
 	int				type;
+	char			**envp;
 	struct s_cmd	*cmd;
 	char			*file;
 	int				mode;
@@ -63,6 +64,7 @@ struct				s_redircmd
 struct				s_pipecmd
 {
 	int				type;
+	char			**envp;
 	struct s_cmd	*left;
 	struct s_cmd	*right;
 };
@@ -73,6 +75,7 @@ struct s_cmd		*parseline(char **ps, char *es);
 struct s_cmd		*parsepipe(char **ps, char *es);
 struct s_cmd		*parseredirs(struct s_cmd *cmd, char **ps, char *es);
 struct s_cmd		*parseexec(char **ps, char *es);
+int 				ft_count_argc(char **ps, char *es);
 
 /*cmnds2.c*/
 int					getcmd(char *buf, int nbuf);
@@ -83,6 +86,10 @@ struct s_cmd		*execcmd(void);
 
 /*signals.c*/
 void				handle_c(int signum);
+int					builtins(char **argv);
+void 				builtin_pwd();
+char				*trim_spaces(char *str);
+
 
 /*get_token.c*/
 int					is_whitespace(char c);
@@ -97,6 +104,7 @@ int					fork1(void);
 char				*mkcopy(char *s, char *es);
 
 /*cmnds1.c*/
+char 				*find_in_path(const char *cmd);
 int					runcmd(struct s_cmd *cmd);
 void				execute_command(struct s_cmd *cmd);
 void				redirect_command(struct s_redircmd *rcmd);

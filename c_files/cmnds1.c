@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 23:30:46 by idlbltv           #+#    #+#             */
-/*   Updated: 2023/10/23 21:56:34 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/11/02 23:15:54 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,14 +33,72 @@ int	runcmd(struct s_cmd *cmd)
 	return (1);
 }
 
-void	execute_command(struct s_cmd *cmd)
+char *find_in_path(const char *cmd)
 {
-	struct s_execcmd	*ecmd;
+    char *path;
+    char *temp;
+    char *dir;
+    char *full_path;
+    char *temp_path;
+    struct stat st;
 
-	ecmd = (struct s_execcmd *)cmd;
-	if (ecmd->argv[0] == 0)
-		exit(0);
-	execvp(ecmd->argv[0], ecmd->argv);
+    path = getenv("PATH");
+    if (!path)
+        return (NULL);
+    temp = ft_strdup(path);
+    if (!temp)
+        return (NULL);
+    dir = ft_strtok(temp, ":");
+    while (dir)
+    {
+        temp_path = ft_strjoin(dir, "/");
+        if (!temp_path)
+        {
+            free(dir);
+            free(temp);
+            return (NULL);
+        }
+        full_path = ft_strjoin(temp_path, cmd);
+        free(temp_path);
+        if (!full_path)
+        {
+            free(dir);
+            free(temp);
+            return (NULL);
+        }
+        if (stat(full_path, &st) == 0 && (st.st_mode & S_IXUSR))
+        {
+            free(temp);
+            return (full_path);
+        }
+        free(full_path);
+        dir = ft_strtok(NULL, ":");
+    }
+    free(dir);
+    free(temp);
+    return (NULL);
+}
+
+void execute_command(struct s_cmd *cmd)
+{
+    struct s_execcmd *ecmd;
+    char *full_path;
+
+    ecmd = (struct s_execcmd *)cmd;
+    if (ecmd->argv[0] == 0)
+        exit(0);
+    if (builtins(ecmd->argv))
+        return ;
+    full_path = find_in_path(ecmd->argv[0]);
+    if (full_path)
+    {
+        execve(full_path, ecmd->argv, ecmd->envp);
+        free(full_path);
+    }
+    else
+    {
+        execve(ecmd->argv[0], ecmd->argv, ecmd->envp);
+    }
 }
 
 void	redirect_command(struct s_redircmd *rcmd)
@@ -58,7 +116,7 @@ void	redirect_command(struct s_redircmd *rcmd)
 	if (fd_redirect < 0)
 	{
 		perror("open");
-		exit(0);
+		return ;
 	}
 	if (dup2(fd_redirect, rcmd->fd) < 0)
 	{
