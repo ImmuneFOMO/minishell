@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 23:30:46 by idlbltv           #+#    #+#             */
-/*   Updated: 2023/11/02 23:15:54 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/11/03 11:33:36 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ void execute_command(struct s_cmd *cmd)
     ecmd = (struct s_execcmd *)cmd;
     if (ecmd->argv[0] == 0)
         exit(0);
-    if (builtins(ecmd->argv))
+    if (builtins(ecmd))
         return ;
     full_path = find_in_path(ecmd->argv[0]);
     if (full_path)

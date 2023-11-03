@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/23 10:51:06 by azhadan           #+#    #+#             */
-/*   Updated: 2023/11/01 18:42:14 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/11/03 11:35:30 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,16 +47,33 @@ void builtin_pwd()
 		perror("pwd");
 }
 
-int builtins(char **argv)
+void builtin_env(struct s_execcmd *ecmd)
 {
-	if (!ft_strncmp(argv[0], "pwd", 4))
+    int i;
+
+    i = 0;
+    while (ecmd->envp[i])
+    {
+        ft_printf("%s\n", ecmd->envp[i]);
+        i++;
+    }
+}
+
+int builtins(struct s_execcmd *ecmd)
+{
+	if (!ft_strncmp(ecmd->argv[0], "pwd", 4))
 	{
 		builtin_pwd();
 		return (1);
 	}
-	else if (!ft_strncmp(argv[0], "echo", 5))
+	else if (!ft_strncmp(ecmd->argv[0], "echo", 5))
     {
-        builtin_echo(argv);
+        builtin_echo(ecmd->argv);
+        return (1);
+    }
+    else if (!ft_strncmp(ecmd->argv[0], "env", 4))
+    {
+        builtin_env(ecmd);
         return (1);
     }
 	return (0);
