@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_token.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
+/*   By: idelibal <idelibal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 23:30:14 by idlbltv           #+#    #+#             */
-/*   Updated: 2023/11/02 23:15:03 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/11/03 19:29:56 by idelibal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,38 +91,39 @@ int	gettoken(char **ps, char *es, char **q, char **eq)
 	return (token);
 }
 
-void free_cmd(struct s_cmd *command) 
+void	free_cmd(struct s_cmd *command)
 {
-	struct s_pipecmd *pcmd;
-	struct s_execcmd *ecmd;
-	struct s_redircmd *rcmd;
-	int i;
+	struct s_pipecmd	*pcmd;
+	struct s_execcmd	*ecmd;
+	struct s_redircmd	*rcmd;
+	int					i;
 
 	i = 0;
-    if (!command) return;
-
-    if (command->type == ' ') 
+	if (!command)
+		return ;
+	if (command->type == ' ')
 	{
-        /*Handle execcmd*/
-        ecmd = (struct s_execcmd *)command;
-		while(ecmd->argv[i])
+		/*Handle execcmd*/
+		ecmd = (struct s_execcmd *)command;
+		while (ecmd->argv[i])
 		{
 			free(ecmd->argv[i]);
 			i++;
 		}
-        free(ecmd->argv);
-    } 
-    else if (command->type == '|') {
-        /*Handle pipecmd*/
-        pcmd = (struct s_pipecmd *)command;
-        free_cmd(pcmd->left);
-        free_cmd(pcmd->right);
-    }
+		free(ecmd->argv);
+	}
+	else if (command->type == '|')
+	{
+		/*Handle pipecmd*/
+		pcmd = (struct s_pipecmd *)command;
+		free_cmd(pcmd->left);
+		free_cmd(pcmd->right);
+	}
 	else if (command->type == '>' || command->type == '<')
 	{
 		rcmd = (struct s_redircmd *)command;
 		free_cmd(rcmd->cmd);
 		free(rcmd->file);
 	}
-    free(command);
+	free(command);
 }
