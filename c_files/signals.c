@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
+/*   By: idelibal <idelibal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/23 10:51:06 by azhadan           #+#    #+#             */
-/*   Updated: 2023/11/03 11:35:30 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/11/03 19:44:35 by idelibal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,48 +18,52 @@ void	handle_c(int signum)
 	write(1, "\nminishell: ", 12);
 }
 
-void builtin_echo(char **args)
+void	builtin_echo(char **args)
 {
-    int i = 1;
-    int n_flag = 0;
+	int		i;
+	int		n_flag;
 
-    if (args[i] && ft_strncmp(args[i], "-n", 3) == 0) {
-        n_flag = 1;
-        i++;
-    }
-    while (args[i]) {
-        ft_printf("%s", args[i]);
-        if (args[i + 1] != NULL)
-            ft_printf(" ");
-        i++;
-    }
-    if (!n_flag)
-        ft_printf("\n");
+	i = 1;
+	n_flag = 0;
+	if (args[i] && ft_strncmp(args[i], "-n", 3) == 0)
+	{
+		n_flag = 1;
+		i++;
+	}
+	while (args[i])
+	{
+		ft_printf("%s", args[i]);
+		if (args[i + 1] != NULL)
+			ft_printf(" ");
+		i++;
+	}
+	if (!n_flag)
+		ft_printf("\n");
 }
 
-void builtin_pwd()
+void	builtin_pwd(void)
 {
-	char dir[2000];
-	
+	char	dir[2000];
+
 	if (getcwd(dir, sizeof(dir)) != NULL)
 		ft_printf("%s\n", dir);
 	else
 		perror("pwd");
 }
 
-void builtin_env(struct s_execcmd *ecmd)
+void	builtin_env(struct s_execcmd *ecmd)
 {
-    int i;
+	int	i;
 
-    i = 0;
-    while (ecmd->envp[i])
-    {
-        ft_printf("%s\n", ecmd->envp[i]);
-        i++;
-    }
+	i = 0;
+	while (ecmd->envp[i])
+	{
+		ft_printf("%s\n", ecmd->envp[i]);
+		i++;
+	}
 }
 
-int builtins(struct s_execcmd *ecmd)
+int	builtins(struct s_execcmd *ecmd)
 {
 	if (!ft_strncmp(ecmd->argv[0], "pwd", 4))
 	{
@@ -67,29 +71,29 @@ int builtins(struct s_execcmd *ecmd)
 		return (1);
 	}
 	else if (!ft_strncmp(ecmd->argv[0], "echo", 5))
-    {
-        builtin_echo(ecmd->argv);
-        return (1);
-    }
-    else if (!ft_strncmp(ecmd->argv[0], "env", 4))
-    {
-        builtin_env(ecmd);
-        return (1);
-    }
+	{
+		builtin_echo(ecmd->argv);
+		return (1);
+	}
+	else if (!ft_strncmp(ecmd->argv[0], "env", 4))
+	{
+		builtin_env(ecmd);
+		return (1);
+	}
 	return (0);
 }
 
-char *trim_spaces(char *str) 
+char	*trim_spaces(char *str)
 {
-	char *end;
+	char	*end;
 
 	while (*str == ' ' || *str == '\t')
 		str++;
-    if (*str == 0)
-		return str;
-    end = str + strlen(str) - 1;
-    while (end > str && (*end == ' ' || *end == '\t')) end--;
-    end[1] = '\0';
-
-    return str;
+	if (*str == 0)
+		return (str);
+	end = str + strlen(str) - 1;
+	while (end > str && (*end == ' ' || *end == '\t'))
+		end--;
+	end[1] = '\0';
+	return (str);
 }
