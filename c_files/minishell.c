@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: idelibal <idelibal@student.42.fr>          +#+  +:+       +#+        */
+/*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 18:54:21 by azhadan           #+#    #+#             */
-/*   Updated: 2023/11/03 19:34:15 by idelibal         ###   ########.fr       */
+/*   Updated: 2023/11/06 15:55:18 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,38 +52,34 @@ char	*mkcopy(char *s, char *es)
 
 int	ft_cd(char *buf)
 {
-	int		flag;
 	char	*home_dir;
-	char	*trimmed_buf;
 
-	flag = 0;
-	trimmed_buf = trim_spaces(buf);
-	if (ft_strncmp(trimmed_buf, "cd", 4) == 0)
+	if (ft_strncmp(buf, "cd", 4) == 0)
 	{
 		home_dir = getenv("HOME");
 		if (home_dir == NULL)
 		{
 			perror("ft_cd: HOME not set");
-			flag = 1;
+			return (1);
 		}
 		else
 		{
 			if (chdir(home_dir) < 0)
 			{
 				perror("ft_cd");
-				flag = 1;
+				return (1);
 			}
 		}
 	}
-	else if (ft_strncmp(trimmed_buf, "cd ", 3) == 0)
+	else if (ft_strncmp(buf, "cd ", 3) == 0)
 	{
-		if (chdir(trimmed_buf + 3) < 0)
+		if (chdir(buf + 3) < 0)
 		{
 			perror("ft_cd");
-			flag = 1;
+			return (1);
 		}
 	}
-	return (flag);
+	return (0);
 }
 
 int	main(int argc, char **argv, char **envp)
@@ -91,6 +87,7 @@ int	main(int argc, char **argv, char **envp)
 	char			*buf;
 	int				r;
 	struct s_cmd	*parse_cmd;
+	int				code;
 
 	signal(SIGQUIT, SIG_IGN);
 	signal(SIGINT, handle_c);
@@ -107,9 +104,10 @@ int	main(int argc, char **argv, char **envp)
 			continue ;
 		}
 		add_history(buf);
-		if (ft_strncmp(buf, "exit", 4) == 0)
+		code = main_builtins(buf);
+		if (code == 2)
 			break ;
-		if (ft_cd(buf))
+		else if (code == 1)
 			continue ;
 		if (fork1() == 0)
 		{

@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 18:26:57 by azhadan           #+#    #+#             */
-/*   Updated: 2023/11/03 11:37:52 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/11/06 15:56:59 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,6 +90,7 @@ int					builtins(struct s_execcmd *ecmd);
 void 				builtin_pwd();
 char				*trim_spaces(char *str);
 void				builtin_env(struct s_execcmd *ecmd);
+int					main_builtins(char *buf);
 
 
 /*get_token.c*/

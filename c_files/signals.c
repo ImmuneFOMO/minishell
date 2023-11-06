@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: idelibal <idelibal@student.42.fr>          +#+  +:+       +#+        */
+/*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/23 10:51:06 by azhadan           #+#    #+#             */
-/*   Updated: 2023/11/03 19:44:35 by idelibal         ###   ########.fr       */
+/*   Updated: 2023/11/06 15:57:01 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,39 @@ void	builtin_env(struct s_execcmd *ecmd)
 	}
 }
 
+int builtin_unset(struct s_execcmd *ecmd)
+{
+	int i = 0;
+    size_t len;
+
+	len = ft_strlen(ecmd->argv[1]);
+    while (ecmd->envp[i] != NULL) {
+        if (ft_strncmp(ecmd->envp[i], ecmd->argv[1], len) == 0 && ecmd->envp[i][len] == '=') {
+			if (ecmd->envp[i])
+            	free(ecmd->envp[i]);
+            while (ecmd->envp[i] != NULL) {
+                ecmd->envp[i] = ecmd->envp[i + 1];
+                i++;
+            }
+            return (1);
+        }
+        i++;
+    }
+    return (0);
+}
+
+int main_builtins(char *buf)
+{
+	char	*trimmed_buf;
+
+	trimmed_buf = trim_spaces(buf);
+	if (ft_cd(trimmed_buf))
+		return (1);
+	else if (!ft_strncmp(trimmed_buf, "exit", 5))
+		return (2);
+	return (0);
+}
+
 int	builtins(struct s_execcmd *ecmd)
 {
 	if (!ft_strncmp(ecmd->argv[0], "pwd", 4))
@@ -80,6 +113,10 @@ int	builtins(struct s_execcmd *ecmd)
 		builtin_env(ecmd);
 		return (1);
 	}
+	// else if (!ft_strncmp(ecmd->argv[0], "unset", 6))
+	// {
+	// 	builtin_unset(ecmd);
+	// }
 	return (0);
 }
 
