@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 18:26:57 by azhadan           #+#    #+#             */
-/*   Updated: 2023/11/03 11:37:52 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/11/08 00:03:22 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,6 +90,7 @@ int					builtins(struct s_execcmd *ecmd);
 void 				builtin_pwd();
 char				*trim_spaces(char *str);
 void				builtin_env(struct s_execcmd *ecmd);
+int					main_builtins(char *buf);
 
 
 /*get_token.c*/
@@ -97,6 +98,9 @@ int					is_whitespace(char c);
 int					gettoken(char **ps, char *es, char **q, char **eq);
 void				process_special_tokens(char **s, int *token);
 void				free_cmd(struct s_cmd *command);
+char				**dup_envp(char **envp);
+void				free_envp(char **envp);
+
 
 /*minishell.c*/
 int					ft_cd(char *buf);
