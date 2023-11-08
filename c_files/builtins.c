@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/08 13:30:35 by azhadan           #+#    #+#             */
-/*   Updated: 2023/11/08 13:33:43 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/11/08 23:25:11 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,15 +34,41 @@ int	ft_count_argc(char **ps, char *es)
 	return (argc);
 }
 
-int main_builtins(char *buf)
+int main_builtins(char *buf, char **envp)
 {
 	char	*trimmed_buf;
+	char	*var;
+	char	**vars;
+	int		i;
 
 	trimmed_buf = trim_spaces(buf);
 	if (ft_cd(trimmed_buf))
 		return (1);
 	else if (!ft_strncmp(trimmed_buf, "exit", 5))
 		return (2);
+	else if (!ft_strncmp(trimmed_buf, "unset ", 6))
+	{
+		var = ft_strchr(trimmed_buf, ' ');
+		var++;
+		if (var)
+		{
+			var++;
+			vars = ft_split(var, ' ');
+			i = 0;
+			while (vars[i])
+			{
+				builtin_unset(vars[i], envp);
+				i++;
+			}
+			i = 0;
+			while (vars[i])
+			{
+				free(vars[i]);
+				i++;
+			}
+			free(vars);
+		}
+	}
 	return (0);
 }
 
@@ -119,4 +145,24 @@ char	*find_in_path(const char *cmd)
 	free(dir);
 	free(temp);
 	return (NULL);
+}
+
+void builtin_unset(char *var, char **envp) 
+{
+    int i;
+    int j;
+
+	i = 0;
+    while (envp[i]) {
+        if (!ft_strncmp(envp[i], var, ft_strlen(var)) && envp[i][ft_strlen(var)] == '=') {
+            free(envp[i]);
+            j = i;
+            while (envp[j]) {
+                envp[j] = envp[j + 1];
+                j++;
+            }
+        } else {
+            i++;
+        }
+    }
 }

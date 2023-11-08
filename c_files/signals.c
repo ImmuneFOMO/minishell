@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/23 10:51:06 by azhadan           #+#    #+#             */
-/*   Updated: 2023/11/08 13:32:23 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/11/08 22:50:43 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,27 +63,6 @@ void	builtin_env(struct s_execcmd *ecmd)
 	}
 }
 
-int builtin_unset(struct s_execcmd *ecmd)
-{
-	int i = 0;
-    size_t len;
-
-	len = ft_strlen(ecmd->argv[1]);
-    while (ecmd->envp[i] != NULL) {
-        if (ft_strncmp(ecmd->envp[i], ecmd->argv[1], len) == 0 && ecmd->envp[i][len] == '=') {
-			if (ecmd->envp[i])
-            	free(ecmd->envp[i]);
-            while (ecmd->envp[i] != NULL) {
-                ecmd->envp[i] = ecmd->envp[i + 1];
-                i++;
-            }
-            return (1);
-        }
-        i++;
-    }
-    return (0);
-}
-
 int	builtins(struct s_execcmd *ecmd)
 {
 	if (!ft_strncmp(ecmd->argv[0], "pwd", 4))
@@ -101,10 +80,6 @@ int	builtins(struct s_execcmd *ecmd)
 		builtin_env(ecmd);
 		return (1);
 	}
-	// else if (!ft_strncmp(ecmd->argv[0], "unset", 6))
-	// {
-	// 	builtin_unset(ecmd);
-	// }
 	return (0);
 }
 

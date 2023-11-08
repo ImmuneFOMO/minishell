@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 18:26:57 by azhadan           #+#    #+#             */
-/*   Updated: 2023/11/08 13:34:50 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/11/08 19:25:40 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,9 +71,10 @@ struct				s_pipecmd
 
 /*builtins.c 4/5*/
 char 				*find_in_path(const char *cmd);
-int					main_builtins(char *buf);
+int					main_builtins(char *buf, char **envp);
 int 				ft_count_argc(char **ps, char *es);
 char				**dup_envp(char **envp);
+void				builtin_unset(char *var, char **envp);
 
 /*parsing.c 5/5*/
 struct s_cmd		*parsecmd(char *s);
