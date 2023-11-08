@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 18:26:57 by azhadan           #+#    #+#             */
-/*   Updated: 2023/11/08 00:03:22 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/11/08 13:34:50 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,47 +69,49 @@ struct				s_pipecmd
 	struct s_cmd	*right;
 };
 
-/*parsing.c*/
+/*builtins.c 4/5*/
+char 				*find_in_path(const char *cmd);
+int					main_builtins(char *buf);
+int 				ft_count_argc(char **ps, char *es);
+char				**dup_envp(char **envp);
+
+/*parsing.c 5/5*/
 struct s_cmd		*parsecmd(char *s);
 struct s_cmd		*parseline(char **ps, char *es);
 struct s_cmd		*parsepipe(char **ps, char *es);
 struct s_cmd		*parseredirs(struct s_cmd *cmd, char **ps, char *es);
 struct s_cmd		*parseexec(char **ps, char *es);
-int 				ft_count_argc(char **ps, char *es);
 
-/*cmnds2.c*/
+/*cmnds2.c 5/5*/
 int					getcmd(char *buf, int nbuf);
 void				create_pipe_process(struct s_pipecmd *pcmd, int fd_pipe[2]);
 struct s_cmd		*pipecmd(struct s_cmd *left, struct s_cmd *right);
 struct s_cmd		*redircmd(struct s_cmd *subcmd, char *file, int type);
 struct s_cmd		*execcmd(void);
 
-/*signals.c*/
+/*signals.c 5/5*/
 void				handle_c(int signum);
 int					builtins(struct s_execcmd *ecmd);
 void 				builtin_pwd();
 char				*trim_spaces(char *str);
 void				builtin_env(struct s_execcmd *ecmd);
-int					main_builtins(char *buf);
 
 
-/*get_token.c*/
+/*get_token.c 5/5*/
 int					is_whitespace(char c);
 int					gettoken(char **ps, char *es, char **q, char **eq);
 void				process_special_tokens(char **s, int *token);
 void				free_cmd(struct s_cmd *command);
-char				**dup_envp(char **envp);
 void				free_envp(char **envp);
 
 
-/*minishell.c*/
+/*minishell.c 4/4*/
 int					ft_cd(char *buf);
 int					peek(char **ps, char *es, char *toks);
 int					fork1(void);
 char				*mkcopy(char *s, char *es);
 
-/*cmnds1.c*/
-char 				*find_in_path(const char *cmd);
+/*cmnds1.c 5/5*/
 int					runcmd(struct s_cmd *cmd);
 void				execute_command(struct s_cmd *cmd);
 void				redirect_command(struct s_redircmd *rcmd);

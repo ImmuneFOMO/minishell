@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: idelibal <idelibal@student.42.fr>          +#+  +:+       +#+        */
+/*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 23:30:37 by idlbltv           #+#    #+#             */
-/*   Updated: 2023/11/03 19:38:26 by idelibal         ###   ########.fr       */
+/*   Updated: 2023/11/08 13:35:58 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,28 +69,6 @@ struct s_cmd	*parseredirs(struct s_cmd *cmd, char **ps, char *es)
 		}
 	}
 	return (cmd);
-}
-
-int	ft_count_argc(char **ps, char *es)
-{
-	char	*q;
-	char	*eq;
-	int		tok;
-	int		argc;
-
-	argc = 0;
-	while (!peek(ps, es, "|") && !peek(ps, es, ">") && !peek(ps, es, "<"))
-	{
-		if ((tok = gettoken(ps, es, &q, &eq)) == 0)
-			break ;
-		if (tok != 'a')
-		{
-			write(2, "syntax error\n", 12);
-			exit(-1);
-		}
-		argc++;
-	}
-	return (argc);
 }
 
 struct s_cmd	*parseexec(char **ps, char *es)

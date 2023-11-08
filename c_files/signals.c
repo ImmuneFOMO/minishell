@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/23 10:51:06 by azhadan           #+#    #+#             */
-/*   Updated: 2023/11/06 15:57:01 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/11/08 13:32:23 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,18 +82,6 @@ int builtin_unset(struct s_execcmd *ecmd)
         i++;
     }
     return (0);
-}
-
-int main_builtins(char *buf)
-{
-	char	*trimmed_buf;
-
-	trimmed_buf = trim_spaces(buf);
-	if (ft_cd(trimmed_buf))
-		return (1);
-	else if (!ft_strncmp(trimmed_buf, "exit", 5))
-		return (2);
-	return (0);
 }
 
 int	builtins(struct s_execcmd *ecmd)
