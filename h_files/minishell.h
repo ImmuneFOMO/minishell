@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 18:26:57 by azhadan           #+#    #+#             */
-/*   Updated: 2023/11/06 15:56:59 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/11/08 00:03:22 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,6 +98,9 @@ int					is_whitespace(char c);
 int					gettoken(char **ps, char *es, char **q, char **eq);
 void				process_special_tokens(char **s, int *token);
 void				free_cmd(struct s_cmd *command);
+char				**dup_envp(char **envp);
+void				free_envp(char **envp);
+
 
 /*minishell.c*/
 int					ft_cd(char *buf);

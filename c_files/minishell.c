@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 18:54:21 by azhadan           #+#    #+#             */
-/*   Updated: 2023/11/06 15:55:18 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/11/08 00:04:16 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,6 +85,7 @@ int	ft_cd(char *buf)
 int	main(int argc, char **argv, char **envp)
 {
 	char			*buf;
+	char			**copy_envp;
 	int				r;
 	struct s_cmd	*parse_cmd;
 	int				code;
@@ -93,6 +94,7 @@ int	main(int argc, char **argv, char **envp)
 	signal(SIGINT, handle_c);
 	(void)argc;
 	(void)argv;
+	copy_envp = dup_envp(envp);
 	while (1)
 	{
 		buf = readline("minishell: ");
@@ -112,7 +114,7 @@ int	main(int argc, char **argv, char **envp)
 		if (fork1() == 0)
 		{
 			parse_cmd = parsecmd(buf);
-			parse_cmd->envp = envp;
+			parse_cmd->envp = copy_envp;
 			runcmd(parse_cmd);
 			free_cmd(parse_cmd);
 			exit(0);
@@ -120,6 +122,7 @@ int	main(int argc, char **argv, char **envp)
 		wait(&r);
 		free(buf);
 	}
+	free_envp(copy_envp);
 	rl_clear_history();
 	return (0);
 }

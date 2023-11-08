@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_token.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: idelibal <idelibal@student.42.fr>          +#+  +:+       +#+        */
+/*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 23:30:14 by idlbltv           #+#    #+#             */
-/*   Updated: 2023/11/03 19:29:56 by idelibal         ###   ########.fr       */
+/*   Updated: 2023/11/08 00:02:56 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,5 +125,48 @@ void	free_cmd(struct s_cmd *command)
 		free_cmd(rcmd->cmd);
 		free(rcmd->file);
 	}
+	free_envp(command->envp);
 	free(command);
+}
+
+char **dup_envp(char **envp)
+{
+	int i;
+	int env_count;
+	char **new_envp;
+
+	i = 0;
+	env_count = 0;
+	while (envp[env_count])
+		env_count++;
+	new_envp = (char **)malloc(sizeof(char *) * (env_count + 1));
+	if (!new_envp)
+		return (NULL);
+	while (i < env_count)
+	{
+		new_envp[i] = ft_strdup(envp[i]);
+		if (!new_envp[i])
+		{
+			while (i > 0)
+				free(new_envp[--i]);
+			free(new_envp);
+			return (NULL);
+		}
+		i++;
+	}
+	new_envp[env_count] = NULL;
+	return(new_envp);
+}
+
+void free_envp(char **envp)
+{
+	int i;
+
+	i = 0;
+	if (envp)
+	{
+		while (envp[i])
+			free(envp[i++]);
+		free(envp);
+	}
 }
