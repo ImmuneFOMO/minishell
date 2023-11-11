@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/09 11:37:12 by azhadan           #+#    #+#             */
-/*   Updated: 2023/11/11 19:10:46 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/11/11 21:01:40 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,13 @@
 
 void builtin_export(char *var, char ***envp)
 {
-    char **var_val;
-    char *new_val;
-    int j;
+    char    **var_val;
+    char    *new_val;
+     char   *temp;
+    int     j;
 
+    if (ft_strchr(var, '=') == 0)
+        return;
     var_val = ft_split(var, '=');
     if (var_val == NULL || var_val[0] == NULL)
     {
@@ -37,7 +40,7 @@ void builtin_export(char *var, char ***envp)
         if (env_var_val[0] && strcmp(env_var_val[0], var_val[0]) == 0)
         {
             free((*envp)[j]);
-            char *temp = ft_strjoin(var_val[0], "=");
+            temp = ft_strjoin(var_val[0], "=");
             if (var_val[1])
                 new_val = ft_strjoin(temp, var_val[1]);
             else
@@ -77,7 +80,7 @@ void builtin_export(char *var, char ***envp)
         new_envp[j] = ft_strdup((*envp)[j]);
         j++;
     }
-    char *temp = ft_strjoin(var_val[0], "=");
+    temp = ft_strjoin(var_val[0], "=");
     if (var_val[1])
                 new_val = ft_strjoin(temp, var_val[1]);
             else
