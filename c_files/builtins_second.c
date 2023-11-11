@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/09 11:37:12 by azhadan           #+#    #+#             */
-/*   Updated: 2023/11/11 01:44:35 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/11/11 13:36:20 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,19 +61,18 @@ void builtin_export(char *var, char ***envp)
         j++;
     }
 
-    char **new_envp = malloc((j + 1) * sizeof(char *));
+    char **new_envp = malloc((j + 2) * sizeof(char *));
     if (!new_envp)
     {
         ft_free_strs(var_val);
         return;
     }
-    for (int i = 0; i < j; i++)
+    j = 0;
+    while ((*envp)[j] != NULL)
     {
-        new_envp[i] = ft_strdup((*envp)[i]);
+        new_envp[j] = ft_strdup((*envp)[j]);
+        j++;
     }
-    new_envp[j + 1] = NULL; // Setting the last element to NULL
-
-    // Creating the new variable
     char *temp = ft_strjoin(var_val[0], "=");
     char *new_val = ft_strjoin(temp, var_val[1]);
     free(temp);
@@ -87,14 +86,13 @@ void builtin_export(char *var, char ***envp)
 
     new_envp[j] = strdup(new_val);
     free(new_val);
-
     if (!new_envp[j])
     {
         free(new_envp);
         ft_free_strs(var_val);
         return;
     }
-
+     new_envp[j + 1] = NULL;
     j = 0;
     while ((*envp)[j])
         free((*envp)[j++]);
