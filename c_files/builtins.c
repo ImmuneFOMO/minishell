@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/08 13:30:35 by azhadan           #+#    #+#             */
-/*   Updated: 2023/11/08 23:25:11 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/11/11 01:37:59 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ int	ft_count_argc(char **ps, char *es)
 	return (argc);
 }
 
-int main_builtins(char *buf, char **envp)
+int main_builtins(char *buf, char ***envp)
 {
 	char	*trimmed_buf;
 	char	*var;
@@ -57,17 +57,29 @@ int main_builtins(char *buf, char **envp)
 			i = 0;
 			while (vars[i])
 			{
-				builtin_unset(vars[i], envp);
+				builtin_unset(vars[i], *envp);
 				i++;
 			}
+			ft_free_strs(vars);
+		}
+		return (1);
+	}
+	else if (!ft_strncmp(trimmed_buf, "export ", 7))
+	{
+		var = ft_strchr(trimmed_buf, ' ');
+		var++;
+		if (var)
+		{
+			vars = ft_split(var, ' ');
 			i = 0;
 			while (vars[i])
 			{
-				free(vars[i]);
+				builtin_export(vars[i] ,envp);
 				i++;
 			}
-			free(vars);
+			ft_free_strs(vars);
 		}
+		return (1);
 	}
 	return (0);
 }
