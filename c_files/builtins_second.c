@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/09 11:37:12 by azhadan           #+#    #+#             */
-/*   Updated: 2023/11/11 13:36:20 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/11/11 19:10:46 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,15 +15,16 @@
 void builtin_export(char *var, char ***envp)
 {
     char **var_val;
+    char *new_val;
     int j;
 
     var_val = ft_split(var, '=');
-    if (!var_val || !var_val[0] || !var_val[1])
+    if (var_val == NULL || var_val[0] == NULL)
     {
+        ft_printf("test\n");
         ft_free_strs(var_val);
         return;
     }
-
     j = 0;
     while ((*envp)[j])
     {
@@ -37,7 +38,10 @@ void builtin_export(char *var, char ***envp)
         {
             free((*envp)[j]);
             char *temp = ft_strjoin(var_val[0], "=");
-            char *new_val = ft_strjoin(temp, var_val[1]);
+            if (var_val[1])
+                new_val = ft_strjoin(temp, var_val[1]);
+            else
+                new_val = ft_strjoin(temp, "");
             free(temp);
             if (!new_val)
             {
@@ -74,7 +78,10 @@ void builtin_export(char *var, char ***envp)
         j++;
     }
     char *temp = ft_strjoin(var_val[0], "=");
-    char *new_val = ft_strjoin(temp, var_val[1]);
+    if (var_val[1])
+                new_val = ft_strjoin(temp, var_val[1]);
+            else
+                new_val = ft_strjoin(temp, "");
     free(temp);
 
     if (!new_val)
@@ -94,13 +101,10 @@ void builtin_export(char *var, char ***envp)
     }
      new_envp[j + 1] = NULL;
     j = 0;
-    while ((*envp)[j])
-        free((*envp)[j++]);
-    free(*envp);
+    ft_free_strs(*envp);
     *envp = new_envp;
     ft_free_strs(var_val);
 }
-
 
 void ft_free_strs(char **strs)
 {
