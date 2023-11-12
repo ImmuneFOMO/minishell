@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/09 11:37:12 by azhadan           #+#    #+#             */
-/*   Updated: 2023/11/11 21:01:40 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/11/12 19:58:14 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void builtin_export(char *var, char ***envp)
             ft_free_strs(var_val);
             return;
         }
-        if (env_var_val[0] && strcmp(env_var_val[0], var_val[0]) == 0)
+        if (env_var_val[0] && ft_strcmp(env_var_val[0], var_val[0]) == 0)
         {
             free((*envp)[j]);
             temp = ft_strjoin(var_val[0], "=");
@@ -94,7 +94,7 @@ void builtin_export(char *var, char ***envp)
         return;
     }
 
-    new_envp[j] = strdup(new_val);
+    new_envp[j] = ft_strdup(new_val);
     free(new_val);
     if (!new_envp[j])
     {
