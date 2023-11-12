@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmnds1.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: idelibal <idelibal@student.42.fr>          +#+  +:+       +#+        */
+/*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 23:30:46 by idlbltv           #+#    #+#             */
-/*   Updated: 2023/11/03 19:24:55 by idelibal         ###   ########.fr       */
+/*   Updated: 2023/11/08 13:33:52 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,52 +31,6 @@ int	runcmd(struct s_cmd *cmd)
 		exit(1);
 	}
 	return (1);
-}
-
-char	*find_in_path(const char *cmd)
-{
-	char			*path;
-	char			*temp;
-	char			*dir;
-	char			*full_path;
-	char			*temp_path;
-	struct stat		st;
-
-	path = getenv("PATH");
-	if (!path)
-		return (NULL);
-	temp = ft_strdup(path);
-	if (!temp)
-		return (NULL);
-	dir = ft_strtok(temp, ":");
-	while (dir)
-	{
-		temp_path = ft_strjoin(dir, "/");
-		if (!temp_path)
-		{
-			free(dir);
-			free(temp);
-			return (NULL);
-		}
-		full_path = ft_strjoin(temp_path, cmd);
-		free(temp_path);
-		if (!full_path)
-		{
-			free(dir);
-			free(temp);
-			return (NULL);
-		}
-		if (stat(full_path, &st) == 0 && (st.st_mode & S_IXUSR))
-		{
-			free(temp);
-			return (full_path);
-		}
-		free(full_path);
-		dir = ft_strtok(NULL, ":");
-	}
-	free(dir);
-	free(temp);
-	return (NULL);
 }
 
 void	execute_command(struct s_cmd *cmd)

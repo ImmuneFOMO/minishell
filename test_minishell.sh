@@ -34,4 +34,12 @@ test_command "echo test"
 test_command "echo -n test"
 test_command "pwd"
 test_command "env"
-test_command ""
+test_command "export MY_VARIABLE_TWO=\"two\" MY_VARIABLE=\"two\""
+test_command "env"
+test_command "unset MY_VARIABLE_TWO MY_VARIABLE"
+test_command "env"
+test_command "export test=\"test2\" | env"
+test_command "env"
+test_command "unset test"
+
+test
