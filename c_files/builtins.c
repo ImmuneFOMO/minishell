@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/08 13:30:35 by azhadan           #+#    #+#             */
-/*   Updated: 2023/11/11 01:37:59 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/11/12 02:18:53 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,12 +52,11 @@ int main_builtins(char *buf, char ***envp)
 		var++;
 		if (var)
 		{
-			var++;
 			vars = ft_split(var, ' ');
 			i = 0;
 			while (vars[i])
 			{
-				builtin_unset(vars[i], *envp);
+				builtin_unset(vars[i], envp);
 				i++;
 			}
 			ft_free_strs(vars);
@@ -74,7 +73,7 @@ int main_builtins(char *buf, char ***envp)
 			i = 0;
 			while (vars[i])
 			{
-				builtin_export(vars[i] ,envp);
+				builtin_export(vars[i] , envp);
 				i++;
 			}
 			ft_free_strs(vars);
@@ -159,18 +158,19 @@ char	*find_in_path(const char *cmd)
 	return (NULL);
 }
 
-void builtin_unset(char *var, char **envp) 
+void builtin_unset(char *var, char ***envp) 
 {
     int i;
     int j;
 
 	i = 0;
-    while (envp[i]) {
-        if (!ft_strncmp(envp[i], var, ft_strlen(var)) && envp[i][ft_strlen(var)] == '=') {
-            free(envp[i]);
+    while ((*envp)[i]) {
+        if (!ft_strncmp((*envp)[i], var, ft_strlen(var)) && (*envp)[i][ft_strlen(var)] == '=') 
+		{
+            free((*envp)[i]);
             j = i;
-            while (envp[j]) {
-                envp[j] = envp[j + 1];
+            while ((*envp)[j]) {
+                (*envp)[j] = (*envp)[j + 1];
                 j++;
             }
         } else {

@@ -22,6 +22,8 @@ fclean: clean
 	@rm -f $(NAME)
 
 re: fclean all
+	# clear
+	# ./minishell
 
 test: $(NAME)
 	@./test_minishell.sh

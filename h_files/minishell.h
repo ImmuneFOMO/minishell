@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 18:26:57 by azhadan           #+#    #+#             */
-/*   Updated: 2023/11/11 01:37:41 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/11/12 02:06:17 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ char 				*find_in_path(const char *cmd);
 int					main_builtins(char *buf, char ***envp);
 int 				ft_count_argc(char **ps, char *es);
 char				**dup_envp(char **envp);
-void				builtin_unset(char *var, char **envp);
+void				builtin_unset(char *var, char ***envp);
 
 /*builtns_second 2/5*/
 void				builtin_export(char *var, char ***envp);
