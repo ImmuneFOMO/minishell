@@ -71,10 +71,118 @@ struct s_cmd	*parseredirs(struct s_cmd *cmd, char **ps, char *es)
 	return (cmd);
 }
 
+int count_quotes(char *arg)
+{
+	int	quote_count;
+	int	i;
+	quote_count = 0;
+	i = 0;
+	while (arg[i] != '\0')
+	{
+		if (arg[i] == '\"')
+			quote_count++;
+		i++;
+	}
+	return (quote_count);
+}
+
+int count_quotes2(char *str)
+{
+    int	count;
+	int	i;
+	count = 0;
+	i = 0;
+    while (str[i] != '\0')
+    {
+        if (str[i] == '\"')
+            count++;
+		i++;
+    }
+    return count;
+}
+
+char *handle_odd_quotes(char *arg, int quote_count)
+{
+    char *new_arg;
+    new_arg = arg;
+    char extra_input[256];
+
+    while (quote_count % 2 != 0)
+    {
+        extra_input[0] = '\0';
+        ft_printf("dquote> \n");
+        read(0, extra_input, 256);
+        extra_input[strcspn(extra_input, "\n")] = 0;
+        quote_count += count_quotes2(extra_input); 
+
+        char *temp_arg = malloc(ft_strlen(new_arg) + ft_strlen(extra_input) + 1);
+        strcpy(temp_arg, new_arg);
+        strcat(temp_arg, extra_input);
+        free(new_arg);
+        new_arg = temp_arg;
+    }
+
+    return new_arg;
+}
+
+char *replace_env_vars(char *arg)
+{
+    char *result = malloc(ft_strlen(arg) + 1);
+    int in_quotes = 0;
+    int i = 0, j = 0;
+    while (arg[i] != '\0')
+    {
+        if (arg[i] == '\"')
+        {
+            in_quotes = !in_quotes;
+        }
+        else if (arg[i] == '$' && in_quotes)
+        {
+            char var_name[256];
+            int k = 0;
+            i++;
+            while (arg[i] != ' ' && arg[i] != '\"' && arg[i] != '\0')
+            {
+                var_name[k++] = arg[i++];
+            }
+            var_name[k] = '\0';
+            char *var_value = getenv(var_name);
+            if (var_value != NULL)
+            {
+                strcpy(result + j, var_value);
+                j += ft_strlen(var_value);
+            }
+        }
+        else
+        {
+            result[j++] = arg[i];
+        }
+        i++;
+    }
+    result[j] = '\0';
+    return result;
+}
+
+char *handle_double_quotes(char *arg)
+{
+	int		quote_count;
+	char	*new_arg;
+	char	*result;
+
+	quote_count = count_quotes(arg);
+	new_arg = handle_odd_quotes(arg, quote_count);
+	result = replace_env_vars(new_arg);
+	if (new_arg != arg)
+		free(new_arg);
+	return (result);
+}
+
 struct s_cmd	*parseexec(char **ps, char *es)
 {
 	char				*q;
 	char				*eq;
+	char				*arg;
+	char				*processed_arg;
 	int					tok;
 	int					argc;
 	struct s_execcmd	*cmd;
@@ -99,7 +207,9 @@ struct s_cmd	*parseexec(char **ps, char *es)
 			write(2, "syntax error\n", 12);
 			exit(-1);
 		}
-		cmd->argv[argc] = mkcopy(q, eq);
+		arg = mkcopy(q, eq);
+		processed_arg = handle_double_quotes(arg);
+		cmd->argv[argc] = processed_arg;
 		argc++;
 		ret = parseredirs(ret, ps, es);
 	}
