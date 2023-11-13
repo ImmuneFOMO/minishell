@@ -86,21 +86,43 @@ int count_quotes(char *arg)
 	return (quote_count);
 }
 
+int count_quotes2(char *str)
+{
+    int	count;
+	int	i;
+	count = 0;
+	i = 0;
+    while (str[i] != '\0')
+    {
+        if (str[i] == '\"')
+            count++;
+		i++;
+    }
+    return count;
+}
+
 char *handle_odd_quotes(char *arg, int quote_count)
 {
-	char *new_arg;
-	new_arg = arg;
-	if (quote_count % 2 != 0)
-	{
-		ft_printf("Please, add quote\n");
-		char extra_input[256];
-		read(0, extra_input, 256);
-		extra_input[strcspn(extra_input, "\n")] = 0;
-		new_arg = malloc(ft_strlen(arg) + ft_strlen(extra_input) + 1);
-		strcpy(new_arg, arg);
-		strcat(new_arg, extra_input);
-	}
-	return new_arg;
+    char *new_arg;
+    new_arg = arg;
+    char extra_input[256];
+
+    while (quote_count % 2 != 0)
+    {
+        extra_input[0] = '\0';
+        ft_printf("dquote> \n");
+        read(0, extra_input, 256);
+        extra_input[strcspn(extra_input, "\n")] = 0;
+        quote_count += count_quotes2(extra_input); 
+
+        char *temp_arg = malloc(ft_strlen(new_arg) + ft_strlen(extra_input) + 1);
+        strcpy(temp_arg, new_arg);
+        strcat(temp_arg, extra_input);
+        free(new_arg);
+        new_arg = temp_arg;
+    }
+
+    return new_arg;
 }
 
 char *replace_env_vars(char *arg)
