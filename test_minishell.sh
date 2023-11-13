@@ -41,5 +41,9 @@ test_command "env"
 test_command "export test=\"test2\" | env"
 test_command "env"
 test_command "unset test"
+test_command "echo \"test\""
+test_command "echo \"test \"test2\"\""
+test_command "echo \"$PATH\""
+test_command "echo \"$HOME\""
 
 test
