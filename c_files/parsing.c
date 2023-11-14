@@ -71,37 +71,22 @@ struct s_cmd	*parseredirs(struct s_cmd *cmd, char **ps, char *es)
 	return (cmd);
 }
 
-int count_quotes(char *arg)
+int count_quotes(char *arg, char quote_type)
 {
-	int	quote_count;
-	int	i;
-	quote_count = 0;
-	i = 0;
-	while (arg[i] != '\0')
-	{
-		if (arg[i] == '\"')
-			quote_count++;
-		i++;
-	}
-	return (quote_count);
-}
-
-int count_quotes2(char *str)
-{
-    int	count;
-	int	i;
-	count = 0;
-	i = 0;
-    while (str[i] != '\0')
+    int	quote_count;
+    int	i;
+    quote_count = 0;
+    i = 0;
+    while (arg[i] != '\0')
     {
-        if (str[i] == '\"')
-            count++;
-		i++;
+        if (arg[i] == quote_type)
+            quote_count++;
+        i++;
     }
-    return count;
+    return (quote_count);
 }
 
-char *handle_odd_quotes(char *arg, int quote_count)
+char *handle_odd_quotes(char *arg, int quote_count, char quote_type)
 {
     char *new_arg;
     new_arg = arg;
@@ -110,10 +95,10 @@ char *handle_odd_quotes(char *arg, int quote_count)
     while (quote_count % 2 != 0)
     {
         extra_input[0] = '\0';
-        ft_printf("dquote> \n");
+        ft_printf("quote> \n");
         read(0, extra_input, 256);
         extra_input[strcspn(extra_input, "\n")] = 0;
-        quote_count += count_quotes2(extra_input); 
+        quote_count += count_quotes(extra_input, quote_type); 
 
         char *temp_arg = malloc(ft_strlen(new_arg) + ft_strlen(extra_input) + 1);
         strcpy(temp_arg, new_arg);
@@ -125,23 +110,23 @@ char *handle_odd_quotes(char *arg, int quote_count)
     return new_arg;
 }
 
-char *replace_env_vars(char *arg)
+char *replace_env_vars(char *arg, char quote_type)
 {
     char *result = malloc(ft_strlen(arg) + 1);
     int in_quotes = 0;
     int i = 0, j = 0;
     while (arg[i] != '\0')
     {
-        if (arg[i] == '\"')
+        if (arg[i] == quote_type)
         {
             in_quotes = !in_quotes;
         }
-        else if (arg[i] == '$' && in_quotes)
+        else if (arg[i] == '$' && in_quotes && quote_type == '\"')
         {
             char var_name[256];
             int k = 0;
             i++;
-            while (arg[i] != ' ' && arg[i] != '\"' && arg[i] != '\0')
+            while (arg[i] != ' ' && arg[i] != quote_type && arg[i] != '\0')
             {
                 var_name[k++] = arg[i++];
             }
@@ -163,18 +148,18 @@ char *replace_env_vars(char *arg)
     return result;
 }
 
-char *handle_double_quotes(char *arg)
+char *handle_quotes(char *arg, char quote_type)
 {
-	int		quote_count;
-	char	*new_arg;
-	char	*result;
+    int		quote_count;
+    char	*new_arg;
+    char	*result;
 
-	quote_count = count_quotes(arg);
-	new_arg = handle_odd_quotes(arg, quote_count);
-	result = replace_env_vars(new_arg);
-	if (new_arg != arg)
-		free(new_arg);
-	return (result);
+    quote_count = count_quotes(arg, quote_type);
+    new_arg = handle_odd_quotes(arg, quote_count, quote_type);
+    result = replace_env_vars(new_arg, quote_type);
+    if (new_arg != arg)
+        free(new_arg);
+    return (result);
 }
 
 struct s_cmd	*parseexec(char **ps, char *es)
@@ -208,7 +193,8 @@ struct s_cmd	*parseexec(char **ps, char *es)
 			exit(-1);
 		}
 		arg = mkcopy(q, eq);
-		processed_arg = handle_double_quotes(arg);
+		processed_arg = handle_quotes(arg, '\''); // обработка одинарных кавычек
+        processed_arg = handle_quotes(processed_arg, '\"'); // обработка двойных кавычек
 		cmd->argv[argc] = processed_arg;
 		argc++;
 		ret = parseredirs(ret, ps, es);
