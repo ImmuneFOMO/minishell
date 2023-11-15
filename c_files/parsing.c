@@ -103,7 +103,8 @@ char *handle_odd_quotes(char *arg, int quote_count, char quote_type)
         char *temp_arg = malloc(ft_strlen(new_arg) + ft_strlen(extra_input) + 1);
         strcpy(temp_arg, new_arg);
         strcat(temp_arg, extra_input);
-        free(new_arg);
+        if (new_arg != arg)
+            free(new_arg);
         new_arg = temp_arg;
     }
 
@@ -193,9 +194,13 @@ struct s_cmd	*parseexec(char **ps, char *es)
 			exit(-1);
 		}
 		arg = mkcopy(q, eq);
-		processed_arg = handle_quotes(arg, '\''); // обработка одинарных кавычек
-        processed_arg = handle_quotes(processed_arg, '\"'); // обработка двойных кавычек
+		processed_arg = handle_quotes(arg, '\'');
+		char *temp = processed_arg;
+		processed_arg = handle_quotes(processed_arg, '\"');
 		cmd->argv[argc] = processed_arg;
+		if (temp != arg)
+    		free(temp);
+		free(arg); 
 		argc++;
 		ret = parseredirs(ret, ps, es);
 	}
