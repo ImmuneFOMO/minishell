@@ -6,37 +6,39 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/23 20:22:16 by idelibal          #+#    #+#             */
-/*   Updated: 2023/11/13 14:08:53 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/11/15 01:22:21 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../h_files/minishell.h"
 
-void	create_pipe_process(struct s_pipecmd *pcmd, int fd_pipe[2])
-{
-	int	p_id;
+void create_pipe_process(struct s_pipecmd *pcmd, int fd_pipe[2]) {
+    int p_id;
+    int status;
 
-	p_id = fork();
-	if (p_id < 0)
+    p_id = fork();
+    if (p_id < 0) 
 	{
-		write(2, "fork has failed\n", 14);
-		exit(0);
-	}
-	else if (p_id == 0)
+        write(2, "fork has failed\n", 16);
+        exit(1);
+    } 
+	else if (p_id == 0) 
 	{
-		close(fd_pipe[1]);
-		dup2(fd_pipe[0], STDIN_FILENO);
-		runcmd(pcmd->right);
-		close(fd_pipe[0]);
-	}
-	else
+        close(fd_pipe[0]);
+        dup2(fd_pipe[1], STDOUT_FILENO);
+        close(fd_pipe[1]);
+        runcmd(pcmd->left);
+		free_cmd((struct s_cmd *)pcmd);
+        exit(0);
+    } 
+	else 
 	{
-		close(fd_pipe[0]);
-		dup2(fd_pipe[1], STDOUT_FILENO);
-		runcmd(pcmd->left);
-		close(fd_pipe[1]);
-		wait(&p_id);
-	}
+        close(fd_pipe[1]);
+        dup2(fd_pipe[0], STDIN_FILENO);
+        close(fd_pipe[0]);
+        waitpid(p_id, &status, 0);
+        runcmd(pcmd->right);
+    }
 }
 
 int	getcmd(char *buf, int nbuf)

@@ -22,8 +22,8 @@ fclean: clean
 	@rm -f $(NAME)
 
 re: fclean all
-	# clear
-	# ./minishell
+	@#clear
+	@#valgrind --leak-check=full --show-leak-kinds=all --suppressions=readline.supp ./minishell 
 
 test: $(NAME)
 	@./test_minishell.sh
