@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 18:54:21 by azhadan           #+#    #+#             */
-/*   Updated: 2023/11/12 02:06:40 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/11/12 23:55:55 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,8 +109,6 @@ int	main(int argc, char **argv, char **envp)
 		code = main_builtins(buf, &copy_envp);
 		if (code == 2)
 			break ;
-		else if (code == 1)
-			continue ;
 		if (fork1() == 0)
 		{
 			parse_cmd = parsecmd(buf);

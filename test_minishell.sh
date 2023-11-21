@@ -15,9 +15,9 @@ TEST_OUTPUT="test_output_$(date +%Y%m%d_%H%M%S).txt"
 function test_command() {
     command=$1
     COLOR=${COLORS[$RANDOM % ${#COLORS[@]}]}
-    echo -e "${COLOR}Testing command: $command${NC}" | tee -a "$TEST_OUTPUT"
-    echo "$command" | valgrind --leak-check=full --show-leak-kinds=all --suppressions=readline.supp ./minishell 2>&1 | tee -a "$TEST_OUTPUT"
-    echo -e "${COLOR}------------------------------------------------------${NC}" | tee -a "$TEST_OUTPUT"
+    echo -e "${COLOR}Testing command: $command${NC}" #| tee -a "$TEST_OUTPUT"
+    echo "$command" | valgrind --leak-check=full --show-leak-kinds=all --suppressions=readline.supp ./minishell 2>&1 #| tee -a "$TEST_OUTPUT"
+    echo -e "${COLOR}------------------------------------------------------${NC}" #| tee -a "$TEST_OUTPUT"
 }
 
 make re

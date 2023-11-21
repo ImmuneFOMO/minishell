@@ -22,10 +22,13 @@ fclean: clean
 	@rm -f $(NAME)
 
 re: fclean all
-	# clear
-	# ./minishell
 
-test: $(NAME)
+test:
+	make re
+	clear
+	valgrind --leak-check=full --show-leak-kinds=all --suppressions=readline.supp -s ./minishell
+
+tests: $(NAME)
 	@./test_minishell.sh
 
 .PHONY: re, fclean, clean, all test
