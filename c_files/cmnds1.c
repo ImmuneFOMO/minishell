@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 23:30:46 by idlbltv           #+#    #+#             */
-/*   Updated: 2023/11/13 14:13:40 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/11/15 00:56:54 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,9 @@ void	execute_command(struct s_cmd *cmd)
 	if (ecmd->argv[0] == 0)
 		exit(0);
 	if (builtins(ecmd))
-		exit(0);
+	{
+		return ;
+	}
 	full_path = find_in_path(ecmd->argv[0]);
 	if (full_path)
 	{
