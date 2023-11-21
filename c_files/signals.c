@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/23 10:51:06 by azhadan           #+#    #+#             */
-/*   Updated: 2023/11/13 14:14:45 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/11/21 00:29:31 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,8 @@ void	builtin_env(struct s_execcmd *ecmd)
 	int	i;
 
 	i = 0;
+	if (!ecmd || !ecmd->envp)
+		return ;
 	while (ecmd->envp[i])
 	{
 		ft_printf("%s\n", ecmd->envp[i]);
