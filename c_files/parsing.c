@@ -6,7 +6,7 @@
 /*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 23:30:37 by idlbltv           #+#    #+#             */
-/*   Updated: 2023/11/21 23:02:05 by root             ###   ########.fr       */
+/*   Updated: 2023/11/22 18:34:16 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,41 +115,48 @@ char	*handle_odd_quotes(char *arg, int quote_count, char quote_type)
 	return (new_arg);
 }
 
-char    *replace_env_vars(char *arg, char quote_type)
+char *handle_env_var(char *arg, int *i)
+{
+    char var_name[256];
+    int k = 0;
+    (*i)++;
+    while (isalnum(arg[*i]) || arg[*i] == '_')
+        var_name[k++] = arg[(*i)++];
+    var_name[k] = '\0';
+    return getenv(var_name);
+}
+
+char *replace_env_vars(char *arg, char quote_type)
 {
     char *result;
-    char temp[4096]; // temporary buffer
+    char temp[4096];
     int in_quotes = 0;
     int i = 0, j = 0;
     while (arg[i] != '\0')
     {
         if (arg[i] == quote_type)
-            in_quotes = !in_quotes;
-        else if (arg[i] == '$' && in_quotes && quote_type == '\"')
         {
-            char var_name[256];
-            int k = 0;
+            in_quotes = !in_quotes;
             i++;
-            while (arg[i] != ' ' && arg[i] != quote_type && arg[i] != '\0')
-                var_name[k++] = arg[i++];
-            var_name[k] = '\0';
-            char *var_value = getenv(var_name);
+            continue ;
+        }
+        else if (arg[i] == '$' && ((!in_quotes && quote_type == '\'') || (in_quotes && quote_type == '\"')))
+        {
+            char *var_value = handle_env_var(arg, &i);
             if (var_value != NULL)
             {
                 ft_strcpy(temp + j, var_value);
                 j += ft_strlen(var_value);
             }
+            continue ;
         }
-        else
-            temp[j++] = arg[i];
-        i++;
+        temp[j++] = arg[i++];
     }
     temp[j] = '\0';
 
-    // Now allocate memory for the result
     result = malloc(ft_strlen(temp) + 1);
     ft_strcpy(result, temp);
-    return result;
+    return (result);
 }
 
 char	*handle_quotes(char *arg, char quote_type)
