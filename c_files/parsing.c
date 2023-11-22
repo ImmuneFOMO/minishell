@@ -6,7 +6,7 @@
 /*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 23:30:37 by idlbltv           #+#    #+#             */
-/*   Updated: 2023/11/22 18:34:16 by root             ###   ########.fr       */
+/*   Updated: 2023/11/22 20:36:23 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,37 +126,69 @@ char *handle_env_var(char *arg, int *i)
     return getenv(var_name);
 }
 
-char *replace_env_vars(char *arg, char quote_type)
+int	calculate_buffer_size(char *arg, char quote_type, int in_quotes)
 {
-    char *result;
-    char temp[4096];
-    int in_quotes = 0;
-    int i = 0, j = 0;
-    while (arg[i] != '\0')
-    {
-        if (arg[i] == quote_type)
-        {
-            in_quotes = !in_quotes;
-            i++;
-            continue ;
-        }
-        else if (arg[i] == '$' && ((!in_quotes && quote_type == '\'') || (in_quotes && quote_type == '\"')))
-        {
-            char *var_value = handle_env_var(arg, &i);
-            if (var_value != NULL)
-            {
-                ft_strcpy(temp + j, var_value);
-                j += ft_strlen(var_value);
-            }
-            continue ;
-        }
-        temp[j++] = arg[i++];
-    }
-    temp[j] = '\0';
+	char	*var_value;
+	int		i;
+	int		size;
 
-    result = malloc(ft_strlen(temp) + 1);
-    ft_strcpy(result, temp);
-    return (result);
+	i = 0;
+	size = 0;
+	while (arg[i] != '\0')
+	{
+		if (arg[i] == quote_type)
+		{
+			in_quotes = !in_quotes;
+			i++;
+			continue ;
+		}
+		else if (arg[i] == '$' && ((!in_quotes && quote_type == '\'') || (in_quotes && quote_type == '\"')))
+		{
+			var_value = handle_env_var(arg, &i);
+			if (var_value != NULL)
+				size += ft_strlen(var_value);
+			continue ;
+		}
+		size++;
+		i++;
+	}
+	return (size + 1);
+}
+
+char	*replace_env_vars(char *arg, char quote_type, int in_quotes)
+{
+	char	*var_value;
+	char	*result;
+	int		size;
+	int		i;
+	int		j;
+
+	size = calculate_buffer_size(arg, quote_type, 0);
+	result = malloc(size);
+	i = 0;
+	j = 0;
+	while (arg[i] != '\0')
+	{
+		if (arg[i] == quote_type)
+		{
+			in_quotes = !in_quotes;
+			i++;
+			continue;
+		}
+		else if (arg[i] == '$' && ((!in_quotes && quote_type == '\'') || (in_quotes && quote_type == '\"')))
+		{
+			var_value = handle_env_var(arg, &i);
+			if (var_value != NULL)
+			{
+				ft_strcpy(result + j, var_value);
+				j += ft_strlen(var_value);
+			}
+			continue;
+		}
+		result[j++] = arg[i++];
+	}
+	result[j] = '\0';
+	return (result);
 }
 
 char	*handle_quotes(char *arg, char quote_type)
@@ -167,7 +199,7 @@ char	*handle_quotes(char *arg, char quote_type)
 
 	quote_count = count_quotes(arg, quote_type);
 	new_arg = handle_odd_quotes(arg, quote_count, quote_type);
-	result = replace_env_vars(new_arg, quote_type);
+	result = replace_env_vars(new_arg, quote_type, 0);
 	if (new_arg != arg)
 		free(new_arg);
 	return (result);
