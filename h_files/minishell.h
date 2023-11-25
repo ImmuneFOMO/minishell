@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 18:26:57 by azhadan           #+#    #+#             */
-/*   Updated: 2023/11/12 19:58:37 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/11/25 17:15:10 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,5 +122,8 @@ void				execute_command(struct s_cmd *cmd);
 void				redirect_command(struct s_redircmd *rcmd);
 void				pipe_command(struct s_pipecmd *pcmd);
 void				setup_pipe(int fd_pipe[2]);
+
+/*help_function.c 1/5*/
+int					check_vars(char **vars);
 
 #endif
