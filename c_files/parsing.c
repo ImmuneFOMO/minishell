@@ -6,7 +6,7 @@
 /*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 23:30:37 by idlbltv           #+#    #+#             */
-/*   Updated: 2023/11/27 22:46:23 by root             ###   ########.fr       */
+/*   Updated: 2023/11/28 23:21:08 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,9 +35,26 @@ struct s_cmd	*parseline(char **ps, char *es)
 {
 	struct s_cmd	*cmd;
 
-	cmd = parsepipe(ps, es);
+	cmd = parsesemicolon(ps, es);
 	return (cmd);
 }
+
+struct s_cmd *parsesemicolon(char **ps, char *es)
+{
+    struct s_cmd    *cmd;
+    int             tok;
+
+    cmd = parsepipe(ps, es);
+    if (peek(ps, es, ";"))
+    {
+        tok = gettoken(ps, es, 0, 0);
+        if (tok == ';' && peek(ps, es, ";"))
+            handle_error("syntax error near unexpected token `;;'\n");
+        cmd = semicoloncmd(cmd, parsesemicolon(ps, es));
+    }
+    return cmd;
+}
+
 
 struct s_cmd	*parsepipe(char **ps, char *es)
 {
@@ -233,7 +250,7 @@ struct s_cmd	*parseexec(char **ps, char *es)
 	argc = ft_count_argc(&ps_clone, es_clone);
 	cmd->argv = (char **)malloc(sizeof(char *) * (argc + 1));
 	argc = 0;
-	while (!peek(ps, es, "|"))
+	while (!peek(ps, es, "|") && !peek(ps, es, ";"))
 	{
 		if ((tok = gettoken(ps, es, &q, &eq)) == 0)
 			break ;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_token.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
+/*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 23:30:14 by idlbltv           #+#    #+#             */
-/*   Updated: 2023/11/11 01:32:57 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/11/28 22:22:44 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@ void	process_special_tokens(char **s, int *token)
 	if (*token == '\0')
 		*token = '\0';
 	else if (*token == '|')
+		(*s)++;
+	else if (*token == ';')
 		(*s)++;
 	else if (*token == '>')
 	{
