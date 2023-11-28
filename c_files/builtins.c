@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
+/*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/08 13:30:35 by azhadan           #+#    #+#             */
-/*   Updated: 2023/11/19 13:39:58 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/11/28 22:26:57 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int	ft_count_argc(char **ps, char *es)
 	int		argc;
 
 	argc = 0;
-	while (!peek(ps, es, "|") && !peek(ps, es, ">") && !peek(ps, es, "<"))
+	while (!peek(ps, es, "|") && !peek(ps, es, ">") && !peek(ps, es, "<") && !peek(ps, es, ";"))
 	{
 		if ((tok = gettoken(ps, es, &q, &eq)) == 0)
 			break ;

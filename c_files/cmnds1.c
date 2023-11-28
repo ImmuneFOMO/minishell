@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmnds1.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
+/*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 23:30:46 by idlbltv           #+#    #+#             */
-/*   Updated: 2023/11/15 00:56:54 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/11/28 22:27:28 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,11 @@ int	runcmd(struct s_cmd *cmd)
 		redirect_command((struct s_redircmd *)cmd);
 	else if (type == '|')
 		pipe_command((struct s_pipecmd *)cmd);
+	else if (type == ';')
+	{
+		runcmd(((struct s_semicoloncmd *)cmd)->left);
+		runcmd(((struct s_semicoloncmd *)cmd)->right);
+	}
 	else
 	{
 		write(2, "unknown runcmd\n", 15);
