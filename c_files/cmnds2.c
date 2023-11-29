@@ -102,6 +102,7 @@ struct s_cmd *semicoloncmd(struct s_cmd *left, struct s_cmd *right)
     struct s_semicoloncmd *cmd;
 
     cmd = malloc(sizeof(*cmd));
+	ft_memset(cmd, 0, sizeof(*cmd));
     cmd->type = ';';
     cmd->left = left;
     cmd->right = right;
