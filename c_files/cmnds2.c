@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/23 20:22:16 by idelibal          #+#    #+#             */
-/*   Updated: 2023/11/15 01:22:21 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/11/29 21:03:40 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ void create_pipe_process(struct s_pipecmd *pcmd, int fd_pipe[2]) {
         dup2(fd_pipe[0], STDIN_FILENO);
         close(fd_pipe[0]);
         waitpid(p_id, &status, 0);
+		pcmd->right->envp = pcmd->envp;
         runcmd(pcmd->right);
     }
 }
