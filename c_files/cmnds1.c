@@ -6,7 +6,7 @@
 /*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 23:30:46 by idlbltv           #+#    #+#             */
-/*   Updated: 2023/11/28 22:27:28 by root             ###   ########.fr       */
+/*   Updated: 2023/11/29 21:30:50 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,7 @@ void	redirect_command(struct s_redircmd *rcmd)
 		perror("dup2");
 		exit(0);
 	}
+	rcmd->cmd->envp = rcmd->envp;
 	runcmd(rcmd->cmd);
 	close(fd_redirect);
 }
