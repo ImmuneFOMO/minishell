@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
+/*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 18:26:57 by azhadan           #+#    #+#             */
 /*   Updated: 2023/11/25 17:15:10 by azhadan          ###   ########.fr       */
@@ -69,6 +69,15 @@ struct				s_pipecmd
 	struct s_cmd	*right;
 };
 
+struct				s_semicoloncmd
+{
+	int				type;
+	char			**envp;
+	struct s_cmd	*left;
+	struct s_cmd	*right;
+};
+
+
 /*builtins.c 5/5*/
 char 				*find_in_path(const char *cmd);
 int					main_builtins(char *buf, char ***envp);
@@ -80,19 +89,21 @@ void				builtin_unset(char *var, char ***envp);
 void				builtin_export(char *var, char ***envp);
 void				ft_free_strs(char **strs);
 
-/*parsing.c 5/5*/
+/*parsing.c 6/6*/
 struct s_cmd		*parsecmd(char *s);
 struct s_cmd		*parseline(char **ps, char *es);
 struct s_cmd		*parsepipe(char **ps, char *es);
 struct s_cmd		*parseredirs(struct s_cmd *cmd, char **ps, char *es);
 struct s_cmd		*parseexec(char **ps, char *es);
+struct s_cmd		*parsesemicolon(char **ps, char *es);
 
-/*cmnds2.c 5/5*/
+/*cmnds2.c 6/6*/
 int					getcmd(char *buf, int nbuf);
 void				create_pipe_process(struct s_pipecmd *pcmd, int fd_pipe[2]);
 struct s_cmd		*pipecmd(struct s_cmd *left, struct s_cmd *right);
 struct s_cmd		*redircmd(struct s_cmd *subcmd, char *file, int type);
 struct s_cmd		*execcmd(void);
+struct s_cmd		*semicoloncmd(struct s_cmd *left, struct s_cmd *right);
 
 /*signals.c 5/5*/
 void				handle_c(int signum);

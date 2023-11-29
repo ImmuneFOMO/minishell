@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
+/*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/08 13:30:35 by azhadan           #+#    #+#             */
 /*   Updated: 2023/11/25 17:17:16 by azhadan          ###   ########.fr       */
@@ -20,7 +20,7 @@ int	ft_count_argc(char **ps, char *es)
 	int		argc;
 
 	argc = 0;
-	while (!peek(ps, es, "|") && !peek(ps, es, ">") && !peek(ps, es, "<"))
+	while (!peek(ps, es, "|") && !peek(ps, es, ">") && !peek(ps, es, "<") && !peek(ps, es, ";"))
 	{
 		if ((tok = gettoken(ps, es, &q, &eq)) == 0)
 			break ;

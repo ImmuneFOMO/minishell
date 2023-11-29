@@ -6,11 +6,17 @@
 /*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 23:30:37 by idlbltv           #+#    #+#             */
-/*   Updated: 2023/11/24 23:52:02 by root             ###   ########.fr       */
+/*   Updated: 2023/11/28 23:21:08 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../h_files/minishell.h"
+
+void	handle_error(const char *error_message)
+{
+	write(2, error_message, ft_strlen(error_message));
+	exit(-1);
+}
 
 struct s_cmd	*parsecmd(char *s)
 {
@@ -21,10 +27,7 @@ struct s_cmd	*parsecmd(char *s)
 	cmd = parseline(&s, es);
 	peek(&s, es, "");
 	if (s != es)
-	{
-		write(2, "leftovers: %s\n", 14);
-		exit(-1);
-	}
+		handle_error("leftovers: %s\n");
 	return (cmd);
 }
 
@@ -32,9 +35,26 @@ struct s_cmd	*parseline(char **ps, char *es)
 {
 	struct s_cmd	*cmd;
 
-	cmd = parsepipe(ps, es);
+	cmd = parsesemicolon(ps, es);
 	return (cmd);
 }
+
+struct s_cmd *parsesemicolon(char **ps, char *es)
+{
+    struct s_cmd    *cmd;
+    int             tok;
+
+    cmd = parsepipe(ps, es);
+    if (peek(ps, es, ";"))
+    {
+        tok = gettoken(ps, es, 0, 0);
+        if (tok == ';' && peek(ps, es, ";"))
+            handle_error("syntax error near unexpected token `;;'\n");
+        cmd = semicoloncmd(cmd, parsesemicolon(ps, es));
+    }
+    return cmd;
+}
+
 
 struct s_cmd	*parsepipe(char **ps, char *es)
 {
@@ -45,10 +65,7 @@ struct s_cmd	*parsepipe(char **ps, char *es)
 	{
 		gettoken(ps, es, 0, 0);
 		if (peek(ps, es, "|") || *ps == es)
-		{
-			write(2, "syntax error near unexpected token `|'\n", 39);
-			exit(-1);
-        }
+				handle_error("syntax error near unexpected token `|'\n");
 		cmd = pipecmd(cmd, parsepipe(ps, es));
 	}
 	return (cmd);
@@ -56,32 +73,26 @@ struct s_cmd	*parsepipe(char **ps, char *es)
 
 struct	s_cmd *parseredirs(struct s_cmd *cmd, char **ps, char *es)
 {
-    int		tok;
-    char	*q;
-    char	*eq;
-
-    while (peek(ps, es, "<>"))
-    {
-        tok = gettoken(ps, es, 0, 0);
-        if (peek(ps, es, ">")) {
-            gettoken(ps, es, 0, 0);
-            if (peek(ps, es, ">")) {
-                write(2, "syntax error near unexpected token `>>'\n", 41);
-                exit(-1);
-            } else {
-                write(2, "syntax error near unexpected token `>'\n", 40);
-                exit(-1);
-            }
-        }
-        if (gettoken(ps, es, &q, &eq) != 'a')
-        {
-            write(2, "syntax error near unexpected token `newline'\n", 45);
-            exit(-1);
-        }
-        if (tok == '<' || tok == '>')
-            cmd = redircmd(cmd, mkcopy(q, eq), tok);
-    }
-    return (cmd);
+	int     tok;
+	int     next_tok;
+	char    *q;
+	char    *eq;
+	while (peek(ps, es, "<>"))
+	{
+		tok = gettoken(ps, es, 0, 0);
+		if (peek(ps, es, ">")) {
+			next_tok = gettoken(ps, es, 0, 0);
+			if (next_tok == '>')
+				handle_error("syntax error near unexpected token `>'\n");
+			else 
+				handle_error("syntax error near unexpected token `>>'\n");
+		}
+		if (gettoken(ps, es, &q, &eq) != 'a')
+			handle_error("syntax error near unexpected token `newline'\n");
+		if (tok == '<' || tok == '>')
+			cmd = redircmd(cmd, mkcopy(q, eq), tok);
+	}
+	return (cmd);
 }
 
 int	count_quotes(char *arg, char quote_type)
@@ -239,15 +250,12 @@ struct s_cmd	*parseexec(char **ps, char *es)
 	argc = ft_count_argc(&ps_clone, es_clone);
 	cmd->argv = (char **)malloc(sizeof(char *) * (argc + 1));
 	argc = 0;
-	while (!peek(ps, es, "|"))
+	while (!peek(ps, es, "|") && !peek(ps, es, ";"))
 	{
 		if ((tok = gettoken(ps, es, &q, &eq)) == 0)
 			break ;
 		if (tok != 'a')
-		{
-			write(2, "syntax error\n", 12);
-			exit(-1);
-		}
+			handle_error("syntax\n");
 		arg = mkcopy(q, eq);
 		processed_arg = handle_quotes(arg, '\'');
 		char *temp = processed_arg;
