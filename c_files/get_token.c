@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_token.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 23:30:14 by idlbltv           #+#    #+#             */
-/*   Updated: 2023/11/29 22:40:00 by root             ###   ########.fr       */
+/*   Updated: 2023/11/30 18:40:50 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,6 @@ void	free_cmd(struct s_cmd *command)
 		return ;
 	if (command->type == ' ')
 	{
-		/*Handle execcmd*/
 		ecmd = (struct s_execcmd *)command;
 		while (ecmd->argv[i])
 		{
@@ -117,7 +116,6 @@ void	free_cmd(struct s_cmd *command)
 	}
 	else if (command->type == '|')
 	{
-		/*Handle pipecmd*/
 		pcmd = (struct s_pipecmd *)command;
 		free_cmd(pcmd->left);
 		free_cmd(pcmd->right);
@@ -134,7 +132,8 @@ void	free_cmd(struct s_cmd *command)
 		free_cmd(scmd->left);
 		free_cmd(scmd->right);
 	}
-	free_envp(command->envp);
+	if (command->envp)
+		free_envp(command->envp);
 	free(command);
 }
 
@@ -146,7 +145,10 @@ void free_envp(char **envp)
 	if (envp)
 	{
 		while (envp[i])
-			free(envp[i++]);
+		{
+			free(envp[i]);
+			i++;
+		}
 		free(envp);
 	}
 }

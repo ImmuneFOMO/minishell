@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmnds1.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 23:30:46 by idlbltv           #+#    #+#             */
-/*   Updated: 2023/11/29 21:30:50 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/11/30 18:38:04 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ void	redirect_command(struct s_redircmd *rcmd)
 		perror("dup2");
 		exit(0);
 	}
-	rcmd->cmd->envp = rcmd->envp;
+	rcmd->cmd->envp = dup_envp(rcmd->envp);
 	runcmd(rcmd->cmd);
 	close(fd_redirect);
 }

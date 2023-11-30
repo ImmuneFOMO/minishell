@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/09 11:37:12 by azhadan           #+#    #+#             */
-/*   Updated: 2023/11/12 20:44:57 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/11/30 17:52:17 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@ void builtin_export(char *var, char ***envp)
     var_val = ft_split(var, '=');
     if (var_val == NULL || var_val[0] == NULL)
     {
-        ft_printf("test\n");
         ft_free_strs(var_val);
         return;
     }
