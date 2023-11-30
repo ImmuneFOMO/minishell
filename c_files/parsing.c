@@ -6,7 +6,7 @@
 /*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 23:30:37 by idlbltv           #+#    #+#             */
-/*   Updated: 2023/11/28 23:21:08 by root             ###   ########.fr       */
+/*   Updated: 2023/11/29 21:40:43 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,20 +41,19 @@ struct s_cmd	*parseline(char **ps, char *es)
 
 struct s_cmd *parsesemicolon(char **ps, char *es)
 {
-    struct s_cmd    *cmd;
-    int             tok;
+	struct s_cmd    *cmd;
+	int             tok;
 
-    cmd = parsepipe(ps, es);
-    if (peek(ps, es, ";"))
-    {
-        tok = gettoken(ps, es, 0, 0);
-        if (tok == ';' && peek(ps, es, ";"))
-            handle_error("syntax error near unexpected token `;;'\n");
-        cmd = semicoloncmd(cmd, parsesemicolon(ps, es));
-    }
-    return cmd;
+	cmd = parsepipe(ps, es);
+	if (peek(ps, es, ";"))
+	{
+		tok = gettoken(ps, es, 0, 0);
+		if (tok == ';' && peek(ps, es, ";"))
+			handle_error("syntax error near unexpected token `;;'\n");
+		cmd = semicoloncmd(cmd, parsesemicolon(ps, es));
+	}
+	return (cmd);
 }
-
 
 struct s_cmd	*parsepipe(char **ps, char *es)
 {
@@ -80,7 +79,8 @@ struct	s_cmd *parseredirs(struct s_cmd *cmd, char **ps, char *es)
 	while (peek(ps, es, "<>"))
 	{
 		tok = gettoken(ps, es, 0, 0);
-		if (peek(ps, es, ">")) {
+		if (peek(ps, es, ">"))
+		{
 			next_tok = gettoken(ps, es, 0, 0);
 			if (next_tok == '>')
 				handle_error("syntax error near unexpected token `>'\n");

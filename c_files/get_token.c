@@ -52,7 +52,7 @@ void	process_special_tokens(char **s, int *token)
 
 void	skip_non_special_tokens(char **s, char *es)
 {
-	while (*s < es && !is_whitespace(**s) && !ft_strchr("<|>", **s))
+	while (*s < es && !is_whitespace(**s) && !ft_strchr("<|>;", **s))
 	{
 		if (**s == '\"')
 		{
@@ -95,10 +95,11 @@ int	gettoken(char **ps, char *es, char **q, char **eq)
 
 void	free_cmd(struct s_cmd *command)
 {
-	struct s_pipecmd	*pcmd;
-	struct s_execcmd	*ecmd;
-	struct s_redircmd	*rcmd;
-	int					i;
+	struct s_pipecmd		*pcmd;
+	struct s_execcmd		*ecmd;
+	struct s_redircmd		*rcmd;
+	struct s_semicoloncmd	*scmd;
+	int						i;
 
 	i = 0;
 	if (!command)
@@ -124,6 +125,12 @@ void	free_cmd(struct s_cmd *command)
 		rcmd = (struct s_redircmd *)command;
 		free_cmd(rcmd->cmd);
 		free(rcmd->file);
+	}
+	else if (command->type == ';')
+	{
+		scmd = (struct s_semicoloncmd *)command;
+		free_cmd(scmd->left);
+		free_cmd(scmd->right);
 	}
 	if (command->envp)
 		free_envp(command->envp);
