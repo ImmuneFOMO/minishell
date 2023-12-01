@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/23 20:22:16 by idelibal          #+#    #+#             */
-/*   Updated: 2023/11/30 18:39:36 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/12/01 18:24:15 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,9 +77,14 @@ struct s_cmd	*redircmd(struct s_cmd *subcmd, char *file, int type)
 		cmd->mode = O_RDONLY;
 		cmd->fd = 0;
 	}
-	else
+	else if (type == '>')
 	{
 		cmd->mode = O_WRONLY | O_CREAT | O_TRUNC;
+		cmd->fd = 1;
+	}
+	else if (type == '+')
+	{
+		cmd->mode = O_WRONLY | O_CREAT | O_APPEND;
 		cmd->fd = 1;
 	}
 	return ((struct s_cmd *)cmd);
@@ -102,7 +107,6 @@ struct s_cmd *semicoloncmd(struct s_cmd *left, struct s_cmd *right)
     struct s_semicoloncmd *cmd;
 
     cmd = malloc(sizeof(*cmd));
-	ft_memset(cmd, 0, sizeof(*cmd));
     cmd->type = ';';
     cmd->left = left;
     cmd->right = right;

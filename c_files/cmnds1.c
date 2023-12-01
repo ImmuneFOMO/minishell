@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 23:30:46 by idlbltv           #+#    #+#             */
-/*   Updated: 2023/11/30 18:38:04 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/12/01 18:25:31 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int	runcmd(struct s_cmd *cmd)
 		exit(0);
 	if (type == ' ')
 		execute_command(cmd);
-	else if (type == '>' || type == '<')
+	else if (type == '>' || type == '<' || type == '+' || type == '%')
 		redirect_command((struct s_redircmd *)cmd);
 	else if (type == '|')
 		pipe_command((struct s_pipecmd *)cmd);
@@ -67,8 +67,8 @@ void	redirect_command(struct s_redircmd *rcmd)
 	int	fd_redirect;
 	int	flags;
 
-	if (rcmd->type == '>')
-		flags = O_WRONLY | O_CREAT | O_TRUNC;
+	if (rcmd->type == '>' || rcmd->type == '+')
+		flags = rcmd->mode;
 	else if (rcmd->type == '<')
 		flags = O_RDONLY;
 	else

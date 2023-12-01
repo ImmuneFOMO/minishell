@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 23:30:14 by idlbltv           #+#    #+#             */
-/*   Updated: 2023/11/30 18:40:50 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/12/01 19:58:40 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ void	process_special_tokens(char **s, int *token)
 
 void	skip_non_special_tokens(char **s, char *es)
 {
-	while (*s < es && !is_whitespace(**s) && !ft_strchr("<|>;", **s))
+	while (*s < es && !is_whitespace(**s) && !ft_strchr("<|>", **s))
 	{
 		if (**s == '\"')
 		{
@@ -95,11 +95,10 @@ int	gettoken(char **ps, char *es, char **q, char **eq)
 
 void	free_cmd(struct s_cmd *command)
 {
-	struct s_pipecmd		*pcmd;
-	struct s_execcmd		*ecmd;
-	struct s_redircmd		*rcmd;
-	struct s_semicoloncmd	*scmd;
-	int						i;
+	struct s_pipecmd	*pcmd;
+	struct s_execcmd	*ecmd;
+	struct s_redircmd	*rcmd;
+	int					i;
 
 	i = 0;
 	if (!command)
@@ -120,17 +119,11 @@ void	free_cmd(struct s_cmd *command)
 		free_cmd(pcmd->left);
 		free_cmd(pcmd->right);
 	}
-	else if (command->type == '>' || command->type == '<')
+	else if (command->type == '>' || command->type == '<' || command->type == '+' || command->type == '%')
 	{
 		rcmd = (struct s_redircmd *)command;
 		free_cmd(rcmd->cmd);
 		free(rcmd->file);
-	}
-	else if (command->type == ';')
-	{
-		scmd = (struct s_semicoloncmd *)command;
-		free_cmd(scmd->left);
-		free_cmd(scmd->right);
 	}
 	if (command->envp)
 		free_envp(command->envp);
