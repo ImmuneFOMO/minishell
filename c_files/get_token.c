@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 23:30:14 by idlbltv           #+#    #+#             */
-/*   Updated: 2023/12/01 15:41:20 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/12/01 19:58:40 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,7 +119,7 @@ void	free_cmd(struct s_cmd *command)
 		free_cmd(pcmd->left);
 		free_cmd(pcmd->right);
 	}
-	else if (command->type == '>' || command->type == '<')
+	else if (command->type == '>' || command->type == '<' || command->type == '+' || command->type == '%')
 	{
 		rcmd = (struct s_redircmd *)command;
 		free_cmd(rcmd->cmd);

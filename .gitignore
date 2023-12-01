@@ -1,6 +1,7 @@
 .vscode
 *.o
 *.out
+test*
 *.a
 *.gch
 .DS_Store
