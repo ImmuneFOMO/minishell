@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmnds2.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/23 20:22:16 by idelibal          #+#    #+#             */
-/*   Updated: 2023/11/29 21:03:40 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/12/01 18:24:15 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void create_pipe_process(struct s_pipecmd *pcmd, int fd_pipe[2]) {
         dup2(fd_pipe[0], STDIN_FILENO);
         close(fd_pipe[0]);
         waitpid(p_id, &status, 0);
-		pcmd->right->envp = pcmd->envp;
+		pcmd->right->envp = dup_envp(pcmd->envp);
         runcmd(pcmd->right);
     }
 }
@@ -77,9 +77,14 @@ struct s_cmd	*redircmd(struct s_cmd *subcmd, char *file, int type)
 		cmd->mode = O_RDONLY;
 		cmd->fd = 0;
 	}
-	else
+	else if (type == '>')
 	{
 		cmd->mode = O_WRONLY | O_CREAT | O_TRUNC;
+		cmd->fd = 1;
+	}
+	else if (type == '+')
+	{
+		cmd->mode = O_WRONLY | O_CREAT | O_APPEND;
 		cmd->fd = 1;
 	}
 	return ((struct s_cmd *)cmd);
@@ -102,7 +107,6 @@ struct s_cmd *semicoloncmd(struct s_cmd *left, struct s_cmd *right)
     struct s_semicoloncmd *cmd;
 
     cmd = malloc(sizeof(*cmd));
-	ft_memset(cmd, 0, sizeof(*cmd));
     cmd->type = ';';
     cmd->left = left;
     cmd->right = right;

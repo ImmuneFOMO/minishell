@@ -3,14 +3,55 @@
 /*                                                        :::      ::::::::   */
 /*   cmnds1.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 23:30:46 by idlbltv           #+#    #+#             */
-/*   Updated: 2023/11/29 21:30:50 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/12/04 22:32:24 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../h_files/minishell.h"
+
+int handle_heredoc(struct s_redircmd *rcmd)
+{
+    char buffer[1024];
+    int pipefd[2];
+    size_t delimiter_length;
+    ssize_t read_len;
+
+    if (rcmd == NULL || rcmd->file == NULL)
+    {
+        write(STDERR_FILENO, "Invalid command\n", 16);
+        return 0;
+    }
+    if (pipe(pipefd) == -1)
+    {
+        perror("pipe");
+        return 0;
+    }
+    delimiter_length = ft_strlen(rcmd->file);
+    while (1)
+    {
+        write(STDERR_FILENO, ">", 1);
+        read_len = read(STDIN_FILENO, buffer, sizeof(buffer) - 1);
+        if (read_len <= 0)
+            break;
+        buffer[read_len] = '\0';
+        if (ft_strncmp(buffer, rcmd->file, delimiter_length) == 0 &&
+            (buffer[delimiter_length] == '\n' || buffer[delimiter_length] == '\0'))
+            break;
+        write(pipefd[1], buffer, read_len);
+    }
+    close(pipefd[1]);
+    if (dup2(pipefd[0], STDIN_FILENO) == -1)
+    {
+        perror("dup2");
+        close(pipefd[0]);
+        return 0;
+    }
+    close(pipefd[0]);
+    return 1;
+}
 
 int	runcmd(struct s_cmd *cmd)
 {
@@ -21,7 +62,7 @@ int	runcmd(struct s_cmd *cmd)
 		exit(0);
 	if (type == ' ')
 		execute_command(cmd);
-	else if (type == '>' || type == '<')
+	else if (type == '>' || type == '<' || type == '+' || type == '%')
 		redirect_command((struct s_redircmd *)cmd);
 	else if (type == '|')
 		pipe_command((struct s_pipecmd *)cmd);
@@ -67,12 +108,21 @@ void	redirect_command(struct s_redircmd *rcmd)
 	int	fd_redirect;
 	int	flags;
 
-	if (rcmd->type == '>')
-		flags = O_WRONLY | O_CREAT | O_TRUNC;
+	if (rcmd->type == '>' || rcmd->type == '+')
+		flags = rcmd->mode;
 	else if (rcmd->type == '<')
 		flags = O_RDONLY;
-	else
-		flags = O_WRONLY | O_CREAT | O_APPEND;
+	else if (rcmd->type == '%')
+	{
+		fd_redirect = handle_heredoc(rcmd);
+		if (fd_redirect == 0)
+  		{
+   		perror("double_redirect_left");
+   		return ;
+ 		}
+ 		runcmd(rcmd->cmd);
+  		return ;
+	}
 	fd_redirect = open(rcmd->file, flags, 0666);
 	if (fd_redirect < 0)
 	{
@@ -84,7 +134,7 @@ void	redirect_command(struct s_redircmd *rcmd)
 		perror("dup2");
 		exit(0);
 	}
-	rcmd->cmd->envp = rcmd->envp;
+	rcmd->cmd->envp = dup_envp(rcmd->envp);
 	runcmd(rcmd->cmd);
 	close(fd_redirect);
 }
