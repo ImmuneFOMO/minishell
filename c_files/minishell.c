@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
+/*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 18:54:21 by azhadan           #+#    #+#             */
-/*   Updated: 2023/11/30 17:13:23 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/12/06 19:19:47 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,8 @@ int	ft_cd(char *buf)
 	return (0);
 }
 
+int g_exit_code;
+
 int	main(int argc, char **argv, char **envp)
 {
 	char			*buf;
@@ -118,6 +120,8 @@ int	main(int argc, char **argv, char **envp)
 			exit(0);
 		}
 		wait(&r);
+		if (WIFEXITED(r))
+            g_exit_code = WEXITSTATUS(r);
 		free(buf);
 	}
 	free_envp(copy_envp);

@@ -56,5 +56,6 @@ test_command ">>>"
 test_command ">>>>"
 test_command ";;"
 test_command "echo test ; echo test2 ; echo test3"
+test_command "echo \$?"
 
 test

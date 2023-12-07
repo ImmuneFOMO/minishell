@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmnds2.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
+/*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/23 20:22:16 by idelibal          #+#    #+#             */
-/*   Updated: 2023/12/01 18:24:15 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/12/06 19:19:53 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,8 @@ void create_pipe_process(struct s_pipecmd *pcmd, int fd_pipe[2]) {
         dup2(fd_pipe[0], STDIN_FILENO);
         close(fd_pipe[0]);
         waitpid(p_id, &status, 0);
+		if (WIFEXITED(status))
+            g_exit_code = WEXITSTATUS(status);
 		pcmd->right->envp = dup_envp(pcmd->envp);
         runcmd(pcmd->right);
     }
