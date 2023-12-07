@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
+/*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 23:30:37 by idlbltv           #+#    #+#             */
-/*   Updated: 2023/12/01 16:28:45 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/12/07 22:27:15 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 void	handle_error(const char *error_message)
 {
 	write(2, error_message, ft_strlen(error_message));
-	exit(-1);
+	exit(1);
 }
 
 struct s_cmd	*parsecmd(char *s)
@@ -181,38 +181,48 @@ int	calculate_buffer_size(char *arg, char quote_type, int in_quotes)
 
 char	*replace_env_vars(char *arg, char quote_type, int in_quotes)
 {
-	char	*var_value;
-	char	*result;
-	int		size;
-	int		i;
-	int		j;
+    char	*var_value;
+    char	*result;
+    int		size;
+    int		i;
+    int		j;
+	int     is_itoa;
 
-	size = calculate_buffer_size(arg, quote_type, 0);
-	result = malloc(size);
-	i = 0;
-	j = 0;
-	while (arg[i] != '\0')
-	{
-		if (arg[i] == quote_type)
-		{
-			in_quotes = !in_quotes;
-			i++;
-			continue;
-		}
-		else if (arg[i] == '$' && ((!in_quotes && quote_type == '\'') || (in_quotes && quote_type == '\"')))
-		{
-			var_value = handle_env_var(arg, &i);
-			if (var_value != NULL)
-			{
-				ft_strcpy(result + j, var_value);
-				j += ft_strlen(var_value);
-			}
-			continue;
-		}
-		result[j++] = arg[i++];
-	}
-	result[j] = '\0';
-	return (result);
+    size = calculate_buffer_size(arg, quote_type, 0);
+    result = malloc(size);
+    i = 0;
+    j = 0;
+    while (arg[i] != '\0')
+    {
+        if (arg[i] == quote_type)
+        {
+            in_quotes = !in_quotes;
+            i++;
+            continue;
+        }
+        else if (arg[i] == '$' && ((!in_quotes && quote_type == '\'') || (in_quotes && quote_type == '\"')))
+        {
+			is_itoa = 0;
+            if (ft_strncmp(arg + i, "$?", 2) == 0) {
+                var_value = ft_itoa(g_exit_code);
+                i += 2;
+				is_itoa = 1;
+            } else {
+                var_value = handle_env_var(arg, &i);
+            }
+            if (var_value != NULL)
+            {
+                ft_strcpy(result + j, var_value);
+                j += ft_strlen(var_value);
+				if (is_itoa)
+                    free(var_value);
+            }
+            continue;
+        }
+        result[j++] = arg[i++];
+    }
+    result[j] = '\0';
+    return (result);
 }
 
 char	*handle_quotes(char *arg, char quote_type)
@@ -228,6 +238,26 @@ char	*handle_quotes(char *arg, char quote_type)
 		free(new_arg);
 	return (result);
 }
+
+// char *handle_exit_code(char *arg) {
+//     char *new_arg = malloc(strlen(arg) * sizeof(char) + 1);
+//     char exit_code_str[12]; // Buffer for exit code as string
+//     sprintf(exit_code_str, "%d", g_exit_code); // Convert exit code to string
+
+//     int i = 0, j = 0;
+//     while (arg[i] != '\0') {
+//         if (arg[i] == '$' && arg[i + 1] == '?') {
+//             strcpy(new_arg + j, exit_code_str);
+//             j += strlen(exit_code_str);
+//             i += 2;
+//         } else {
+//             new_arg[j++] = arg[i++];
+//         }
+//     }
+//     new_arg[j] = '\0';
+
+//     return new_arg;
+// }
 
 struct s_cmd	*parseexec(char **ps, char *es)
 {
@@ -260,9 +290,13 @@ struct s_cmd	*parseexec(char **ps, char *es)
 		processed_arg = handle_quotes(arg, '\'');
 		char *temp = processed_arg;
 		processed_arg = handle_quotes(processed_arg, '\"');
+		// char *temp2 = processed_arg;
+		// processed_arg = handle_exit_code(processed_arg);
 		cmd->argv[argc] = processed_arg;
 		if (temp != arg)
     		free(temp);
+		// if (temp2 != temp)
+   		// 	free(temp2);
 		free(arg); 
 		argc++;
 		ret = parseredirs(ret, ps, es);
