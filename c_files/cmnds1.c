@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmnds1.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
+/*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 23:30:46 by idlbltv           #+#    #+#             */
-/*   Updated: 2023/12/04 22:32:24 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/12/07 21:57:25 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,26 +81,32 @@ int	runcmd(struct s_cmd *cmd)
 
 void	execute_command(struct s_cmd *cmd)
 {
-	struct s_execcmd	*ecmd;
-	char				*full_path;
+    struct s_execcmd	*ecmd;
+    char				*full_path;
 
-	ecmd = (struct s_execcmd *)cmd;
-	if (ecmd->argv[0] == 0)
-		exit(0);
-	if (builtins(ecmd))
-	{
-		return ;
-	}
-	full_path = find_in_path(ecmd->argv[0]);
-	if (full_path)
-	{
-		execve(full_path, ecmd->argv, ecmd->envp);
-		free(full_path);
-	}
-	else
-	{
-		execve(ecmd->argv[0], ecmd->argv, ecmd->envp);
-	}
+    ecmd = (struct s_execcmd *)cmd;
+    if (ecmd->argv[0] == 0)
+        exit(0);
+    if (builtins(ecmd))
+    {
+        return ;
+    }
+    full_path = find_in_path(ecmd->argv[0]);
+    if (full_path)
+    {
+        execve(full_path, ecmd->argv, ecmd->envp);
+        if (errno) {
+            g_exit_code = 127;
+        }
+        free(full_path);
+    }
+    else
+    {
+        execve(ecmd->argv[0], ecmd->argv, ecmd->envp);
+        if (errno) {
+            g_exit_code = 127;
+        }
+    }
 }
 
 void	redirect_command(struct s_redircmd *rcmd)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
+/*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 18:26:57 by azhadan           #+#    #+#             */
-/*   Updated: 2023/12/04 21:25:40 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/12/07 22:26:02 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,8 @@ rl_replace_line, rl_redisplay, add_history */
 # include <term.h>
 /* tgetent, tgetflag, tgetnum, tgetstr, tgoto, tputs */
 # include "../libft/libft.h"
+/* errno */
+# include <errno.h>
 
 struct				s_cmd
 {
@@ -136,5 +138,8 @@ void				setup_pipe(int fd_pipe[2]);
 
 /*help_function.c 1/5*/
 int					check_vars(char **vars);
+
+/*global variable*/
+extern int			g_exit_code;
 
 #endif
