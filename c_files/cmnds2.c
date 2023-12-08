@@ -6,7 +6,7 @@
 /*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/23 20:22:16 by idelibal          #+#    #+#             */
-/*   Updated: 2023/12/06 19:19:53 by root             ###   ########.fr       */
+/*   Updated: 2023/12/08 18:21:44 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,6 +109,7 @@ struct s_cmd *semicoloncmd(struct s_cmd *left, struct s_cmd *right)
     struct s_semicoloncmd *cmd;
 
     cmd = malloc(sizeof(*cmd));
+	ft_memset(cmd, 0, sizeof(*cmd));
     cmd->type = ';';
     cmd->left = left;
     cmd->right = right;

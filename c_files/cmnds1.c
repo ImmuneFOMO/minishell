@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmnds1.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
+/*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 23:30:46 by idlbltv           #+#    #+#             */
-/*   Updated: 2023/12/07 23:17:07 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/12/08 17:47:39 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,12 +56,13 @@ int handle_heredoc(struct s_redircmd *rcmd)
 int	runcmd(struct s_cmd *cmd)
 {
 	char	type;
+    int     exit_code = 0;
 
 	type = cmd->type;
 	if (cmd == 0)
 		exit(0);
 	if (type == ' ')
-		execute_command(cmd);
+		exit_code = execute_command(cmd);
 	else if (type == '>' || type == '<' || type == '+' || type == '%')
 		redirect_command((struct s_redircmd *)cmd);
 	else if (type == '|')
@@ -76,27 +77,28 @@ int	runcmd(struct s_cmd *cmd)
 		write(2, "unknown runcmd\n", 15);
 		exit(1);
 	}
-	return (1);
+	return (exit_code);
 }
 
-void	execute_command(struct s_cmd *cmd)
+int	execute_command(struct s_cmd *cmd)
 {
     struct s_execcmd	*ecmd;
     char				*full_path;
+    int                 exit_code = 0;
 
     ecmd = (struct s_execcmd *)cmd;
     if (ecmd->argv[0] == 0)
         exit(0);
     if (builtins(ecmd))
     {
-        return ;
+        return (exit_code);
     }
     full_path = find_in_path(ecmd->argv[0]);
     if (full_path)
     {
         execve(full_path, ecmd->argv, ecmd->envp);
         if (errno) {
-            g_exit_code = 127;
+            exit_code = 127;
         }
         free(full_path);
     }
@@ -104,9 +106,10 @@ void	execute_command(struct s_cmd *cmd)
     {
         execve(ecmd->argv[0], ecmd->argv, ecmd->envp);
         if (errno) {
-            g_exit_code = 127;
+            exit_code = 127;
         }
     }
+    return (exit_code);
 }
 
 void	redirect_command(struct s_redircmd *rcmd)
