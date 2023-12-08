@@ -3,14 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 18:54:21 by azhadan           #+#    #+#             */
-/*   Updated: 2023/12/06 19:19:47 by root             ###   ########.fr       */
+/*   Updated: 2023/12/07 23:38:39 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../h_files/minishell.h"
+
+int g_exit_code;
 
 int	fork1(void)
 {
@@ -82,8 +84,6 @@ int	ft_cd(char *buf)
 	return (0);
 }
 
-int g_exit_code;
-
 int	main(int argc, char **argv, char **envp)
 {
 	char			*buf;
@@ -96,6 +96,7 @@ int	main(int argc, char **argv, char **envp)
 	signal(SIGINT, handle_c);
 	(void)argc;
 	(void)argv;
+	g_exit_code = 0;
 	copy_envp = dup_envp(envp);
 	while (1)
 	{
@@ -117,7 +118,7 @@ int	main(int argc, char **argv, char **envp)
 			parse_cmd->envp = copy_envp;
 			runcmd(parse_cmd);
 			free_cmd(parse_cmd);
-			exit(0);
+			exit(g_exit_code);
 		}
 		wait(&r);
 		if (WIFEXITED(r))
