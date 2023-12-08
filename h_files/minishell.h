@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
+/*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 18:26:57 by azhadan           #+#    #+#             */
-/*   Updated: 2023/12/07 23:17:18 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/12/08 17:46:09 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,15 +133,12 @@ char				*mkcopy(char *s, char *es);
 
 /*cmnds1.c 5/5*/
 int					runcmd(struct s_cmd *cmd);
-void				execute_command(struct s_cmd *cmd);
+int					execute_command(struct s_cmd *cmd);
 void				redirect_command(struct s_redircmd *rcmd);
 void				pipe_command(struct s_pipecmd *pcmd);
 void				setup_pipe(int fd_pipe[2]);
 
 /*help_function.c 1/5*/
 int					check_vars(char **vars);
-
-/*global variable*/
-extern int			g_exit_code;
 
 #endif
