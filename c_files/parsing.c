@@ -6,7 +6,7 @@
 /*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 23:30:37 by idlbltv           #+#    #+#             */
-/*   Updated: 2023/12/08 19:29:55 by root             ###   ########.fr       */
+/*   Updated: 2023/12/08 23:07:42 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,7 +151,7 @@ char *handle_env_var(char *arg, int *i, int *memory_allocated)
     env_value = getenv(var_name);
     if (env_value != NULL) {
         *memory_allocated = 1;
-        return strdup(env_value);
+        return ft_strdup(env_value);
     } else {
         *memory_allocated = 0;
         return NULL;
@@ -177,12 +177,17 @@ int	calculate_buffer_size(char *arg, char quote_type, int in_quotes)
         }
         else if (arg[i] == '$' && ((!in_quotes && quote_type == '\'') || (in_quotes && quote_type == '\"')))
         {
-            var_value = handle_env_var(arg, &i, &memory_allocated);
-            if (var_value != NULL)
-            {
-                size += ft_strlen(var_value);
-                if (memory_allocated) {
-                    free(var_value);
+            if (ft_strncmp(arg + i, "$?", 2) == 0) {
+                size += 3;
+                i += 2;
+            } else {
+                var_value = handle_env_var(arg, &i, &memory_allocated);
+                if (var_value != NULL)
+                {
+                    size += ft_strlen(var_value);
+                    if (memory_allocated) {
+                        free(var_value);
+                    }
                 }
             }
             continue ;
@@ -193,7 +198,7 @@ int	calculate_buffer_size(char *arg, char quote_type, int in_quotes)
     return (size + 1);
 }
 
-char	*replace_env_vars(char *arg, char quote_type, int in_quotes)
+char *replace_env_vars(char *arg, char quote_type, int in_quotes)
 {
     char	*var_value;
     char	*result;
@@ -203,9 +208,9 @@ char	*replace_env_vars(char *arg, char quote_type, int in_quotes)
     int     is_itoa;
     int     memory_allocated;
 
-    size = calculate_buffer_size(arg, quote_type, 0) + 1; // Add 1 for the null terminator
-    result = malloc(size);
-    if (!result) return NULL; // Check if malloc was successful
+    size = calculate_buffer_size(arg, quote_type, 0);
+    result = malloc(size + 1);
+    if (!result) return NULL;
     i = 0;
     j = 0;
     while (arg[i] != '\0')
@@ -223,16 +228,14 @@ char	*replace_env_vars(char *arg, char quote_type, int in_quotes)
                 var_value = ft_itoa(g_exit_code);
                 i += 2;
                 is_itoa = 1;
-            } else {
+            } else
                 var_value = handle_env_var(arg, &i, &memory_allocated);
-            }
             if (var_value != NULL)
             {
                 ft_strcpy(result + j, var_value);
                 j += ft_strlen(var_value);
-                if (is_itoa || memory_allocated) {
+                if (is_itoa || memory_allocated)
                     free(var_value);
-                }
             }
             continue;
         }
