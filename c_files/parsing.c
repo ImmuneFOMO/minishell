@@ -6,7 +6,7 @@
 /*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 23:30:37 by idlbltv           #+#    #+#             */
-/*   Updated: 2023/12/08 23:07:42 by root             ###   ########.fr       */
+/*   Updated: 2023/12/11 22:58:27 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 void	handle_error(const char *error_message)
 {
 	write(2, error_message, ft_strlen(error_message));
-	exit(1);
+	exit(2);
 }
 
 struct s_cmd	*parsecmd(char *s)
@@ -27,7 +27,7 @@ struct s_cmd	*parsecmd(char *s)
 	cmd = parseline(&s, es);
 	peek(&s, es, "");
 	if (s != es)
-		handle_error("leftovers: %s\n");
+		handle_error("leftovers: \n");
 	return (cmd);
 }
 
@@ -145,7 +145,7 @@ char *handle_env_var(char *arg, int *i, int *memory_allocated)
     int k = 0;
     char *env_value;
     (*i)++;
-    while (isalnum(arg[*i]) || arg[*i] == '_')
+    while (ft_isalnum(arg[*i]) || arg[*i] == '_')
         var_name[k++] = arg[(*i)++];
     var_name[k] = '\0';
     env_value = getenv(var_name);
