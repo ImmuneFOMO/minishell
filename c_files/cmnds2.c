@@ -6,7 +6,7 @@
 /*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/23 20:22:16 by idelibal          #+#    #+#             */
-/*   Updated: 2023/12/08 18:21:44 by root             ###   ########.fr       */
+/*   Updated: 2023/12/11 22:26:37 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,12 +24,13 @@ void create_pipe_process(struct s_pipecmd *pcmd, int fd_pipe[2]) {
     } 
 	else if (p_id == 0) 
 	{
+		signal(SIGINT, handle_c); // add this line
         close(fd_pipe[0]);
         dup2(fd_pipe[1], STDOUT_FILENO);
         close(fd_pipe[1]);
         runcmd(pcmd->left);
 		free_cmd((struct s_cmd *)pcmd);
-        exit(0);
+        exit(g_exit_code);
     } 
 	else 
 	{
@@ -37,7 +38,9 @@ void create_pipe_process(struct s_pipecmd *pcmd, int fd_pipe[2]) {
         dup2(fd_pipe[0], STDIN_FILENO);
         close(fd_pipe[0]);
         waitpid(p_id, &status, 0);
-		if (WIFEXITED(status))
+        if (WIFSIGNALED(status))
+            g_exit_code = 127 + WTERMSIG(status);
+        else if (WIFEXITED(status))
             g_exit_code = WEXITSTATUS(status);
 		pcmd->right->envp = dup_envp(pcmd->envp);
         runcmd(pcmd->right);

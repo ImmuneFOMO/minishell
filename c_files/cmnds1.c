@@ -6,7 +6,7 @@
 /*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 23:30:46 by idlbltv           #+#    #+#             */
-/*   Updated: 2023/12/08 17:47:39 by root             ###   ########.fr       */
+/*   Updated: 2023/12/11 22:55:23 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,21 @@ int	runcmd(struct s_cmd *cmd)
 	return (exit_code);
 }
 
+int check_error(char *cmd) {
+    if (errno == EINVAL) {
+        write(2, cmd, ft_strlen(cmd));
+        write(2, ": invalid argument\n", 19);
+        return 1;
+    } else if (errno == EACCES) {
+        write(2, cmd, ft_strlen(cmd));
+        write(2, ": permission denied\n", 20);
+        return 126;
+    } else {
+        perror(cmd);
+        return 127;
+    }
+}
+
 int	execute_command(struct s_cmd *cmd)
 {
     struct s_execcmd	*ecmd;
@@ -97,17 +112,15 @@ int	execute_command(struct s_cmd *cmd)
     if (full_path)
     {
         execve(full_path, ecmd->argv, ecmd->envp);
-        if (errno) {
-            exit_code = 127;
-        }
+        if (errno)
+           exit_code = check_error(ecmd->argv[0]);
         free(full_path);
     }
     else
     {
         execve(ecmd->argv[0], ecmd->argv, ecmd->envp);
-        if (errno) {
-            exit_code = 127;
-        }
+        if (errno)
+           exit_code = check_error(ecmd->argv[0]);
     }
     return (exit_code);
 }
