@@ -6,7 +6,7 @@
 /*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 18:26:57 by azhadan           #+#    #+#             */
-/*   Updated: 2023/12/08 17:46:09 by root             ###   ########.fr       */
+/*   Updated: 2023/12/12 22:37:01 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,7 +114,7 @@ void				handle_c(int signum);
 int					builtins(struct s_execcmd *ecmd);
 void 				builtin_pwd();
 char				*trim_spaces(char *str);
-void				builtin_env(struct s_execcmd *ecmd);
+void				builtin_env(struct s_execcmd *ecmd, char **args);
 
 
 /*get_token.c 5/5*/

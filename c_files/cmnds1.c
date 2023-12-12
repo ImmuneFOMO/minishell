@@ -6,7 +6,7 @@
 /*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 23:30:46 by idlbltv           #+#    #+#             */
-/*   Updated: 2023/12/11 22:55:23 by root             ###   ########.fr       */
+/*   Updated: 2023/12/12 23:09:50 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,11 +81,7 @@ int	runcmd(struct s_cmd *cmd)
 }
 
 int check_error(char *cmd) {
-    if (errno == EINVAL) {
-        write(2, cmd, ft_strlen(cmd));
-        write(2, ": invalid argument\n", 19);
-        return 1;
-    } else if (errno == EACCES) {
+    if (errno == EACCES) {
         write(2, cmd, ft_strlen(cmd));
         write(2, ": permission denied\n", 20);
         return 126;
@@ -149,7 +145,7 @@ void	redirect_command(struct s_redircmd *rcmd)
 	if (fd_redirect < 0)
 	{
 		perror("open");
-		return ;
+		exit (1);
 	}
 	if (dup2(fd_redirect, rcmd->fd) < 0)
 	{
