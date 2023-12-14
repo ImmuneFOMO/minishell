@@ -6,7 +6,7 @@
 /*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/23 20:22:16 by idelibal          #+#    #+#             */
-/*   Updated: 2023/12/12 23:05:09 by root             ###   ########.fr       */
+/*   Updated: 2023/12/14 17:55:18 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,13 +24,12 @@ void create_pipe_process(struct s_pipecmd *pcmd, int fd_pipe[2]) {
     } 
 	else if (p_id == 0) 
 	{
-		signal(SIGINT, handle_c); // add this line
         close(fd_pipe[0]);
         dup2(fd_pipe[1], STDOUT_FILENO);
         close(fd_pipe[1]);
         runcmd(pcmd->left);
 		free_cmd((struct s_cmd *)pcmd);
-        exit(g_exit_code);
+        exit(0);
     } 
 	else 
 	{
