@@ -6,7 +6,7 @@
 /*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 23:30:46 by idlbltv           #+#    #+#             */
-/*   Updated: 2023/12/12 23:09:50 by root             ###   ########.fr       */
+/*   Updated: 2023/12/15 21:26:36 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,9 +114,12 @@ int	execute_command(struct s_cmd *cmd)
     }
     else
     {
-        execve(ecmd->argv[0], ecmd->argv, ecmd->envp);
-        if (errno)
-           exit_code = check_error(ecmd->argv[0]);
+        if (ft_strncmp(ecmd->argv[0], "cd", 2) != 0 && ft_strncmp(ecmd->argv[0], "export", 6) != 0 && ft_strncmp(ecmd->argv[0], "unset", 5) != 0)
+        {
+            execve(ecmd->argv[0], ecmd->argv, ecmd->envp);
+            if (errno)
+            exit_code = check_error(ecmd->argv[0]);    
+        }
     }
     return (exit_code);
 }
