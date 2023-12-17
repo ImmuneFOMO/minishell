@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
+/*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 23:30:37 by idlbltv           #+#    #+#             */
-/*   Updated: 2023/12/17 16:30:40 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/12/17 23:39:53 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,18 +97,23 @@ struct	s_cmd *parseredirs(struct s_cmd *cmd, char **ps, char *es)
 
 int	count_quotes(char *arg, char quote_type)
 {
-	int	quote_count;
-	int	i;
+    int	quote_count;
+    int	i;
+    int in_double_quotes = 0;
 
-	quote_count = 0;
-	i = 0;
-	while (arg[i] != '\0')
-	{
-		if (arg[i] == quote_type)
-			quote_count++;
-		i++;
-	}
-	return (quote_count);
+    quote_count = 0;
+    i = 0;
+    while (arg[i] != '\0')
+    {
+        if (arg[i] == '\"')
+        {
+            in_double_quotes = !in_double_quotes;
+        }
+        if (arg[i] == quote_type && (!in_double_quotes || quote_type == '\"'))
+            quote_count++;
+        i++;
+    }
+    return (quote_count);
 }
 
 char	*handle_odd_quotes(char *arg, int quote_count, char quote_type)
@@ -169,12 +174,17 @@ int	calculate_buffer_size(char *arg, char quote_type, int in_quotes, char **envp
     int		i;
     int		size;
     int     memory_allocated;
+    int     in_double_quotes = 0;
 
     i = 0;
     size = 0;
     while (arg[i] != '\0')
     {
-        if (arg[i] == quote_type)
+        if (arg[i] == '\"')
+        {
+            in_double_quotes = !in_double_quotes;
+        }
+        if (arg[i] == quote_type && (!in_double_quotes || quote_type == '\"'))
         {
             in_quotes = !in_quotes;
             i++;
@@ -212,6 +222,7 @@ char *replace_env_vars(char *arg, char quote_type, int in_quotes, char **envp)
     int		j;
     int     is_itoa;
     int     memory_allocated;
+    int     in_double_quotes = 0;
 
     size = calculate_buffer_size(arg, quote_type, 0, envp);
     result = malloc(size + 1);
@@ -220,7 +231,11 @@ char *replace_env_vars(char *arg, char quote_type, int in_quotes, char **envp)
     j = 0;
     while (arg[i] != '\0')
     {
-        if (arg[i] == quote_type)
+        if (arg[i] == '\"')
+        {
+            in_double_quotes = !in_double_quotes;
+        }
+        if (arg[i] == quote_type && (!in_double_quotes || quote_type == '\"'))
         {
             in_quotes = !in_quotes;
             i++;
