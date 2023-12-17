@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 23:30:37 by idlbltv           #+#    #+#             */
-/*   Updated: 2023/12/11 22:58:27 by root             ###   ########.fr       */
+/*   Updated: 2023/12/17 14:47:09 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,12 +148,17 @@ char *handle_env_var(char *arg, int *i, int *memory_allocated)
     while (ft_isalnum(arg[*i]) || arg[*i] == '_')
         var_name[k++] = arg[(*i)++];
     var_name[k] = '\0';
+	if (var_name[0] == '\0')
+	{
+		*memory_allocated = 1;
+		return (ft_strdup("$"));
+	}
     env_value = getenv(var_name);
     if (env_value != NULL) {
         *memory_allocated = 1;
         return ft_strdup(env_value);
     } else {
-        *memory_allocated = 0;
+        *memory_allocated = 1;
         return NULL;
     }
 }
