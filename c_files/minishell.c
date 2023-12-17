@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
+/*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 18:54:21 by azhadan           #+#    #+#             */
-/*   Updated: 2023/12/07 23:38:39 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/12/11 22:18:06 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,13 +116,15 @@ int	main(int argc, char **argv, char **envp)
 		{
 			parse_cmd = parsecmd(buf);
 			parse_cmd->envp = copy_envp;
-			runcmd(parse_cmd);
-			free_cmd(parse_cmd);
-			exit(g_exit_code);
+	    	int exit_code = runcmd(parse_cmd); // make runcmd return the exit code
+    		free_cmd(parse_cmd);
+    		exit(exit_code); // use the exit code from runcmd
 		}
 		wait(&r);
-		if (WIFEXITED(r))
-            g_exit_code = WEXITSTATUS(r);
+		if (WIFSIGNALED(r))
+            g_exit_code = 127 + WTERMSIG(r);
+		else if (WIFEXITED(r))
+			g_exit_code = WEXITSTATUS(r);
 		free(buf);
 	}
 	free_envp(copy_envp);

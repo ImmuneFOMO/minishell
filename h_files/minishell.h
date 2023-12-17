@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
+/*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 18:26:57 by azhadan           #+#    #+#             */
-/*   Updated: 2023/12/07 23:17:18 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/12/14 21:05:08 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,7 +114,7 @@ void				handle_c(int signum);
 int					builtins(struct s_execcmd *ecmd);
 void 				builtin_pwd();
 char				*trim_spaces(char *str);
-void				builtin_env(struct s_execcmd *ecmd);
+void				builtin_env(struct s_execcmd *ecmd, char **args);
 
 
 /*get_token.c 5/5*/
@@ -133,15 +133,12 @@ char				*mkcopy(char *s, char *es);
 
 /*cmnds1.c 5/5*/
 int					runcmd(struct s_cmd *cmd);
-void				execute_command(struct s_cmd *cmd);
+int					execute_command(struct s_cmd *cmd);
 void				redirect_command(struct s_redircmd *rcmd);
 void				pipe_command(struct s_pipecmd *pcmd);
 void				setup_pipe(int fd_pipe[2]);
 
 /*help_function.c 1/5*/
 int					check_vars(char **vars);
-
-/*global variable*/
-extern int			g_exit_code;
 
 #endif

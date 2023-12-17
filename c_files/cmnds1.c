@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmnds1.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
+/*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 23:30:46 by idlbltv           #+#    #+#             */
-/*   Updated: 2023/12/07 23:17:07 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/12/15 21:26:36 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,12 +56,13 @@ int handle_heredoc(struct s_redircmd *rcmd)
 int	runcmd(struct s_cmd *cmd)
 {
 	char	type;
+    int     exit_code = 0;
 
 	type = cmd->type;
 	if (cmd == 0)
 		exit(0);
 	if (type == ' ')
-		execute_command(cmd);
+		exit_code = execute_command(cmd);
 	else if (type == '>' || type == '<' || type == '+' || type == '%')
 		redirect_command((struct s_redircmd *)cmd);
 	else if (type == '|')
@@ -76,37 +77,51 @@ int	runcmd(struct s_cmd *cmd)
 		write(2, "unknown runcmd\n", 15);
 		exit(1);
 	}
-	return (1);
+	return (exit_code);
 }
 
-void	execute_command(struct s_cmd *cmd)
+int check_error(char *cmd) {
+    if (errno == EACCES) {
+        write(2, cmd, ft_strlen(cmd));
+        write(2, ": permission denied\n", 20);
+        return 126;
+    } else {
+        perror(cmd);
+        return 127;
+    }
+}
+
+int	execute_command(struct s_cmd *cmd)
 {
     struct s_execcmd	*ecmd;
     char				*full_path;
+    int                 exit_code = 0;
 
     ecmd = (struct s_execcmd *)cmd;
     if (ecmd->argv[0] == 0)
         exit(0);
     if (builtins(ecmd))
     {
-        return ;
+        return (exit_code);
     }
     full_path = find_in_path(ecmd->argv[0]);
     if (full_path)
     {
         execve(full_path, ecmd->argv, ecmd->envp);
-        if (errno) {
-            g_exit_code = 127;
-        }
+        if (errno)
+           exit_code = check_error(ecmd->argv[0]);
         free(full_path);
     }
     else
     {
-        execve(ecmd->argv[0], ecmd->argv, ecmd->envp);
-        if (errno) {
-            g_exit_code = 127;
+        if (ft_strncmp(ecmd->argv[0], "cd", 2) != 0 && ft_strncmp(ecmd->argv[0], "export", 6) != 0 && ft_strncmp(ecmd->argv[0], "unset", 5) != 0)
+        {
+            execve(ecmd->argv[0], ecmd->argv, ecmd->envp);
+            if (errno)
+            exit_code = check_error(ecmd->argv[0]);    
         }
     }
+    return (exit_code);
 }
 
 void	redirect_command(struct s_redircmd *rcmd)
@@ -133,7 +148,7 @@ void	redirect_command(struct s_redircmd *rcmd)
 	if (fd_redirect < 0)
 	{
 		perror("open");
-		return ;
+		exit (1);
 	}
 	if (dup2(fd_redirect, rcmd->fd) < 0)
 	{

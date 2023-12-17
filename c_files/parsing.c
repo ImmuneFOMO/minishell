@@ -6,7 +6,7 @@
 /*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 23:30:37 by idlbltv           #+#    #+#             */
-/*   Updated: 2023/12/07 22:27:15 by root             ###   ########.fr       */
+/*   Updated: 2023/12/11 22:58:27 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 void	handle_error(const char *error_message)
 {
 	write(2, error_message, ft_strlen(error_message));
-	exit(1);
+	exit(2);
 }
 
 struct s_cmd	*parsecmd(char *s)
@@ -27,7 +27,7 @@ struct s_cmd	*parsecmd(char *s)
 	cmd = parseline(&s, es);
 	peek(&s, es, "");
 	if (s != es)
-		handle_error("leftovers: %s\n");
+		handle_error("leftovers: \n");
 	return (cmd);
 }
 
@@ -139,57 +139,78 @@ char	*handle_odd_quotes(char *arg, int quote_count, char quote_type)
 	return (new_arg);
 }
 
-char *handle_env_var(char *arg, int *i)
+char *handle_env_var(char *arg, int *i, int *memory_allocated)
 {
     char var_name[256];
     int k = 0;
+    char *env_value;
     (*i)++;
-    while (isalnum(arg[*i]) || arg[*i] == '_')
+    while (ft_isalnum(arg[*i]) || arg[*i] == '_')
         var_name[k++] = arg[(*i)++];
     var_name[k] = '\0';
-    return getenv(var_name);
+    env_value = getenv(var_name);
+    if (env_value != NULL) {
+        *memory_allocated = 1;
+        return ft_strdup(env_value);
+    } else {
+        *memory_allocated = 0;
+        return NULL;
+    }
 }
 
 int	calculate_buffer_size(char *arg, char quote_type, int in_quotes)
 {
-	char	*var_value;
-	int		i;
-	int		size;
+    char	*var_value;
+    int		i;
+    int		size;
+    int     memory_allocated;
 
-	i = 0;
-	size = 0;
-	while (arg[i] != '\0')
-	{
-		if (arg[i] == quote_type)
-		{
-			in_quotes = !in_quotes;
-			i++;
-			continue ;
-		}
-		else if (arg[i] == '$' && ((!in_quotes && quote_type == '\'') || (in_quotes && quote_type == '\"')))
-		{
-			var_value = handle_env_var(arg, &i);
-			if (var_value != NULL)
-				size += ft_strlen(var_value);
-			continue ;
-		}
-		size++;
-		i++;
-	}
-	return (size + 1);
+    i = 0;
+    size = 0;
+    while (arg[i] != '\0')
+    {
+        if (arg[i] == quote_type)
+        {
+            in_quotes = !in_quotes;
+            i++;
+            continue ;
+        }
+        else if (arg[i] == '$' && ((!in_quotes && quote_type == '\'') || (in_quotes && quote_type == '\"')))
+        {
+            if (ft_strncmp(arg + i, "$?", 2) == 0) {
+                size += 3;
+                i += 2;
+            } else {
+                var_value = handle_env_var(arg, &i, &memory_allocated);
+                if (var_value != NULL)
+                {
+                    size += ft_strlen(var_value);
+                    if (memory_allocated) {
+                        free(var_value);
+                    }
+                }
+            }
+            continue ;
+        }
+        size++;
+        i++;
+    }
+    return (size + 1);
 }
 
-char	*replace_env_vars(char *arg, char quote_type, int in_quotes)
+char *replace_env_vars(char *arg, char quote_type, int in_quotes)
 {
     char	*var_value;
     char	*result;
     int		size;
     int		i;
     int		j;
-	int     is_itoa;
+    int     is_itoa;
+    int     memory_allocated;
 
     size = calculate_buffer_size(arg, quote_type, 0);
-    result = malloc(size);
+    result = malloc(size + 1);
+    if (!result) return NULL;
     i = 0;
     j = 0;
     while (arg[i] != '\0')
@@ -202,19 +223,18 @@ char	*replace_env_vars(char *arg, char quote_type, int in_quotes)
         }
         else if (arg[i] == '$' && ((!in_quotes && quote_type == '\'') || (in_quotes && quote_type == '\"')))
         {
-			is_itoa = 0;
+            is_itoa = 0;
             if (ft_strncmp(arg + i, "$?", 2) == 0) {
                 var_value = ft_itoa(g_exit_code);
                 i += 2;
-				is_itoa = 1;
-            } else {
-                var_value = handle_env_var(arg, &i);
-            }
+                is_itoa = 1;
+            } else
+                var_value = handle_env_var(arg, &i, &memory_allocated);
             if (var_value != NULL)
             {
                 ft_strcpy(result + j, var_value);
                 j += ft_strlen(var_value);
-				if (is_itoa)
+                if (is_itoa || memory_allocated)
                     free(var_value);
             }
             continue;
@@ -238,26 +258,6 @@ char	*handle_quotes(char *arg, char quote_type)
 		free(new_arg);
 	return (result);
 }
-
-// char *handle_exit_code(char *arg) {
-//     char *new_arg = malloc(strlen(arg) * sizeof(char) + 1);
-//     char exit_code_str[12]; // Buffer for exit code as string
-//     sprintf(exit_code_str, "%d", g_exit_code); // Convert exit code to string
-
-//     int i = 0, j = 0;
-//     while (arg[i] != '\0') {
-//         if (arg[i] == '$' && arg[i + 1] == '?') {
-//             strcpy(new_arg + j, exit_code_str);
-//             j += strlen(exit_code_str);
-//             i += 2;
-//         } else {
-//             new_arg[j++] = arg[i++];
-//         }
-//     }
-//     new_arg[j] = '\0';
-
-//     return new_arg;
-// }
 
 struct s_cmd	*parseexec(char **ps, char *es)
 {
@@ -290,13 +290,8 @@ struct s_cmd	*parseexec(char **ps, char *es)
 		processed_arg = handle_quotes(arg, '\'');
 		char *temp = processed_arg;
 		processed_arg = handle_quotes(processed_arg, '\"');
-		// char *temp2 = processed_arg;
-		// processed_arg = handle_exit_code(processed_arg);
 		cmd->argv[argc] = processed_arg;
-		if (temp != arg)
-    		free(temp);
-		// if (temp2 != temp)
-   		// 	free(temp2);
+    	free(temp);
 		free(arg); 
 		argc++;
 		ret = parseredirs(ret, ps, es);

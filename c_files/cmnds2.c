@@ -6,7 +6,7 @@
 /*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/23 20:22:16 by idelibal          #+#    #+#             */
-/*   Updated: 2023/12/06 19:19:53 by root             ###   ########.fr       */
+/*   Updated: 2023/12/14 17:55:18 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,9 @@ void create_pipe_process(struct s_pipecmd *pcmd, int fd_pipe[2]) {
         dup2(fd_pipe[0], STDIN_FILENO);
         close(fd_pipe[0]);
         waitpid(p_id, &status, 0);
-		if (WIFEXITED(status))
+        if (WIFSIGNALED(status))
+            g_exit_code = 127 + WTERMSIG(status);
+        else if (WIFEXITED(status))
             g_exit_code = WEXITSTATUS(status);
 		pcmd->right->envp = dup_envp(pcmd->envp);
         runcmd(pcmd->right);
@@ -109,6 +111,7 @@ struct s_cmd *semicoloncmd(struct s_cmd *left, struct s_cmd *right)
     struct s_semicoloncmd *cmd;
 
     cmd = malloc(sizeof(*cmd));
+	ft_memset(cmd, 0, sizeof(*cmd));
     cmd->type = ';';
     cmd->left = left;
     cmd->right = right;
