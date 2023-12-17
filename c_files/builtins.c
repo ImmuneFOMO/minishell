@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/08 13:30:35 by azhadan           #+#    #+#             */
-/*   Updated: 2023/12/01 15:35:52 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/12/17 15:38:10 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ int main_builtins(char *buf, char ***envp)
 	int		i;
 
 	trimmed_buf = trim_spaces(buf);
-	if (ft_cd(trimmed_buf))
+	if (ft_cd(trimmed_buf, *envp))
 		return (1);
 	else if (!ft_strncmp(trimmed_buf, "exit", 5))
 		return (2);
@@ -122,7 +122,7 @@ char **dup_envp(char **envp)
 	return(new_envp);
 }
 
-char	*find_in_path(const char *cmd)
+char	*find_in_path(const char *cmnd, struct s_cmd *cmd)
 {
 	char			*path;
 	char			*temp;
@@ -131,7 +131,7 @@ char	*find_in_path(const char *cmd)
 	char			*temp_path;
 	struct stat		st;
 
-	path = getenv("PATH");
+	path = builtin_getenv("PATH", cmd->envp);
 	if (!path)
 		return (NULL);
 	temp = ft_strdup(path);
@@ -147,7 +147,7 @@ char	*find_in_path(const char *cmd)
 			free(temp);
 			return (NULL);
 		}
-		full_path = ft_strjoin(temp_path, cmd);
+		full_path = ft_strjoin(temp_path, cmnd);
 		free(temp_path);
 		if (!full_path)
 		{
@@ -187,4 +187,24 @@ void builtin_unset(char *var, char ***envp)
             i++;
         }
     }
+}
+
+#include <stdlib.h>
+#include <string.h>
+
+char *builtin_getenv(const char *var, char **envp)
+{
+    int i;
+
+    if (var == NULL) {
+        return NULL;
+    }
+
+    for (i = 0; envp[i]; i++) {
+        if (!strncmp(envp[i], var, strlen(var)) && envp[i][strlen(var)] == '=') {
+            return &envp[i][strlen(var) + 1];
+        }
+    }
+
+    return NULL;
 }
