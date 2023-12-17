@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 18:26:57 by azhadan           #+#    #+#             */
-/*   Updated: 2023/12/14 21:05:08 by root             ###   ########.fr       */
+/*   Updated: 2023/12/17 16:29:18 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,23 +83,24 @@ struct				s_semicoloncmd
 
 
 /*builtins.c 5/5*/
-char 				*find_in_path(const char *cmd);
+char 				*find_in_path(const char *cmnd, struct s_cmd *cmd);
 int					main_builtins(char *buf, char ***envp);
 int 				ft_count_argc(char **ps, char *es);
 char				**dup_envp(char **envp);
 void				builtin_unset(char *var, char ***envp);
+char				*builtin_getenv(const char *var, char **envp);
 
 /*builtns_second 2/5*/
 void				builtin_export(char *var, char ***envp);
 void				ft_free_strs(char **strs);
 
 /*parsing.c 6/6*/
-struct s_cmd		*parsecmd(char *s);
-struct s_cmd		*parseline(char **ps, char *es);
-struct s_cmd		*parsepipe(char **ps, char *es);
+struct s_cmd		*parsecmd(char *s, char **envp);
+struct s_cmd		*parseline(char **ps, char *es, char **envp);
+struct s_cmd		*parsepipe(char **ps, char *es, char **envp);
 struct s_cmd		*parseredirs(struct s_cmd *cmd, char **ps, char *es);
-struct s_cmd		*parseexec(char **ps, char *es);
-struct s_cmd		*parsesemicolon(char **ps, char *es);
+struct s_cmd		*parseexec(char **ps, char *es, char **envp);
+struct s_cmd		*parsesemicolon(char **ps, char *es, char **envp);
 
 /*cmnds2.c 6/6*/
 int					getcmd(char *buf, int nbuf);
@@ -126,7 +127,7 @@ void				free_envp(char **envp);
 
 
 /*minishell.c 4/4*/
-int					ft_cd(char *buf);
+int					ft_cd(char *buf, char **envp);
 int					peek(char **ps, char *es, char *toks);
 int					fork1(void);
 char				*mkcopy(char *s, char *es);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 18:54:21 by azhadan           #+#    #+#             */
-/*   Updated: 2023/12/11 22:18:06 by root             ###   ########.fr       */
+/*   Updated: 2023/12/17 16:29:51 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,13 +52,13 @@ char	*mkcopy(char *s, char *es)
 	return (c);
 }
 
-int	ft_cd(char *buf)
+int	ft_cd(char *buf, char **envp)
 {
 	char	*home_dir;
 
 	if (ft_strncmp(buf, "cd", 4) == 0)
 	{
-		home_dir = getenv("HOME");
+		home_dir = builtin_getenv("HOME", envp);
 		if (home_dir == NULL)
 		{
 			perror("ft_cd: HOME not set");
@@ -114,11 +114,11 @@ int	main(int argc, char **argv, char **envp)
 			break ;
 		if (fork1() == 0)
 		{
-			parse_cmd = parsecmd(buf);
+			parse_cmd = parsecmd(buf, copy_envp);
 			parse_cmd->envp = copy_envp;
-	    	int exit_code = runcmd(parse_cmd); // make runcmd return the exit code
+	    	int exit_code = runcmd(parse_cmd);
     		free_cmd(parse_cmd);
-    		exit(exit_code); // use the exit code from runcmd
+    		exit(exit_code);
 		}
 		wait(&r);
 		if (WIFSIGNALED(r))

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmnds1.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 23:30:46 by idlbltv           #+#    #+#             */
-/*   Updated: 2023/12/15 21:26:36 by root             ###   ########.fr       */
+/*   Updated: 2023/12/17 15:18:19 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,7 @@ int	execute_command(struct s_cmd *cmd)
     {
         return (exit_code);
     }
-    full_path = find_in_path(ecmd->argv[0]);
+    full_path = find_in_path(ecmd->argv[0],(struct s_cmd *)ecmd);
     if (full_path)
     {
         execve(full_path, ecmd->argv, ecmd->envp);

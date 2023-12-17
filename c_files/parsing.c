@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 23:30:37 by idlbltv           #+#    #+#             */
-/*   Updated: 2023/12/11 22:58:27 by root             ###   ########.fr       */
+/*   Updated: 2023/12/17 16:30:40 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,55 +18,55 @@ void	handle_error(const char *error_message)
 	exit(2);
 }
 
-struct s_cmd	*parsecmd(char *s)
+struct s_cmd	*parsecmd(char *s, char **envp)
 {
 	char			*es;
 	struct s_cmd	*cmd;
 
 	es = s + ft_strlen(s);
-	cmd = parseline(&s, es);
+	cmd = parseline(&s, es, envp);
 	peek(&s, es, "");
 	if (s != es)
 		handle_error("leftovers: \n");
 	return (cmd);
 }
 
-struct s_cmd	*parseline(char **ps, char *es)
+struct s_cmd	*parseline(char **ps, char *es, char **envp)
 {
 	struct s_cmd	*cmd;
 
-	cmd = parsesemicolon(ps, es);
+	cmd = parsesemicolon(ps, es, envp);
 	return (cmd);
 }
 
-struct s_cmd *parsesemicolon(char **ps, char *es)
+struct s_cmd *parsesemicolon(char **ps, char *es, char **envp)
 {
     struct s_cmd    *cmd;
     int             tok;
 
-    cmd = parsepipe(ps, es);
+    cmd = parsepipe(ps, es, envp);
     if (peek(ps, es, ";"))
     {
         tok = gettoken(ps, es, 0, 0);
         if (tok == ';' && peek(ps, es, ";"))
             handle_error("syntax error near unexpected token `;;'\n");
-        cmd = semicoloncmd(cmd, parsesemicolon(ps, es));
+        cmd = semicoloncmd(cmd, parsesemicolon(ps, es, envp));
     }
     return cmd;
 }
 
 
-struct s_cmd	*parsepipe(char **ps, char *es)
+struct s_cmd	*parsepipe(char **ps, char *es, char **envp)
 {
 	struct s_cmd	*cmd;
 
-	cmd = parseexec(ps, es);
+	cmd = parseexec(ps, es, envp);
 	if (peek(ps, es, "|"))
 	{
 		gettoken(ps, es, 0, 0);
 		if (peek(ps, es, "|") || *ps == es)
 				handle_error("syntax error near unexpected token `|'\n");
-		cmd = pipecmd(cmd, parsepipe(ps, es));
+		cmd = pipecmd(cmd, parsepipe(ps, es, envp));
 	}
 	return (cmd);
 }
@@ -139,7 +139,7 @@ char	*handle_odd_quotes(char *arg, int quote_count, char quote_type)
 	return (new_arg);
 }
 
-char *handle_env_var(char *arg, int *i, int *memory_allocated)
+char *handle_env_var(char *arg, int *i, int *memory_allocated,char **envp)
 {
     char var_name[256];
     int k = 0;
@@ -148,17 +148,22 @@ char *handle_env_var(char *arg, int *i, int *memory_allocated)
     while (ft_isalnum(arg[*i]) || arg[*i] == '_')
         var_name[k++] = arg[(*i)++];
     var_name[k] = '\0';
-    env_value = getenv(var_name);
+	if (var_name[0] == '\0')
+	{
+		*memory_allocated = 1;
+		return (ft_strdup("$"));
+	}
+    env_value = builtin_getenv(var_name, envp);
     if (env_value != NULL) {
         *memory_allocated = 1;
         return ft_strdup(env_value);
     } else {
-        *memory_allocated = 0;
+        *memory_allocated = 1;
         return NULL;
     }
 }
 
-int	calculate_buffer_size(char *arg, char quote_type, int in_quotes)
+int	calculate_buffer_size(char *arg, char quote_type, int in_quotes, char **envp)
 {
     char	*var_value;
     int		i;
@@ -181,7 +186,7 @@ int	calculate_buffer_size(char *arg, char quote_type, int in_quotes)
                 size += 3;
                 i += 2;
             } else {
-                var_value = handle_env_var(arg, &i, &memory_allocated);
+                var_value = handle_env_var(arg, &i, &memory_allocated, envp);
                 if (var_value != NULL)
                 {
                     size += ft_strlen(var_value);
@@ -198,7 +203,7 @@ int	calculate_buffer_size(char *arg, char quote_type, int in_quotes)
     return (size + 1);
 }
 
-char *replace_env_vars(char *arg, char quote_type, int in_quotes)
+char *replace_env_vars(char *arg, char quote_type, int in_quotes, char **envp)
 {
     char	*var_value;
     char	*result;
@@ -208,7 +213,7 @@ char *replace_env_vars(char *arg, char quote_type, int in_quotes)
     int     is_itoa;
     int     memory_allocated;
 
-    size = calculate_buffer_size(arg, quote_type, 0);
+    size = calculate_buffer_size(arg, quote_type, 0, envp);
     result = malloc(size + 1);
     if (!result) return NULL;
     i = 0;
@@ -229,7 +234,7 @@ char *replace_env_vars(char *arg, char quote_type, int in_quotes)
                 i += 2;
                 is_itoa = 1;
             } else
-                var_value = handle_env_var(arg, &i, &memory_allocated);
+                var_value = handle_env_var(arg, &i, &memory_allocated, envp);
             if (var_value != NULL)
             {
                 ft_strcpy(result + j, var_value);
@@ -245,7 +250,7 @@ char *replace_env_vars(char *arg, char quote_type, int in_quotes)
     return (result);
 }
 
-char	*handle_quotes(char *arg, char quote_type)
+char	*handle_quotes(char *arg, char quote_type, char **envp)
 {
 	int		quote_count;
 	char	*new_arg;
@@ -253,13 +258,13 @@ char	*handle_quotes(char *arg, char quote_type)
 
 	quote_count = count_quotes(arg, quote_type);
 	new_arg = handle_odd_quotes(arg, quote_count, quote_type);
-	result = replace_env_vars(new_arg, quote_type, 0);
+	result = replace_env_vars(new_arg, quote_type, 0, envp);
 	if (new_arg != arg)
 		free(new_arg);
 	return (result);
 }
 
-struct s_cmd	*parseexec(char **ps, char *es)
+struct s_cmd	*parseexec(char **ps, char *es, char **envp)
 {
 	char				*q;
 	char				*eq;
@@ -287,9 +292,9 @@ struct s_cmd	*parseexec(char **ps, char *es)
 		if (tok != 'a')
 			handle_error("syntax\n");
 		arg = mkcopy(q, eq);
-		processed_arg = handle_quotes(arg, '\'');
+		processed_arg = handle_quotes(arg, '\'', envp);
 		char *temp = processed_arg;
-		processed_arg = handle_quotes(processed_arg, '\"');
+		processed_arg = handle_quotes(processed_arg, '\"', envp);
 		cmd->argv[argc] = processed_arg;
     	free(temp);
 		free(arg); 
