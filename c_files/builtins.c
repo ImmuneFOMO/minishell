@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/08 13:30:35 by azhadan           #+#    #+#             */
-/*   Updated: 2023/12/19 15:36:39 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/12/19 16:48:24 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,9 +48,15 @@ int main_builtins(char *buf, char ***envp)
     processed_var = handle_quotes(processed_var, '\"', *envp);
 	free(temp);
 	if (ft_cd(processed_var, *envp))
+	{
+		free(processed_var);
 		return (1);
+	}
 	else if (!ft_strncmp(processed_var, "exit", 5))
+	{
+		free(processed_var);
 		return (2);
+	}
 	else if (!ft_strncmp(processed_var, "unset ", 6))
 	{
 		var = ft_strchr(processed_var, ' ');
@@ -61,6 +67,7 @@ int main_builtins(char *buf, char ***envp)
 			if (check_vars(vars))
 			{
 				ft_free_strs(vars);
+				free(processed_var);
 				return (0);
 			}
 			i = 0;
@@ -71,6 +78,7 @@ int main_builtins(char *buf, char ***envp)
 			}
 			ft_free_strs(vars);
 		}
+		free(processed_var);
 		return (1);
 	}
 	else if (!ft_strncmp(processed_var, "export ", 7))
@@ -83,16 +91,22 @@ int main_builtins(char *buf, char ***envp)
 			if (check_vars(vars))
 			{
 				ft_free_strs(vars);
+				free(processed_var);
 				return (0);
 			}
 			i = 0;
 			while (vars[i])
 			{
-				builtin_export(vars[i] , envp);
+				if (builtin_export(vars[i] , envp))
+				{
+					free(processed_var);
+					return (1);
+				}
 				i++;
 			}
 			ft_free_strs(vars);
 		}
+		free(processed_var);
 		return (1);
 	}
 	free(processed_var);

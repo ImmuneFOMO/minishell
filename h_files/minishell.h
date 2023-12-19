@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 18:26:57 by azhadan           #+#    #+#             */
-/*   Updated: 2023/12/19 11:50:20 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/12/19 15:55:25 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,7 @@ void				builtin_unset(char *var, char ***envp);
 char				*builtin_getenv(const char *var, char **envp);
 
 /*builtns_second 2/5*/
-void				builtin_export(char *var, char ***envp);
+int					builtin_export(char *var, char ***envp);
 void				ft_free_strs(char **strs);
 int					is_valid_var_name(char *var_name);
 

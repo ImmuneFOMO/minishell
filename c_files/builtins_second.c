@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/09 11:37:12 by azhadan           #+#    #+#             */
-/*   Updated: 2023/12/19 15:38:00 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/12/19 15:58:16 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int is_valid_var_name(char *var_name)
     return 1;
 }
 
-void builtin_export(char *var, char ***envp)
+int builtin_export(char *var, char ***envp)
 {
      char    **var_val;
     char    *new_val;
@@ -41,9 +41,9 @@ void builtin_export(char *var, char ***envp)
         if (!is_valid_var_name(var)) {
         g_exit_code = 1;
         ft_putstr_fd(" not a valid identifier\n", STDERR_FILENO);
-        exit (1);
+        return (1);
     }
-    return;
+    return (0);
     }
     int var_name_length = eq_pos - var;
     char var_name[var_name_length + 1];
@@ -52,13 +52,13 @@ void builtin_export(char *var, char ***envp)
     if (!is_valid_var_name(var_name)) {
         g_exit_code = 1;
         ft_putstr_fd(" not a valid identifier\n", STDERR_FILENO);
-        exit (1);
+        return (1);
     }
     var_val = ft_split(var, '=');
     if (var_val == NULL || var_val[0] == NULL)
     {
         ft_free_strs(var_val);
-        return;
+        return (0);
     }
     j = 0;
     while ((*envp)[j])
@@ -67,7 +67,7 @@ void builtin_export(char *var, char ***envp)
         if (!env_var_val)
         {
             ft_free_strs(var_val);
-            return;
+            return (0);
         }
         if (env_var_val[0] && ft_strcmp(env_var_val[0], var_val[0]) == 0)
         {
@@ -82,7 +82,7 @@ void builtin_export(char *var, char ***envp)
             {
                 ft_free_strs(env_var_val);
                 ft_free_strs(var_val);
-                return;
+                return (0);
             }
             (*envp)[j] = ft_strdup(new_val);
             free(new_val);
@@ -90,11 +90,11 @@ void builtin_export(char *var, char ***envp)
             {
                 ft_free_strs(env_var_val);
                 ft_free_strs(var_val);
-                return;
+                return (0);
             }
             ft_free_strs(env_var_val);
             ft_free_strs(var_val);
-            return;
+            return (0);
         }
         ft_free_strs(env_var_val);
         j++;
@@ -104,7 +104,7 @@ void builtin_export(char *var, char ***envp)
     if (!new_envp)
     {
         ft_free_strs(var_val);
-        return;
+        return (0);
     }
     j = 0;
     while ((*envp)[j] != NULL)
@@ -123,7 +123,7 @@ void builtin_export(char *var, char ***envp)
     {
         free(new_envp);
         ft_free_strs(var_val);
-        return;
+        return (1);
     }
 
     new_envp[j] = ft_strdup(new_val);
@@ -132,7 +132,7 @@ void builtin_export(char *var, char ***envp)
     {
         free(new_envp);
         ft_free_strs(var_val);
-        return;
+        return (1);
     }
      new_envp[j + 1] = NULL;
     j = 0;
@@ -140,6 +140,7 @@ void builtin_export(char *var, char ***envp)
     *envp = new_envp;
     ft_free_strs(var_val);
      g_exit_code = 0;
+     return (0);
 }
 
 void ft_free_strs(char **strs)
