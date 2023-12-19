@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/08 13:30:35 by azhadan           #+#    #+#             */
-/*   Updated: 2023/12/17 17:23:17 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/12/19 15:36:39 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,15 +40,20 @@ int main_builtins(char *buf, char ***envp)
 	char	*var;
 	char	**vars;
 	int		i;
+	char    *processed_var;
 
 	trimmed_buf = trim_spaces(buf);
-	if (ft_cd(trimmed_buf, *envp))
+	processed_var = handle_quotes(trimmed_buf, '\'', *envp);
+    char *temp = processed_var;
+    processed_var = handle_quotes(processed_var, '\"', *envp);
+	free(temp);
+	if (ft_cd(processed_var, *envp))
 		return (1);
-	else if (!ft_strncmp(trimmed_buf, "exit", 5))
+	else if (!ft_strncmp(processed_var, "exit", 5))
 		return (2);
-	else if (!ft_strncmp(trimmed_buf, "unset ", 6))
+	else if (!ft_strncmp(processed_var, "unset ", 6))
 	{
-		var = ft_strchr(trimmed_buf, ' ');
+		var = ft_strchr(processed_var, ' ');
 		var++;
 		if (var)
 		{
@@ -68,9 +73,9 @@ int main_builtins(char *buf, char ***envp)
 		}
 		return (1);
 	}
-	else if (!ft_strncmp(trimmed_buf, "export ", 7))
+	else if (!ft_strncmp(processed_var, "export ", 7))
 	{
-		var = ft_strchr(trimmed_buf, ' ');
+		var = ft_strchr(processed_var, ' ');
 		var++;
 		if (var)
 		{
@@ -90,6 +95,7 @@ int main_builtins(char *buf, char ***envp)
 		}
 		return (1);
 	}
+	free(processed_var);
 	return (0);
 }
 
@@ -188,9 +194,6 @@ void builtin_unset(char *var, char ***envp)
         }
     }
 }
-
-#include <stdlib.h>
-#include <string.h>
 
 char *builtin_getenv(const char *var, char **envp)
 {

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/23 10:51:06 by azhadan           #+#    #+#             */
-/*   Updated: 2023/12/14 21:06:18 by root             ###   ########.fr       */
+/*   Updated: 2023/12/19 15:26:25 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,7 @@ void	builtin_env(struct s_execcmd *ecmd, char **args)
 
     if (args[1] != NULL)
 	{
+		ft_printf("fdffdfd234\n");
 		ft_printf("env: %s: No such file or directory\n", args[1]);
 		exit (1);
 	}

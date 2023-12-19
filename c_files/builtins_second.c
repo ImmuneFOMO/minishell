@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/09 11:37:12 by azhadan           #+#    #+#             */
-/*   Updated: 2023/12/19 00:38:05 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/12/19 15:38:00 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ void builtin_export(char *var, char ***envp)
     }
     int var_name_length = eq_pos - var;
     char var_name[var_name_length + 1];
-    strncpy(var_name, var, var_name_length);
+    ft_strncpy(var_name, var, var_name_length);
     var_name[var_name_length] = '\0';
     if (!is_valid_var_name(var_name)) {
         g_exit_code = 1;

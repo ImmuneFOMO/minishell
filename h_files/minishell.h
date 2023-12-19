@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 18:26:57 by azhadan           #+#    #+#             */
-/*   Updated: 2023/12/17 17:21:34 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/12/19 11:50:20 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,6 +102,13 @@ struct s_cmd		*parsepipe(char **ps, char *es, char **envp);
 struct s_cmd		*parseredirs(struct s_cmd *cmd, char **ps, char *es);
 struct s_cmd		*parseexec(char **ps, char *es, char **envp);
 struct s_cmd		*parsesemicolon(char **ps, char *es, char **envp);
+int					count_quotes(char *arg, char quote_type);
+char				*handle_odd_quotes(char *arg, int quote_count, char quote_type);
+char				*handle_env_var(char *arg, int *i, int *memory_allocated,char **envp);
+int					calculate_buffer_size(char *arg, char quote_type, int in_quotes, char **envp);
+char				*replace_env_vars(char *arg, char quote_type, int in_quotes, char **envp);
+char				*handle_quotes(char *arg, char quote_type, char **envp);
+
 
 /*cmnds2.c 6/6*/
 int					getcmd(char *buf, int nbuf);
