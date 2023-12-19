@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/08 13:30:35 by azhadan           #+#    #+#             */
-/*   Updated: 2023/12/19 16:48:24 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/12/19 17:18:52 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,6 +99,7 @@ int main_builtins(char *buf, char ***envp)
 			{
 				if (builtin_export(vars[i] , envp))
 				{
+					ft_free_strs(vars);
 					free(processed_var);
 					return (1);
 				}

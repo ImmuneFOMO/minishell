@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/09 11:37:12 by azhadan           #+#    #+#             */
-/*   Updated: 2023/12/19 15:58:16 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/12/19 17:18:13 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,11 +38,13 @@ int builtin_export(char *var, char ***envp)
     char *eq_pos = ft_strchr(var, '=');
     if (eq_pos == NULL)
     {
-        if (!is_valid_var_name(var)) {
+        if (!is_valid_var_name(var)) 
+        {
         g_exit_code = 1;
+        ft_printf("%s", var);
         ft_putstr_fd(" not a valid identifier\n", STDERR_FILENO);
         return (1);
-    }
+        }
     return (0);
     }
     int var_name_length = eq_pos - var;
