@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/23 10:51:06 by azhadan           #+#    #+#             */
-/*   Updated: 2023/12/14 21:06:18 by root             ###   ########.fr       */
+/*   Updated: 2023/12/19 16:50:23 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,25 @@
 
 void	handle_c(int signum)
 {
-	(void)signum;
-	write(1, "\nminishell: ", 12);
-	g_exit_code = 130;
+	pid_t pid;
+ int  status;
+
+ pid = waitpid(-1, &status, WNOHANG);
+ if (signum == SIGINT)
+ {
+  if (pid == -1)
+  {
+   g_exit_code = 130;
+   write(STDOUT_FILENO, "\n", 1);
+   rl_on_new_line();
+   rl_replace_line("", 0);
+   rl_redisplay();
+  }
+  else
+   write(STDOUT_FILENO, "\n", 1);
+ }
+ if (signum == SIGQUIT)
+  write(STDOUT_FILENO, "Quit (core dumped)\n", 19);
 }
 
 void	builtin_echo(char **args)
@@ -58,6 +74,7 @@ void	builtin_env(struct s_execcmd *ecmd, char **args)
 
     if (args[1] != NULL)
 	{
+		ft_printf("fdffdfd234\n");
 		ft_printf("env: %s: No such file or directory\n", args[1]);
 		exit (1);
 	}
