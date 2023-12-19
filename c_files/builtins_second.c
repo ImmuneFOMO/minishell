@@ -6,21 +6,54 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/09 11:37:12 by azhadan           #+#    #+#             */
-/*   Updated: 2023/11/30 17:52:17 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/12/19 00:38:05 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../h_files/minishell.h"
 
+extern int g_exit_code;
+
+int is_valid_var_name(char *var_name)
+{
+    if (!var_name || !((var_name[0] >= 'a' && var_name[0] <= 'z') || (var_name[0] >= 'A' && var_name[0] <= 'Z'))) {
+        return 0;
+    }
+
+    for (int i = 1; var_name[i]; i++) {
+        if (!((var_name[i] >= '0' && var_name[i] <= '9') || (var_name[i] >= 'a' && var_name[i] <= 'z') || (var_name[i] >= 'A' && var_name[i] <= 'Z') || var_name[i] == '_')) {
+            return 0;
+        }
+    }
+    return 1;
+}
+
 void builtin_export(char *var, char ***envp)
 {
-    char    **var_val;
+     char    **var_val;
     char    *new_val;
-     char   *temp;
+    char    *temp;
     int     j;
 
-    if (ft_strchr(var, '=') == 0)
-        return;
+    char *eq_pos = ft_strchr(var, '=');
+    if (eq_pos == NULL)
+    {
+        if (!is_valid_var_name(var)) {
+        g_exit_code = 1;
+        ft_putstr_fd(" not a valid identifier\n", STDERR_FILENO);
+        exit (1);
+    }
+    return;
+    }
+    int var_name_length = eq_pos - var;
+    char var_name[var_name_length + 1];
+    strncpy(var_name, var, var_name_length);
+    var_name[var_name_length] = '\0';
+    if (!is_valid_var_name(var_name)) {
+        g_exit_code = 1;
+        ft_putstr_fd(" not a valid identifier\n", STDERR_FILENO);
+        exit (1);
+    }
     var_val = ft_split(var, '=');
     if (var_val == NULL || var_val[0] == NULL)
     {
@@ -106,6 +139,7 @@ void builtin_export(char *var, char ***envp)
     ft_free_strs(*envp);
     *envp = new_envp;
     ft_free_strs(var_val);
+     g_exit_code = 0;
 }
 
 void ft_free_strs(char **strs)

@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 23:30:46 by idlbltv           #+#    #+#             */
-/*   Updated: 2023/12/17 15:18:19 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/12/17 18:13:00 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,6 +100,10 @@ int	execute_command(struct s_cmd *cmd)
     ecmd = (struct s_execcmd *)cmd;
     if (ecmd->argv[0] == 0)
         exit(0);
+    if (ft_strncmp(ecmd->argv[0], "cd", 3) == 0 || 
+    ft_strncmp(ecmd->argv[0], "export", 7) == 0 || 
+    ft_strncmp(ecmd->argv[0], "unset", 6) == 0)
+        return (g_exit_code);
     if (builtins(ecmd))
     {
         return (exit_code);
