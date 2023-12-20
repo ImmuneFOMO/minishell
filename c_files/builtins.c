@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/08 13:30:35 by azhadan           #+#    #+#             */
-/*   Updated: 2023/12/19 17:18:52 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/12/19 23:04:48 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ int	ft_count_argc(char **ps, char *es)
 		if (tok != 'a')
 		{
 			write(2, "syntax error\n", 12);
-			exit(-1);
+			return (argc);
 		}
 		argc++;
 	}

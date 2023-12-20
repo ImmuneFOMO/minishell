@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 23:30:46 by idlbltv           #+#    #+#             */
-/*   Updated: 2023/12/19 16:01:51 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/12/19 23:09:12 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ int	runcmd(struct s_cmd *cmd)
 
 	type = cmd->type;
 	if (cmd == 0)
-		exit(0);
+		return(0);
 	if (type == ' ')
 		exit_code = execute_command(cmd);
 	else if (type == '>' || type == '<' || type == '+' || type == '%')
@@ -75,7 +75,7 @@ int	runcmd(struct s_cmd *cmd)
 	else
 	{
 		write(2, "unknown runcmd\n", 15);
-		exit(1);
+		return (1);
 	}
 	return (exit_code);
 }
@@ -103,7 +103,7 @@ int	execute_command(struct s_cmd *cmd)
 
     ecmd = (struct s_execcmd *)cmd;
     if (ecmd->argv[0] == 0)
-        exit(0);
+        return(0);
     if (ft_strncmp(ecmd->argv[0], "cd", 3) == 0 || 
     ft_strncmp(ecmd->argv[0], "export", 7) == 0 || 
     ft_strncmp(ecmd->argv[0], "unset", 6) == 0)
@@ -154,12 +154,14 @@ void	redirect_command(struct s_redircmd *rcmd)
 	if (fd_redirect < 0)
 	{
 		perror("open");
-		exit (1);
+        close(fd_redirect);
+		return ;
 	}
 	if (dup2(fd_redirect, rcmd->fd) < 0)
 	{
 		perror("dup2");
-		exit(0);
+		close(fd_redirect);
+        return ;
 	}
 	rcmd->cmd->envp = dup_envp(rcmd->envp);
 	runcmd(rcmd->cmd);
@@ -179,6 +181,6 @@ void	setup_pipe(int fd_pipe[2])
 	if (pipe(fd_pipe) < 0)
 	{
 		write(2, "pipe has failed\n", 14);
-		exit(0);
+		return ;
 	}
 }

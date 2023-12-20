@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 23:30:37 by idlbltv           #+#    #+#             */
-/*   Updated: 2023/12/17 23:39:53 by root             ###   ########.fr       */
+/*   Updated: 2023/12/19 23:37:24 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,11 @@ struct	s_cmd *parseredirs(struct s_cmd *cmd, char **ps, char *es)
 				handle_error("syntax error near unexpected token `>>'\n");
 		}
 		if (gettoken(ps, es, &q, &eq) != 'a')
-			handle_error("syntax error near unexpected token `newline'\n");
+        {
+            write(2, "missing file or redirection\n", 29);
+            g_exit_code = 2;
+            return (cmd);
+        }	
 		if (tok == '<' || tok == '>' || tok == '+' || tok == '%')
 			cmd = redircmd(cmd, mkcopy(q, eq), tok);
 	}

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmnds2.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/23 20:22:16 by idelibal          #+#    #+#             */
-/*   Updated: 2023/12/14 17:55:18 by root             ###   ########.fr       */
+/*   Updated: 2023/12/19 23:10:05 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void create_pipe_process(struct s_pipecmd *pcmd, int fd_pipe[2]) {
     if (p_id < 0) 
 	{
         write(2, "fork has failed\n", 16);
-        exit(1);
+        return ;
     } 
 	else if (p_id == 0) 
 	{
@@ -29,7 +29,7 @@ void create_pipe_process(struct s_pipecmd *pcmd, int fd_pipe[2]) {
         close(fd_pipe[1]);
         runcmd(pcmd->left);
 		free_cmd((struct s_cmd *)pcmd);
-        exit(0);
+        return ;
     } 
 	else 
 	{
