@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 18:54:21 by azhadan           #+#    #+#             */
-/*   Updated: 2023/12/20 02:07:03 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/12/20 03:29:34 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,22 +69,23 @@ int	ft_cd(char *buf, char **envp)
 		{
 			if (chdir(home_dir) < 0)
 			{
-				perror("ft_cd");
 				g_exit_code = 1;
+				perror("ft_cd");
 				return (1);
 			}
+			g_exit_code = 0;
 		}
 	}
 	else if (ft_strncmp(buf, "cd ", 3) == 0)
 	{
 		if (chdir(buf + 3) < 0)
 		{
-			perror("ft_cd");
 			g_exit_code = 1;
+			perror("ft_cd");
 			return (1);
 		}
+		g_exit_code = 0;
 	}
-	g_exit_code = 0;
 	return (0);
 }
 
