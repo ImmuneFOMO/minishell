@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/23 10:51:06 by azhadan           #+#    #+#             */
-/*   Updated: 2023/12/19 16:50:23 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/12/20 02:07:18 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,6 @@ void	builtin_env(struct s_execcmd *ecmd, char **args)
 
     if (args[1] != NULL)
 	{
-		ft_printf("fdffdfd234\n");
 		ft_printf("env: %s: No such file or directory\n", args[1]);
 		exit (1);
 	}
