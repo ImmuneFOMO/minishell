@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 18:26:57 by azhadan           #+#    #+#             */
-/*   Updated: 2023/12/19 17:14:51 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/12/20 19:53:40 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,6 +138,7 @@ void				free_envp(char **envp);
 int					ft_cd(char *buf, char **envp);
 int					peek(char **ps, char *es, char *toks);
 int					fork1(void);
+int					ft_cd_helper(char **envp);
 char				*mkcopy(char *s, char *es);
 
 /*cmnds1.c 5/5*/

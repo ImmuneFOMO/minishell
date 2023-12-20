@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 18:54:21 by azhadan           #+#    #+#             */
-/*   Updated: 2023/12/20 13:35:12 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/12/20 20:28:28 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,14 +52,12 @@ char	*mkcopy(char *s, char *es)
 	return (c);
 }
 
-int	ft_cd(char *buf, char **envp)
+int	ft_cd_helper(char **envp)
 {
 	char	*home_dir;
-
-	if (ft_strncmp(buf, "cd", 4) == 0)
-	{
-		home_dir = builtin_getenv("HOME", envp);
-		if (home_dir == NULL)
+	
+	home_dir = builtin_getenv("HOME", envp);
+	if (home_dir == NULL)
 		{
 			g_exit_code = 1;
 			perror("ft_cd: HOME not set");
@@ -75,6 +73,15 @@ int	ft_cd(char *buf, char **envp)
 			}
 			g_exit_code = 0;
 		}
+	return (0);
+}
+
+int	ft_cd(char *buf, char **envp)
+{
+	if (ft_strncmp(buf, "cd", 4) == 0)
+	{
+		if (ft_cd_helper(envp))
+			return (1);
 	}
 	else if (ft_strncmp(buf, "cd ", 3) == 0)
 	{
