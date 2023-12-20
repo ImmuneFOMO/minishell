@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/08 13:30:35 by azhadan           #+#    #+#             */
-/*   Updated: 2023/12/20 13:34:38 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/12/20 19:02:46 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,8 @@ int builtin_exit(char *buf)
             ft_putendl_fd("exit: numeric argument required", 2);
         ft_free_strs(args);
         g_exit_code = 1;
+		if (argc <= 2)
+			g_exit_code = 2;
         return 1;
     }
 
@@ -238,18 +240,19 @@ void builtin_unset(char *var, char ***envp)
     int j;
 
 	i = 0;
-    while ((*envp)[i]) {
+    while ((*envp)[i]) 
+	{
         if (!ft_strncmp((*envp)[i], var, ft_strlen(var)) && (*envp)[i][ft_strlen(var)] == '=') 
 		{
             free((*envp)[i]);
             j = i;
-            while ((*envp)[j]) {
+            while ((*envp)[j]) 
+			{
                 (*envp)[j] = (*envp)[j + 1];
                 j++;
             }
-        } else {
-            i++;
-        }
+        } else
+			i++;
     }
 }
 
