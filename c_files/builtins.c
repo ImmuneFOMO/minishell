@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/08 13:30:35 by azhadan           #+#    #+#             */
-/*   Updated: 2023/12/19 23:04:48 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/12/20 13:34:38 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,48 @@ int	ft_count_argc(char **ps, char *es)
 	return (argc);
 }
 
+int is_valid_number(char *str) 
+{
+    if (!str) return 0;
+
+    if (*str == '-' || *str == '+') str++;
+
+    while (*str) {
+        if (!ft_isdigit(*str))
+            return 0;
+        str++;
+    }
+    return 1;
+}
+
+int builtin_exit(char *buf) 
+{
+    char **args = ft_split(buf, ' ');
+    int argc = 0;
+
+    while (args[argc])
+        argc++;
+
+    if (argc > 2 || (argc == 2 && !is_valid_number(args[1]))) {
+        if (argc > 2)
+            ft_putendl_fd("exit: too many arguments", 2);
+        else
+            ft_putendl_fd("exit: numeric argument required", 2);
+        ft_free_strs(args);
+        g_exit_code = 1;
+        return 1;
+    }
+
+    g_exit_code = (argc == 2) ? ft_atoi(args[1]) : g_exit_code;
+    if (g_exit_code < 0) {
+        g_exit_code = (256 + g_exit_code) % 256;
+    } else {
+        g_exit_code %= 256;
+    }
+    ft_free_strs(args);
+    return 0;
+}
+
 int main_builtins(char *buf, char ***envp)
 {
 	char	*trimmed_buf;
@@ -52,8 +94,9 @@ int main_builtins(char *buf, char ***envp)
 		free(processed_var);
 		return (1);
 	}
-	else if (!ft_strncmp(processed_var, "exit", 5))
+	else if (!ft_strncmp(processed_var, "exit", 5) || !ft_strncmp(processed_var, "exit ", 5))
 	{
+		builtin_exit(processed_var);
 		free(processed_var);
 		return (2);
 	}
