@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 18:54:21 by azhadan           #+#    #+#             */
-/*   Updated: 2023/12/17 16:29:51 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/12/19 15:38:05 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ char	*mkcopy(char *s, char *es)
 		write(2, "Memory allocation failed.\n", 25);
 		exit(1);
 	}
-	strncpy(c, s, n);
+	ft_strncpy(c, s, n);
 	c[n] = 0;
 	return (c);
 }
@@ -58,6 +58,7 @@ int	ft_cd(char *buf, char **envp)
 
 	if (ft_strncmp(buf, "cd", 4) == 0)
 	{
+		ft_printf("enter cd\n");
 		home_dir = builtin_getenv("HOME", envp);
 		if (home_dir == NULL)
 		{
@@ -129,5 +130,6 @@ int	main(int argc, char **argv, char **envp)
 	}
 	free_envp(copy_envp);
 	rl_clear_history();
+	exit (g_exit_code);
 	return (0);
 }

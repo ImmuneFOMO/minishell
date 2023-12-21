@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 18:26:57 by azhadan           #+#    #+#             */
-/*   Updated: 2023/12/17 16:29:18 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/12/19 17:14:51 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,19 +90,27 @@ char				**dup_envp(char **envp);
 void				builtin_unset(char *var, char ***envp);
 char				*builtin_getenv(const char *var, char **envp);
 
-/*builtns_second 2/5*/
-void				builtin_export(char *var, char ***envp);
+/*builtns_second 5/3*/
+int					builtin_export(char *var, char ***envp);
 void				ft_free_strs(char **strs);
+int					is_valid_var_name(char *var_name);
 
-/*parsing.c 6/6*/
+/*parsing.c 5/12*/
 struct s_cmd		*parsecmd(char *s, char **envp);
 struct s_cmd		*parseline(char **ps, char *es, char **envp);
 struct s_cmd		*parsepipe(char **ps, char *es, char **envp);
 struct s_cmd		*parseredirs(struct s_cmd *cmd, char **ps, char *es);
 struct s_cmd		*parseexec(char **ps, char *es, char **envp);
 struct s_cmd		*parsesemicolon(char **ps, char *es, char **envp);
+int					count_quotes(char *arg, char quote_type);
+char				*handle_odd_quotes(char *arg, int quote_count, char quote_type);
+char				*handle_env_var(char *arg, int *i, int *memory_allocated,char **envp);
+int					calculate_buffer_size(char *arg, char quote_type, int in_quotes, char **envp);
+char				*replace_env_vars(char *arg, char quote_type, int in_quotes, char **envp);
+char				*handle_quotes(char *arg, char quote_type, char **envp);
 
-/*cmnds2.c 6/6*/
+
+/*cmnds2.c 5/6*/
 int					getcmd(char *buf, int nbuf);
 void				create_pipe_process(struct s_pipecmd *pcmd, int fd_pipe[2]);
 struct s_cmd		*pipecmd(struct s_cmd *left, struct s_cmd *right);
@@ -139,7 +147,7 @@ void				redirect_command(struct s_redircmd *rcmd);
 void				pipe_command(struct s_pipecmd *pcmd);
 void				setup_pipe(int fd_pipe[2]);
 
-/*help_function.c 1/5*/
+/*help_function.c 5/1*/
 int					check_vars(char **vars);
 
 #endif

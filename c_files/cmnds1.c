@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 23:30:46 by idlbltv           #+#    #+#             */
-/*   Updated: 2023/12/17 15:18:19 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/12/19 16:01:51 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,9 +82,13 @@ int	runcmd(struct s_cmd *cmd)
 
 int check_error(char *cmd) {
     if (errno == EACCES) {
-        write(2, cmd, ft_strlen(cmd));
+        write(2, cmd, strlen(cmd));
         write(2, ": permission denied\n", 20);
         return 126;
+    } else if (errno == ENOENT) {
+        write(2, cmd, strlen(cmd));
+        write(2, ": command not found\n", 20);
+        return 127;
     } else {
         perror(cmd);
         return 127;
@@ -100,10 +104,12 @@ int	execute_command(struct s_cmd *cmd)
     ecmd = (struct s_execcmd *)cmd;
     if (ecmd->argv[0] == 0)
         exit(0);
+    if (ft_strncmp(ecmd->argv[0], "cd", 3) == 0 || 
+    ft_strncmp(ecmd->argv[0], "export", 7) == 0 || 
+    ft_strncmp(ecmd->argv[0], "unset", 6) == 0)
+        return (g_exit_code);
     if (builtins(ecmd))
-    {
         return (exit_code);
-    }
     full_path = find_in_path(ecmd->argv[0],(struct s_cmd *)ecmd);
     if (full_path)
     {
