@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 23:30:46 by idlbltv           #+#    #+#             */
-/*   Updated: 2023/12/19 23:09:12 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/12/20 23:32:52 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,6 @@ int	execute_command(struct s_cmd *cmd)
 {
     struct s_execcmd	*ecmd;
     char				*full_path;
-    int                 exit_code = 0;
 
     ecmd = (struct s_execcmd *)cmd;
     if (ecmd->argv[0] == 0)
@@ -109,25 +108,25 @@ int	execute_command(struct s_cmd *cmd)
     ft_strncmp(ecmd->argv[0], "unset", 6) == 0)
         return (g_exit_code);
     if (builtins(ecmd))
-        return (exit_code);
-    full_path = find_in_path(ecmd->argv[0],(struct s_cmd *)ecmd);
+        return (g_exit_code);
+    full_path = find_in_path(ecmd->argv[0]);
     if (full_path)
     {
         execve(full_path, ecmd->argv, ecmd->envp);
         if (errno)
-           exit_code = check_error(ecmd->argv[0]);
+            g_exit_code = check_error(ecmd->argv[0]);
         free(full_path);
     }
     else
     {
-        if (ft_strncmp(ecmd->argv[0], "cd", 2) != 0 && ft_strncmp(ecmd->argv[0], "export", 6) != 0 && ft_strncmp(ecmd->argv[0], "unset", 5) != 0)
+        if (ft_strncmp(ecmd->argv[0], "cd", 3) != 0 && ft_strncmp(ecmd->argv[0], "export", 7) != 0 && ft_strncmp(ecmd->argv[0], "unset", 6) != 0)
         {
             execve(ecmd->argv[0], ecmd->argv, ecmd->envp);
             if (errno)
-            exit_code = check_error(ecmd->argv[0]);    
+                g_exit_code = check_error(ecmd->argv[0]);    
         }
     }
-    return (exit_code);
+    return (g_exit_code);
 }
 
 void	redirect_command(struct s_redircmd *rcmd)
@@ -172,15 +171,10 @@ void	pipe_command(struct s_pipecmd *pcmd)
 {
 	int	fd_pipe[2];
 
-	setup_pipe(fd_pipe);
-	create_pipe_process(pcmd, fd_pipe);
-}
-
-void	setup_pipe(int fd_pipe[2])
-{
 	if (pipe(fd_pipe) < 0)
 	{
 		write(2, "pipe has failed\n", 14);
 		return ;
 	}
+	create_pipe_process(pcmd, fd_pipe);
 }

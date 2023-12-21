@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 18:26:57 by azhadan           #+#    #+#             */
-/*   Updated: 2023/12/20 19:53:40 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/12/21 00:36:34 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ struct				s_semicoloncmd
 
 
 /*builtins.c 5/5*/
-char 				*find_in_path(const char *cmnd, struct s_cmd *cmd);
+char 				*find_in_path(char *cmnd);
 int					main_builtins(char *buf, char ***envp);
 int 				ft_count_argc(char **ps, char *es);
 char				**dup_envp(char **envp);
@@ -146,7 +146,6 @@ int					runcmd(struct s_cmd *cmd);
 int					execute_command(struct s_cmd *cmd);
 void				redirect_command(struct s_redircmd *rcmd);
 void				pipe_command(struct s_pipecmd *pcmd);
-void				setup_pipe(int fd_pipe[2]);
 
 /*help_function.c 5/1*/
 int					check_vars(char **vars);

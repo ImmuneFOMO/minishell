@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/08 13:30:35 by azhadan           #+#    #+#             */
-/*   Updated: 2023/12/20 19:02:46 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/12/21 00:36:03 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -188,50 +188,61 @@ char **dup_envp(char **envp)
 	return(new_envp);
 }
 
-char	*find_in_path(const char *cmnd, struct s_cmd *cmd)
+char *create_full_path(char *dir, char *command)
 {
-	char			*path;
-	char			*temp;
-	char			*dir;
-	char			*full_path;
-	char			*temp_path;
-	struct stat		st;
+	char *temp_path;
+	char *full_path;
 
-	path = builtin_getenv("PATH", cmd->envp);
-	if (!path)
-		return (NULL);
-	temp = ft_strdup(path);
-	if (!temp)
-		return (NULL);
+	temp_path = ft_strjoin(dir, "/");
+	if (!temp_path)
+	return (NULL);
+	full_path = ft_strjoin(temp_path, command);
+	free(temp_path);
+	return (full_path);
+}
+
+char *search_command_in_dirs(char *temp, char *command)
+{
+	char  *dir;
+	struct stat st;
+	char  *full_path;
+
 	dir = ft_strtok(temp, ":");
 	while (dir)
 	{
-		temp_path = ft_strjoin(dir, "/");
-		if (!temp_path)
-		{
-			free(dir);
-			free(temp);
-			return (NULL);
-		}
-		full_path = ft_strjoin(temp_path, cmnd);
-		free(temp_path);
-		if (!full_path)
-		{
-			free(dir);
-			free(temp);
-			return (NULL);
-		}
-		if (stat(full_path, &st) == 0 && (st.st_mode & S_IXUSR))
-		{
-			free(temp);
-			return (full_path);
-		}
-		free(full_path);
-		dir = ft_strtok(NULL, ":");
-	}
-	free(dir);
-	free(temp);
+	full_path = create_full_path(dir, command);
+	if (!full_path)
 	return (NULL);
+	if (stat(full_path, &st) == 0 && (st.st_mode & S_IXUSR))
+	return (full_path);
+	free(full_path);
+	dir = ft_strtok(NULL, ":");
+	}
+	return (NULL);
+}
+
+char	*find_in_path(char *cmd)
+{
+	struct stat st;
+	char  *path;
+	char  *temp;
+	char  *result;
+
+	if (cmd[0] == '/' || ft_strchr(cmd, '/'))
+	{
+	if (stat(cmd, &st) == 0 && (st.st_mode & S_IXUSR))
+	return (ft_strdup(cmd));
+	return (NULL);
+	}
+	path = getenv("PATH");
+	if (!path)
+	return (NULL);
+	temp = ft_strdup(path);
+	if (!temp)
+	return (NULL);
+	result = search_command_in_dirs(temp, cmd);
+	free(temp);
+	return (result);
 }
 
 void builtin_unset(char *var, char ***envp) 

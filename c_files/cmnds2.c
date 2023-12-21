@@ -6,13 +6,14 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/23 20:22:16 by idelibal          #+#    #+#             */
-/*   Updated: 2023/12/19 23:10:05 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/12/20 22:51:25 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../h_files/minishell.h"
 
-void create_pipe_process(struct s_pipecmd *pcmd, int fd_pipe[2]) {
+void create_pipe_process(struct s_pipecmd *pcmd, int fd_pipe[2]) 
+{
     int p_id;
     int status;
 
