@@ -6,13 +6,13 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/27 10:33:08 by azhadan           #+#    #+#             */
-/*   Updated: 2023/10/28 22:50:58 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/12/21 02:47:49 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../libft.h"
 
-char	*ft_strtok(char *str,const char *sepa)
+char	*ft_strtok(char *str, const char *sepa)
 {
 	static char	*saveptr;
 	char		*end;

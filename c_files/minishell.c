@@ -6,13 +6,13 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 18:54:21 by azhadan           #+#    #+#             */
-/*   Updated: 2023/12/20 20:28:28 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/12/21 03:12:00 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../h_files/minishell.h"
 
-int g_exit_code;
+int	g_exit_code;
 
 int	fork1(void)
 {
@@ -55,24 +55,24 @@ char	*mkcopy(char *s, char *es)
 int	ft_cd_helper(char **envp)
 {
 	char	*home_dir;
-	
+
 	home_dir = builtin_getenv("HOME", envp);
 	if (home_dir == NULL)
+	{
+		g_exit_code = 1;
+		perror("ft_cd: HOME not set");
+		return (1);
+	}
+	else
+	{
+		if (chdir(home_dir) < 0)
 		{
 			g_exit_code = 1;
-			perror("ft_cd: HOME not set");
+			perror("ft_cd");
 			return (1);
 		}
-		else
-		{
-			if (chdir(home_dir) < 0)
-			{
-				g_exit_code = 1;
-				perror("ft_cd");
-				return (1);
-			}
-			g_exit_code = 0;
-		}
+		g_exit_code = 0;
+	}
 	return (0);
 }
 
@@ -103,6 +103,7 @@ int	main(int argc, char **argv, char **envp)
 	int				r;
 	struct s_cmd	*parse_cmd;
 	int				code;
+	int				exit_code;
 
 	signal(SIGQUIT, SIG_IGN);
 	signal(SIGINT, handle_c);
@@ -128,19 +129,19 @@ int	main(int argc, char **argv, char **envp)
 		{
 			parse_cmd = parsecmd(buf, copy_envp);
 			parse_cmd->envp = copy_envp;
-	    	int exit_code = runcmd(parse_cmd);
-    		free_cmd(parse_cmd);
-    		exit(exit_code);
+			exit_code = runcmd(parse_cmd);
+			free_cmd(parse_cmd);
+			exit(exit_code);
 		}
 		wait(&r);
 		if (WIFSIGNALED(r))
-            g_exit_code = 127 + WTERMSIG(r);
+			g_exit_code = 127 + WTERMSIG(r);
 		else if (WIFEXITED(r))
 			g_exit_code = WEXITSTATUS(r);
 		free(buf);
 	}
 	free_envp(copy_envp);
 	rl_clear_history();
-	exit (g_exit_code);
+	exit(g_exit_code);
 	return (0);
 }

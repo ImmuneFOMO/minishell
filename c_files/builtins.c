@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/08 13:30:35 by azhadan           #+#    #+#             */
-/*   Updated: 2023/12/21 00:36:03 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/12/21 03:00:47 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,8 @@ int	ft_count_argc(char **ps, char *es)
 	int		argc;
 
 	argc = 0;
-	while (!peek(ps, es, "|") && !peek(ps, es, ">") && !peek(ps, es, "<") && !peek(ps, es, ";") && !peek(ps, es, ">>") && !peek(ps, es, "<<"))
+	while (!peek(ps, es, "|") && !peek(ps, es, ">") && !peek(ps, es, "<")
+		&& !peek(ps, es, ";") && !peek(ps, es, ">>") && !peek(ps, es, "<<"))
 	{
 		if ((tok = gettoken(ps, es, &q, &eq)) == 0)
 			break ;
@@ -34,69 +35,76 @@ int	ft_count_argc(char **ps, char *es)
 	return (argc);
 }
 
-int is_valid_number(char *str) 
+int	is_valid_number(char *str)
 {
-    if (!str) return 0;
-
-    if (*str == '-' || *str == '+') str++;
-
-    while (*str) {
-        if (!ft_isdigit(*str))
-            return 0;
-        str++;
-    }
-    return 1;
+	if (!str)
+		return (0);
+	if (*str == '-' || *str == '+')
+		str++;
+	while (*str)
+	{
+		if (!ft_isdigit(*str))
+			return (0);
+		str++;
+	}
+	return (1);
 }
 
-int builtin_exit(char *buf) 
+int	builtin_exit(char *buf)
 {
-    char **args = ft_split(buf, ' ');
-    int argc = 0;
+	char	**args;
+	int		argc;
 
-    while (args[argc])
-        argc++;
-
-    if (argc > 2 || (argc == 2 && !is_valid_number(args[1]))) {
-        if (argc > 2)
-            ft_putendl_fd("exit: too many arguments", 2);
-        else
-            ft_putendl_fd("exit: numeric argument required", 2);
-        ft_free_strs(args);
-        g_exit_code = 1;
+	args = ft_split(buf, ' ');
+	argc = 0;
+	while (args[argc])
+		argc++;
+	if (argc > 2 || (argc == 2 && !is_valid_number(args[1])))
+	{
+		if (argc > 2)
+			ft_putendl_fd("exit: too many arguments", 2);
+		else
+			ft_putendl_fd("exit: numeric argument required", 2);
+		ft_free_strs(args);
+		g_exit_code = 1;
 		if (argc <= 2)
 			g_exit_code = 2;
-        return 1;
-    }
-
-    g_exit_code = (argc == 2) ? ft_atoi(args[1]) : g_exit_code;
-    if (g_exit_code < 0) {
-        g_exit_code = (256 + g_exit_code) % 256;
-    } else {
-        g_exit_code %= 256;
-    }
-    ft_free_strs(args);
-    return 0;
+		return (1);
+	}
+	g_exit_code = (argc == 2) ? ft_atoi(args[1]) : g_exit_code;
+	if (g_exit_code < 0)
+	{
+		g_exit_code = (256 + g_exit_code) % 256;
+	}
+	else
+	{
+		g_exit_code %= 256;
+	}
+	ft_free_strs(args);
+	return (0);
 }
 
-int main_builtins(char *buf, char ***envp)
+int	main_builtins(char *buf, char ***envp)
 {
 	char	*trimmed_buf;
 	char	*var;
 	char	**vars;
 	int		i;
-	char    *processed_var;
+	char	*processed_var;
+	char	*temp;
 
 	trimmed_buf = trim_spaces(buf);
 	processed_var = handle_quotes(trimmed_buf, '\'', *envp);
-    char *temp = processed_var;
-    processed_var = handle_quotes(processed_var, '\"', *envp);
+	temp = processed_var;
+	processed_var = handle_quotes(processed_var, '\"', *envp);
 	free(temp);
 	if (ft_cd(processed_var, *envp))
 	{
 		free(processed_var);
 		return (1);
 	}
-	else if (!ft_strncmp(processed_var, "exit", 5) || !ft_strncmp(processed_var, "exit ", 5))
+	else if (!ft_strncmp(processed_var, "exit", 5) || !ft_strncmp(processed_var,
+			"exit ", 5))
 	{
 		builtin_exit(processed_var);
 		free(processed_var);
@@ -142,7 +150,7 @@ int main_builtins(char *buf, char ***envp)
 			i = 0;
 			while (vars[i])
 			{
-				if (builtin_export(vars[i] , envp))
+				if (builtin_export(vars[i], envp))
 				{
 					ft_free_strs(vars);
 					free(processed_var);
@@ -159,11 +167,11 @@ int main_builtins(char *buf, char ***envp)
 	return (0);
 }
 
-char **dup_envp(char **envp)
+char	**dup_envp(char **envp)
 {
-	int i;
-	int env_count;
-	char **new_envp;
+	int		i;
+	int		env_count;
+	char	**new_envp;
 
 	i = 0;
 	env_count = 0;
@@ -185,101 +193,104 @@ char **dup_envp(char **envp)
 		i++;
 	}
 	new_envp[env_count] = NULL;
-	return(new_envp);
+	return (new_envp);
 }
 
-char *create_full_path(char *dir, char *command)
+char	*create_full_path(char *dir, char *command)
 {
-	char *temp_path;
-	char *full_path;
+	char	*temp_path;
+	char	*full_path;
 
 	temp_path = ft_strjoin(dir, "/");
 	if (!temp_path)
-	return (NULL);
+		return (NULL);
 	full_path = ft_strjoin(temp_path, command);
 	free(temp_path);
 	return (full_path);
 }
 
-char *search_command_in_dirs(char *temp, char *command)
+char	*search_command_in_dirs(char *temp, char *command)
 {
-	char  *dir;
-	struct stat st;
-	char  *full_path;
+	char		*dir;
+	struct stat	st;
+	char		*full_path;
 
 	dir = ft_strtok(temp, ":");
 	while (dir)
 	{
-	full_path = create_full_path(dir, command);
-	if (!full_path)
-	return (NULL);
-	if (stat(full_path, &st) == 0 && (st.st_mode & S_IXUSR))
-	return (full_path);
-	free(full_path);
-	dir = ft_strtok(NULL, ":");
+		full_path = create_full_path(dir, command);
+		if (!full_path)
+			return (NULL);
+		if (stat(full_path, &st) == 0 && (st.st_mode & S_IXUSR))
+			return (full_path);
+		free(full_path);
+		dir = ft_strtok(NULL, ":");
 	}
 	return (NULL);
 }
 
 char	*find_in_path(char *cmd)
 {
-	struct stat st;
-	char  *path;
-	char  *temp;
-	char  *result;
+	struct stat	st;
+	char		*path;
+	char		*temp;
+	char		*result;
 
 	if (cmd[0] == '/' || ft_strchr(cmd, '/'))
 	{
-	if (stat(cmd, &st) == 0 && (st.st_mode & S_IXUSR))
-	return (ft_strdup(cmd));
-	return (NULL);
+		if (stat(cmd, &st) == 0 && (st.st_mode & S_IXUSR))
+			return (ft_strdup(cmd));
+		return (NULL);
 	}
 	path = getenv("PATH");
 	if (!path)
-	return (NULL);
+		return (NULL);
 	temp = ft_strdup(path);
 	if (!temp)
-	return (NULL);
+		return (NULL);
 	result = search_command_in_dirs(temp, cmd);
 	free(temp);
 	return (result);
 }
 
-void builtin_unset(char *var, char ***envp) 
+void	builtin_unset(char *var, char ***envp)
 {
-    int i;
-    int j;
+	int	i;
+	int	j;
 
 	i = 0;
-    while ((*envp)[i]) 
+	while ((*envp)[i])
 	{
-        if (!ft_strncmp((*envp)[i], var, ft_strlen(var)) && (*envp)[i][ft_strlen(var)] == '=') 
+		if (!ft_strncmp((*envp)[i], var, ft_strlen(var))
+			&& (*envp)[i][ft_strlen(var)] == '=')
 		{
-            free((*envp)[i]);
-            j = i;
-            while ((*envp)[j]) 
+			free((*envp)[i]);
+			j = i;
+			while ((*envp)[j])
 			{
-                (*envp)[j] = (*envp)[j + 1];
-                j++;
-            }
-        } else
+				(*envp)[j] = (*envp)[j + 1];
+				j++;
+			}
+		}
+		else
 			i++;
-    }
+	}
 }
 
-char *builtin_getenv(const char *var, char **envp)
+char	*builtin_getenv(const char *var, char **envp)
 {
-    int i;
+	int	i;
 
-    if (var == NULL) {
-        return NULL;
-    }
-
-    for (i = 0; envp[i]; i++) {
-        if (!strncmp(envp[i], var, strlen(var)) && envp[i][strlen(var)] == '=') {
-            return &envp[i][strlen(var) + 1];
-        }
-    }
-
-    return NULL;
+	if (var == NULL)
+	{
+		return (NULL);
+	}
+	for (i = 0; envp[i]; i++)
+	{
+		if (!strncmp(envp[i], var, strlen(var)) && envp[i][strlen(var)] == '=')
+		{
+			return (&envp[i][strlen(var) + 1]);
+		}
+	}
+	return (NULL);
 }

@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 18:26:57 by azhadan           #+#    #+#             */
-/*   Updated: 2023/12/21 00:36:34 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/12/21 02:46:32 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ rl_replace_line, rl_redisplay, add_history */
 /* errno */
 # include <errno.h>
 
-extern int g_exit_code;
+extern int			g_exit_code;
 
 struct				s_cmd
 {
@@ -81,11 +81,10 @@ struct				s_semicoloncmd
 	struct s_cmd	*right;
 };
 
-
 /*builtins.c 5/5*/
-char 				*find_in_path(char *cmnd);
+char				*find_in_path(char *cmnd);
 int					main_builtins(char *buf, char ***envp);
-int 				ft_count_argc(char **ps, char *es);
+int					ft_count_argc(char **ps, char *es);
 char				**dup_envp(char **envp);
 void				builtin_unset(char *var, char ***envp);
 char				*builtin_getenv(const char *var, char **envp);
@@ -103,12 +102,15 @@ struct s_cmd		*parseredirs(struct s_cmd *cmd, char **ps, char *es);
 struct s_cmd		*parseexec(char **ps, char *es, char **envp);
 struct s_cmd		*parsesemicolon(char **ps, char *es, char **envp);
 int					count_quotes(char *arg, char quote_type);
-char				*handle_odd_quotes(char *arg, int quote_count, char quote_type);
-char				*handle_env_var(char *arg, int *i, int *memory_allocated,char **envp);
-int					calculate_buffer_size(char *arg, char quote_type, int in_quotes, char **envp);
-char				*replace_env_vars(char *arg, char quote_type, int in_quotes, char **envp);
+char				*handle_odd_quotes(char *arg, int quote_count,
+						char quote_type);
+char				*handle_env_var(char *arg, int *i, int *memory_allocated,
+						char **envp);
+int					calculate_buffer_size(char *arg, char quote_type,
+						int in_quotes, char **envp);
+char				*replace_env_vars(char *arg, char quote_type, int in_quotes,
+						char **envp);
 char				*handle_quotes(char *arg, char quote_type, char **envp);
-
 
 /*cmnds2.c 5/6*/
 int					getcmd(char *buf, int nbuf);
@@ -121,10 +123,9 @@ struct s_cmd		*semicoloncmd(struct s_cmd *left, struct s_cmd *right);
 /*signals.c 5/5*/
 void				handle_c(int signum);
 int					builtins(struct s_execcmd *ecmd);
-void 				builtin_pwd();
+void				builtin_pwd(void);
 char				*trim_spaces(char *str);
 void				builtin_env(struct s_execcmd *ecmd, char **args);
-
 
 /*get_token.c 5/5*/
 int					is_whitespace(char c);
@@ -132,7 +133,6 @@ int					gettoken(char **ps, char *es, char **q, char **eq);
 void				process_special_tokens(char **s, int *token);
 void				free_cmd(struct s_cmd *command);
 void				free_envp(char **envp);
-
 
 /*minishell.c 4/4*/
 int					ft_cd(char *buf, char **envp);

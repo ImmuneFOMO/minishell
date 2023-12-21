@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/23 10:51:06 by azhadan           #+#    #+#             */
-/*   Updated: 2023/12/20 02:07:18 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/12/21 02:54:59 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,31 +14,31 @@
 
 void	handle_c(int signum)
 {
-	pid_t pid;
- int  status;
+	pid_t	pid;
+	int		status;
 
- pid = waitpid(-1, &status, WNOHANG);
- if (signum == SIGINT)
- {
-  if (pid == -1)
-  {
-   g_exit_code = 130;
-   write(STDOUT_FILENO, "\n", 1);
-   rl_on_new_line();
-   rl_replace_line("", 0);
-   rl_redisplay();
-  }
-  else
-   write(STDOUT_FILENO, "\n", 1);
- }
- if (signum == SIGQUIT)
-  write(STDOUT_FILENO, "Quit (core dumped)\n", 19);
+	pid = waitpid(-1, &status, WNOHANG);
+	if (signum == SIGINT)
+	{
+		if (pid == -1)
+		{
+			g_exit_code = 130;
+			write(STDOUT_FILENO, "\n", 1);
+			rl_on_new_line();
+			rl_replace_line("", 0);
+			rl_redisplay();
+		}
+		else
+			write(STDOUT_FILENO, "\n", 1);
+	}
+	if (signum == SIGQUIT)
+		write(STDOUT_FILENO, "Quit (core dumped)\n", 19);
 }
 
 void	builtin_echo(char **args)
 {
-	int		i;
-	int		n_flag;
+	int	i;
+	int	n_flag;
 
 	i = 1;
 	n_flag = 0;
@@ -70,21 +70,21 @@ void	builtin_pwd(void)
 
 void	builtin_env(struct s_execcmd *ecmd, char **args)
 {
-    int	i;
+	int	i;
 
-    if (args[1] != NULL)
+	if (args[1] != NULL)
 	{
 		ft_printf("env: %s: No such file or directory\n", args[1]);
-		exit (1);
+		exit(1);
 	}
-    i = 0;
-    if (!ecmd || !ecmd->envp)
-        return;
-    while (ecmd->envp[i])
-    {
-        ft_printf("%s\n", ecmd->envp[i]);
-        i++;
-    }
+	i = 0;
+	if (!ecmd || !ecmd->envp)
+		return ;
+	while (ecmd->envp[i])
+	{
+		ft_printf("%s\n", ecmd->envp[i]);
+		i++;
+	}
 }
 
 int	builtins(struct s_execcmd *ecmd)

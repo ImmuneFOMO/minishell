@@ -6,13 +6,11 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/09 11:37:12 by azhadan           #+#    #+#             */
-/*   Updated: 2023/12/19 17:18:13 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/12/21 03:11:00 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../h_files/minishell.h"
-
-extern int g_exit_code;
 
 int is_valid_var_name(char *var_name)
 {

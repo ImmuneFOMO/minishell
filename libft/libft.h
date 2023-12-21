@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/12 20:10:39 by azhadan           #+#    #+#             */
-/*   Updated: 2023/12/19 11:38:44 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/12/21 02:47:25 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ char				**ft_split(char const *s, char c);
 char				*ft_itoa(int n);
 char				*ft_strmapi(char const *s, char (*f)(unsigned int, char));
 void				ft_striteri(char *s, void (*f)(unsigned int, char *));
-char				*ft_strtok(char *str,const char *sepa);
+char				*ft_strtok(char *str, const char *sepa);
 void				ft_putchar_fd(char c, int fd);
 void				ft_putstr_fd(char *s, int fd);
 void				ft_putendl_fd(char *s, int fd);
@@ -81,20 +81,20 @@ void				ft_lstclear(t_list **lst, void (*del)(void *));
 void				ft_lstiter(t_list *lst, void (*f)(void *));
 t_list				*ft_lstmap(t_list *lst, void *(*f)(void *),
 						void (*del)(void *));
-//get_next_line
+// get_next_line
 int					ft_strle_gnl(const char *str);
 int					ft_check(char *to_check);
 char				*ft_gnl_join(char *s1, char *s2);
 char				*get_next_line(int fd);
-//printf source
+// printf source
 void				ft_putchar_fd_printf(char c, int fd, int *len);
 void				ft_putnbr_fd_printf(int n, int fd, int *len);
 void				ft_putstr_fd_printf(char *s, int fd, int *len);
 void				ft_unsigned_putnbr(unsigned int num, int *len);
 void				print_ptr_hex(unsigned long int ptr, int *len, int check);
-//printf second_source
+// printf second_source
 void				ft_puthex(unsigned int num, int *len, int up_or_low);
-//printf
+// printf
 void				check(const char *str, int i, int *len, va_list args);
 int					ft_printf(const char *str, ...);
 

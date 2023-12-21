@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_token.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 23:30:14 by idlbltv           #+#    #+#             */
-/*   Updated: 2023/12/08 18:23:39 by root             ###   ########.fr       */
+/*   Updated: 2023/12/21 02:53:59 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,7 @@ void	free_cmd(struct s_cmd *command)
 	struct s_execcmd		*ecmd;
 	struct s_redircmd		*rcmd;
 	struct s_semicoloncmd	*scmd;
-	int					i;
+	int						i;
 
 	i = 0;
 	if (!command)
@@ -126,7 +126,8 @@ void	free_cmd(struct s_cmd *command)
 		free_cmd(scmd->left);
 		free_cmd(scmd->right);
 	}
-	else if (command->type == '>' || command->type == '<' || command->type == '+' || command->type == '%')
+	else if (command->type == '>' || command->type == '<'
+		|| command->type == '+' || command->type == '%')
 	{
 		rcmd = (struct s_redircmd *)command;
 		free_cmd(rcmd->cmd);
@@ -137,9 +138,9 @@ void	free_cmd(struct s_cmd *command)
 	free(command);
 }
 
-void free_envp(char **envp)
+void	free_envp(char **envp)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	if (envp)

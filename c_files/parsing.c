@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 23:30:37 by idlbltv           #+#    #+#             */
-/*   Updated: 2023/12/19 23:37:24 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/12/21 03:00:28 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,22 +39,21 @@ struct s_cmd	*parseline(char **ps, char *es, char **envp)
 	return (cmd);
 }
 
-struct s_cmd *parsesemicolon(char **ps, char *es, char **envp)
+struct s_cmd	*parsesemicolon(char **ps, char *es, char **envp)
 {
-    struct s_cmd    *cmd;
-    int             tok;
+	struct s_cmd	*cmd;
+	int				tok;
 
-    cmd = parsepipe(ps, es, envp);
-    if (peek(ps, es, ";"))
-    {
-        tok = gettoken(ps, es, 0, 0);
-        if (tok == ';' && peek(ps, es, ";"))
-            handle_error("syntax error near unexpected token `;;'\n");
-        cmd = semicoloncmd(cmd, parsesemicolon(ps, es, envp));
-    }
-    return cmd;
+	cmd = parsepipe(ps, es, envp);
+	if (peek(ps, es, ";"))
+	{
+		tok = gettoken(ps, es, 0, 0);
+		if (tok == ';' && peek(ps, es, ";"))
+			handle_error("syntax error near unexpected token `;;'\n");
+		cmd = semicoloncmd(cmd, parsesemicolon(ps, es, envp));
+	}
+	return (cmd);
 }
-
 
 struct s_cmd	*parsepipe(char **ps, char *es, char **envp)
 {
@@ -65,34 +64,36 @@ struct s_cmd	*parsepipe(char **ps, char *es, char **envp)
 	{
 		gettoken(ps, es, 0, 0);
 		if (peek(ps, es, "|") || *ps == es)
-				handle_error("syntax error near unexpected token `|'\n");
+			handle_error("syntax error near unexpected token `|'\n");
 		cmd = pipecmd(cmd, parsepipe(ps, es, envp));
 	}
 	return (cmd);
 }
 
-struct	s_cmd *parseredirs(struct s_cmd *cmd, char **ps, char *es)
+struct s_cmd	*parseredirs(struct s_cmd *cmd, char **ps, char *es)
 {
-	int     tok;
-	int     next_tok;
-	char    *q;
-	char    *eq;
+	int		tok;
+	int		next_tok;
+	char	*q;
+	char	*eq;
+
 	while (peek(ps, es, "<>"))
 	{
 		tok = gettoken(ps, es, 0, 0);
-		if (peek(ps, es, ">")) {
+		if (peek(ps, es, ">"))
+		{
 			next_tok = gettoken(ps, es, 0, 0);
 			if (next_tok == '>')
 				handle_error("syntax error near unexpected token `>'\n");
-			else 
+			else
 				handle_error("syntax error near unexpected token `>>'\n");
 		}
 		if (gettoken(ps, es, &q, &eq) != 'a')
-        {
-            write(2, "missing file or redirection\n", 29);
-            g_exit_code = 2;
-            return (cmd);
-        }	
+		{
+			write(2, "missing file or redirection\n", 29);
+			g_exit_code = 2;
+			return (cmd);
+		}
 		if (tok == '<' || tok == '>' || tok == '+' || tok == '%')
 			cmd = redircmd(cmd, mkcopy(q, eq), tok);
 	}
@@ -101,46 +102,47 @@ struct	s_cmd *parseredirs(struct s_cmd *cmd, char **ps, char *es)
 
 int	count_quotes(char *arg, char quote_type)
 {
-    int	quote_count;
-    int	i;
-    int in_double_quotes = 0;
+	int	quote_count;
+	int	i;
+	int	in_double_quotes;
 
-    quote_count = 0;
-    i = 0;
-    while (arg[i] != '\0')
-    {
-        if (arg[i] == '\"')
-        {
-            in_double_quotes = !in_double_quotes;
-        }
-        if (arg[i] == quote_type && (!in_double_quotes || quote_type == '\"'))
-            quote_count++;
-        i++;
-    }
-    return (quote_count);
+	in_double_quotes = 0;
+	quote_count = 0;
+	i = 0;
+	while (arg[i] != '\0')
+	{
+		if (arg[i] == '\"')
+		{
+			in_double_quotes = !in_double_quotes;
+		}
+		if (arg[i] == quote_type && (!in_double_quotes || quote_type == '\"'))
+			quote_count++;
+		i++;
+	}
+	return (quote_count);
 }
 
 char	*handle_odd_quotes(char *arg, int quote_count, char quote_type)
 {
-	char *new_arg;
-	new_arg = arg;
-	char extra_input[256];
-	char *temp_arg;
-	ssize_t len;
+	char	*new_arg;
+	char	extra_input[256];
+	char	*temp_arg;
+	ssize_t	len;
 
+	new_arg = arg;
 	while (quote_count % 2 != 0)
 	{
 		extra_input[0] = '\0';
 		ft_printf("quote> ");
 		len = read(0, extra_input, 255);
-		if (extra_input[len - 1] == '\n') 
+		if (extra_input[len - 1] == '\n')
 			extra_input[len - 1] = '\0';
-		quote_count += count_quotes(extra_input, quote_type); 
-		temp_arg = (char *)malloc(ft_strlen(new_arg) + ft_strlen(extra_input) + 2);
+		quote_count += count_quotes(extra_input, quote_type);
+		temp_arg = (char *)malloc(ft_strlen(new_arg) + ft_strlen(extra_input)
+				+ 2);
 		ft_strcpy(temp_arg, new_arg);
 		ft_strcat(temp_arg, "\n");
 		ft_strcat(temp_arg, extra_input);
-
 		if (new_arg != arg)
 			free(new_arg);
 		new_arg = temp_arg;
@@ -148,125 +150,143 @@ char	*handle_odd_quotes(char *arg, int quote_count, char quote_type)
 	return (new_arg);
 }
 
-char *handle_env_var(char *arg, int *i, int *memory_allocated,char **envp)
+char	*handle_env_var(char *arg, int *i, int *memory_allocated, char **envp)
 {
-    char var_name[256];
-    int k = 0;
-    char *env_value;
-    (*i)++;
-    while (ft_isalnum(arg[*i]) || arg[*i] == '_')
-        var_name[k++] = arg[(*i)++];
-    var_name[k] = '\0';
+	char	var_name[256];
+	int		k;
+	char	*env_value;
+
+	k = 0;
+	(*i)++;
+	while (ft_isalnum(arg[*i]) || arg[*i] == '_')
+		var_name[k++] = arg[(*i)++];
+	var_name[k] = '\0';
 	if (var_name[0] == '\0')
 	{
 		*memory_allocated = 1;
 		return (ft_strdup("$"));
 	}
-    env_value = builtin_getenv(var_name, envp);
-    if (env_value != NULL) {
-        *memory_allocated = 1;
-        return ft_strdup(env_value);
-    } else {
-        *memory_allocated = 1;
-        return NULL;
-    }
+	env_value = builtin_getenv(var_name, envp);
+	if (env_value != NULL)
+	{
+		*memory_allocated = 1;
+		return (ft_strdup(env_value));
+	}
+	else
+	{
+		*memory_allocated = 1;
+		return (NULL);
+	}
 }
 
-int	calculate_buffer_size(char *arg, char quote_type, int in_quotes, char **envp)
+int	calculate_buffer_size(char *arg, char quote_type, int in_quotes,
+		char **envp)
 {
-    char	*var_value;
-    int		i;
-    int		size;
-    int     memory_allocated;
-    int     in_double_quotes = 0;
+	char	*var_value;
+	int		i;
+	int		size;
+	int		memory_allocated;
+	int		in_double_quotes;
 
-    i = 0;
-    size = 0;
-    while (arg[i] != '\0')
-    {
-        if (arg[i] == '\"')
-        {
-            in_double_quotes = !in_double_quotes;
-        }
-        if (arg[i] == quote_type && (!in_double_quotes || quote_type == '\"'))
-        {
-            in_quotes = !in_quotes;
-            i++;
-            continue ;
-        }
-        else if (arg[i] == '$' && ((!in_quotes && quote_type == '\'') || (in_quotes && quote_type == '\"')))
-        {
-            if (ft_strncmp(arg + i, "$?", 2) == 0) {
-                size += 3;
-                i += 2;
-            } else {
-                var_value = handle_env_var(arg, &i, &memory_allocated, envp);
-                if (var_value != NULL)
-                {
-                    size += ft_strlen(var_value);
-                    if (memory_allocated) {
-                        free(var_value);
-                    }
-                }
-            }
-            continue ;
-        }
-        size++;
-        i++;
-    }
-    return (size + 1);
+	in_double_quotes = 0;
+	i = 0;
+	size = 0;
+	while (arg[i] != '\0')
+	{
+		if (arg[i] == '\"')
+		{
+			in_double_quotes = !in_double_quotes;
+		}
+		if (arg[i] == quote_type && (!in_double_quotes || quote_type == '\"'))
+		{
+			in_quotes = !in_quotes;
+			i++;
+			continue ;
+		}
+		else if (arg[i] == '$' && ((!in_quotes && quote_type == '\'')
+					|| (in_quotes && quote_type == '\"')))
+		{
+			if (ft_strncmp(arg + i, "$?", 2) == 0)
+			{
+				size += 3;
+				i += 2;
+			}
+			else
+			{
+				var_value = handle_env_var(arg, &i, &memory_allocated, envp);
+				if (var_value != NULL)
+				{
+					size += ft_strlen(var_value);
+					if (memory_allocated)
+					{
+						free(var_value);
+					}
+				}
+			}
+			continue ;
+		}
+		size++;
+		i++;
+	}
+	return (size + 1);
 }
 
-char *replace_env_vars(char *arg, char quote_type, int in_quotes, char **envp)
+char	*replace_env_vars(char *arg, char quote_type, int in_quotes,
+		char **envp)
 {
-    char	*var_value;
-    char	*result;
-    int		size;
-    int		i;
-    int		j;
-    int     is_itoa;
-    int     memory_allocated;
-    int     in_double_quotes = 0;
+	char	*var_value;
+	char	*result;
+	int		size;
+	int		i;
+	int		j;
+	int		is_itoa;
+	int		memory_allocated;
+	int		in_double_quotes;
 
-    size = calculate_buffer_size(arg, quote_type, 0, envp);
-    result = malloc(size + 1);
-    if (!result) return NULL;
-    i = 0;
-    j = 0;
-    while (arg[i] != '\0')
-    {
-        if (arg[i] == '\"')
-        {
-            in_double_quotes = !in_double_quotes;
-        }
-        if (arg[i] == quote_type && (!in_double_quotes || quote_type == '\"'))
-        {
-            in_quotes = !in_quotes;
-            i++;
-            continue;
-        }
-        else if (arg[i] == '$' && ((!in_quotes && quote_type == '\'') || (in_quotes && quote_type == '\"')))
-        {
-            is_itoa = 0;
-            if (ft_strncmp(arg + i, "$?", 2) == 0) {
-                var_value = ft_itoa(g_exit_code);
-                i += 2;
-                is_itoa = 1;
-            } else
-                var_value = handle_env_var(arg, &i, &memory_allocated, envp);
-            if (var_value != NULL)
-            {
-                ft_strcpy(result + j, var_value);
-                j += ft_strlen(var_value);
-                if (is_itoa || memory_allocated)
-                    free(var_value);
-            }
-            continue;
-        }
-        result[j++] = arg[i++];
-    }
-    result[j] = '\0';
-    return (result);
+	in_double_quotes = 0;
+	size = calculate_buffer_size(arg, quote_type, 0, envp);
+	result = malloc(size + 1);
+	if (!result)
+		return (NULL);
+	i = 0;
+	j = 0;
+	while (arg[i] != '\0')
+	{
+		if (arg[i] == '\"')
+		{
+			in_double_quotes = !in_double_quotes;
+		}
+		if (arg[i] == quote_type && (!in_double_quotes || quote_type == '\"'))
+		{
+			in_quotes = !in_quotes;
+			i++;
+			continue ;
+		}
+		else if (arg[i] == '$' && ((!in_quotes && quote_type == '\'')
+					|| (in_quotes && quote_type == '\"')))
+		{
+			is_itoa = 0;
+			if (ft_strncmp(arg + i, "$?", 2) == 0)
+			{
+				var_value = ft_itoa(g_exit_code);
+				i += 2;
+				is_itoa = 1;
+			}
+			else
+				var_value = handle_env_var(arg, &i, &memory_allocated, envp);
+			if (var_value != NULL)
+			{
+				ft_strcpy(result + j, var_value);
+				j += ft_strlen(var_value);
+				if (is_itoa || memory_allocated)
+					free(var_value);
+			}
+			continue ;
+		}
+		result[j++] = arg[i++];
+	}
+	result[j] = '\0';
+	return (result);
 }
 
 char	*handle_quotes(char *arg, char quote_type, char **envp)
@@ -295,6 +315,7 @@ struct s_cmd	*parseexec(char **ps, char *es, char **envp)
 	struct s_cmd		*ret;
 	char				*ps_clone;
 	char				*es_clone;
+	char				*temp;
 
 	ps_clone = *ps;
 	es_clone = es;
@@ -306,17 +327,18 @@ struct s_cmd	*parseexec(char **ps, char *es, char **envp)
 	argc = 0;
 	while (!peek(ps, es, "|") && !peek(ps, es, ";"))
 	{
-		if ((tok = gettoken(ps, es, &q, &eq)) == 0)
+		tok = gettoken(ps, es, &q, &eq);
+		if (tok == 0)
 			break ;
 		if (tok != 'a')
 			handle_error("syntax\n");
 		arg = mkcopy(q, eq);
 		processed_arg = handle_quotes(arg, '\'', envp);
-		char *temp = processed_arg;
+		temp = processed_arg;
 		processed_arg = handle_quotes(processed_arg, '\"', envp);
 		cmd->argv[argc] = processed_arg;
-    	free(temp);
-		free(arg); 
+		free(temp);
+		free(arg);
 		argc++;
 		ret = parseredirs(ret, ps, es);
 	}
