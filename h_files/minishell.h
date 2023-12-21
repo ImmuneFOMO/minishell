@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 18:26:57 by azhadan           #+#    #+#             */
-/*   Updated: 2023/12/21 02:46:32 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/12/21 22:16:00 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,6 +93,11 @@ char				*builtin_getenv(const char *var, char **envp);
 int					builtin_export(char *var, char ***envp);
 void				ft_free_strs(char **strs);
 int					is_valid_var_name(char *var_name);
+int					check_for_equal_sign(char *var);
+int					update_or_add_env_var(char ***envp, char ***var_val);
+int					update_environment_variable(char ***envp, char ***var_val, int index, char ***env_var_val);
+int					add_new_environment_variable(char ***envp, char ***var_val, int size);
+int					builtin_export_name_valid(int var_name_length, char **var, char ***var_val);
 
 /*parsing.c 5/12*/
 struct s_cmd		*parsecmd(char *s, char **envp);
