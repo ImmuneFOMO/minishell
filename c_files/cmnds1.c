@@ -6,27 +6,49 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 23:30:46 by idlbltv           #+#    #+#             */
-/*   Updated: 2023/12/22 01:48:50 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/12/22 14:12:03 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../h_files/minishell.h"
 
-int	handle_heredoc(struct s_redircmd *rcmd)
+int	checker_handle_heredoc(struct s_redircmd *rcmd, int *pipefd)
 {
-	char	buffer[1024];
-	int		pipefd[2];
-	size_t	delimiter_length;
-	ssize_t	read_len;
-
 	if (rcmd == NULL || rcmd->file == NULL)
 	{
 		write(STDERR_FILENO, "Invalid command\n", 16);
-		return (0);
+		return (1);
 	}
 	if (pipe(pipefd) == -1)
 	{
 		perror("pipe");
+		return (1);
+	}
+	return (0);
+}
+
+int	handle_heredoc_finish(int *pipefd)
+{
+	close(pipefd[1]);
+	if (dup2(pipefd[0], STDIN_FILENO) == -1)
+	{
+		perror("dup2");
+		close(pipefd[0]);
+		return (0);
+	}
+	close(pipefd[0]);
+	return (1);
+}
+
+int	handle_heredoc(struct s_redircmd *rcmd)
+{
+	char	buffer[1024];
+	int		pipefd[2];
+	int		delimiter_length;
+	ssize_t	read_len;
+
+	if (checker_handle_heredoc(rcmd, pipefd))
+	{
 		return (0);
 	}
 	delimiter_length = ft_strlen(rcmd->file);
@@ -43,15 +65,7 @@ int	handle_heredoc(struct s_redircmd *rcmd)
 			break ;
 		write(pipefd[1], buffer, read_len);
 	}
-	close(pipefd[1]);
-	if (dup2(pipefd[0], STDIN_FILENO) == -1)
-	{
-		perror("dup2");
-		close(pipefd[0]);
-		return (0);
-	}
-	close(pipefd[0]);
-	return (1);
+	return (handle_heredoc_finish(pipefd));
 }
 
 int	runcmd(struct s_cmd *cmd)
@@ -103,20 +117,8 @@ int	check_error(char *cmd)
 	}
 }
 
-int	execute_command(struct s_cmd *cmd)
+void	execute_command_run(char *full_path, struct s_execcmd *ecmd)
 {
-	struct s_execcmd	*ecmd;
-	char				*full_path;
-
-	ecmd = (struct s_execcmd *)cmd;
-	if (ecmd->argv[0] == 0)
-		return (0);
-	if (ft_strncmp(ecmd->argv[0], "cd", 3) == 0 || ft_strncmp(ecmd->argv[0],
-			"export", 7) == 0 || ft_strncmp(ecmd->argv[0], "unset", 6) == 0)
-		return (g_exit_code);
-	if (builtins(ecmd))
-		return (g_exit_code);
-	full_path = find_in_path(ecmd->argv[0]);
 	if (full_path)
 	{
 		execve(full_path, ecmd->argv, ecmd->envp);
@@ -134,7 +136,45 @@ int	execute_command(struct s_cmd *cmd)
 				g_exit_code = check_error(ecmd->argv[0]);
 		}
 	}
+}
+
+int	execute_command(struct s_cmd *cmd)
+{
+	struct s_execcmd	*ecmd;
+	char				*full_path;
+
+	ecmd = (struct s_execcmd *)cmd;
+	if (ecmd->argv[0] == 0)
+		return (0);
+	if (ft_strncmp(ecmd->argv[0], "cd", 3) == 0 || ft_strncmp(ecmd->argv[0],
+			"export", 7) == 0 || ft_strncmp(ecmd->argv[0], "unset", 6) == 0)
+		return (g_exit_code);
+	if (builtins(ecmd))
+		return (g_exit_code);
+	full_path = find_in_path(ecmd->argv[0]);
+	execute_command_run(full_path, ecmd);
 	return (g_exit_code);
+}
+
+int	checkes_redirect_command(int *flags, struct s_redircmd *rcmd,
+		int *fd_redirect)
+{
+	if (rcmd->type == '>' || rcmd->type == '+')
+		(*flags) = rcmd->mode;
+	else if (rcmd->type == '<')
+		(*flags) = O_RDONLY;
+	else if (rcmd->type == '%')
+	{
+		(*fd_redirect) = handle_heredoc(rcmd);
+		if ((*fd_redirect) == 0)
+		{
+			perror("double_redirect_left");
+			return (1);
+		}
+		runcmd(rcmd->cmd);
+		return (1);
+	}
+	return (0);
 }
 
 void	redirect_command(struct s_redircmd *rcmd)
@@ -142,21 +182,8 @@ void	redirect_command(struct s_redircmd *rcmd)
 	int	fd_redirect;
 	int	flags;
 
-	if (rcmd->type == '>' || rcmd->type == '+')
-		flags = rcmd->mode;
-	else if (rcmd->type == '<')
-		flags = O_RDONLY;
-	else if (rcmd->type == '%')
-	{
-		fd_redirect = handle_heredoc(rcmd);
-		if (fd_redirect == 0)
-		{
-			perror("double_redirect_left");
-			return ;
-		}
-		runcmd(rcmd->cmd);
+	if (checkes_redirect_command(&flags, rcmd, &fd_redirect))
 		return ;
-	}
 	fd_redirect = open(rcmd->file, flags, 0666);
 	if (fd_redirect < 0)
 	{

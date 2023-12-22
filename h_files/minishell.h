@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 18:26:57 by azhadan           #+#    #+#             */
-/*   Updated: 2023/12/21 22:16:00 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/12/22 02:50:18 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,9 +95,12 @@ void				ft_free_strs(char **strs);
 int					is_valid_var_name(char *var_name);
 int					check_for_equal_sign(char *var);
 int					update_or_add_env_var(char ***envp, char ***var_val);
-int					update_environment_variable(char ***envp, char ***var_val, int index, char ***env_var_val);
-int					add_new_environment_variable(char ***envp, char ***var_val, int size);
-int					builtin_export_name_valid(int var_name_length, char **var, char ***var_val);
+int					update_environment_variable(char ***envp, char ***var_val,
+						int index, char ***env_var_val);
+int					add_new_environment_variable(char ***envp, char ***var_val,
+						int size);
+int					builtin_export_name_valid(int var_name_length, char **var,
+						char ***var_val);
 
 /*parsing.c 5/12*/
 struct s_cmd		*parsecmd(char *s, char **envp);
@@ -116,6 +119,7 @@ int					calculate_buffer_size(char *arg, char quote_type,
 char				*replace_env_vars(char *arg, char quote_type, int in_quotes,
 						char **envp);
 char				*handle_quotes(char *arg, char quote_type, char **envp);
+void				parseredirs_error(char **ps, char *es);
 
 /*cmnds2.c 5/6*/
 int					getcmd(char *buf, int nbuf);
@@ -147,10 +151,17 @@ int					ft_cd_helper(char **envp);
 char				*mkcopy(char *s, char *es);
 
 /*cmnds1.c 5/5*/
+int					checker_handle_heredoc(struct s_redircmd *rcmd,
+						int *pipefd);
+int					handle_heredoc_finish(int *pipefd);
+int					handle_heredoc(struct s_redircmd *rcmd);
 int					runcmd(struct s_cmd *cmd);
+void				pipe_command(struct s_pipecmd *pcmd);
+int					check_error(char *cmd);
+void				execute_command_run(char *full_path,
+						struct s_execcmd *ecmd);
 int					execute_command(struct s_cmd *cmd);
 void				redirect_command(struct s_redircmd *rcmd);
-void				pipe_command(struct s_pipecmd *pcmd);
 
 /*help_function.c 5/1*/
 int					check_vars(char **vars);

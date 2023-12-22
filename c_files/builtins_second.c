@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/09 11:37:12 by azhadan           #+#    #+#             */
-/*   Updated: 2023/12/22 01:51:04 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/12/22 14:22:32 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,8 +103,8 @@ int	update_environment_variable(char ***envp, char ***var_val, int index,
 
 	free((*envp)[index]);
 	temp = ft_strjoin((*var_val)[0], "=");
-	new_val = (*var_val)[1] ? ft_strjoin(temp, (*var_val)[1]) : ft_strjoin(temp,
-			"");
+	new_val = (*var_val)[1] ? ft_strjoin(temp, (*var_val)[1]) : ft_strjoin(temp,\
+	"");
 	free(temp);
 	if (!new_val)
 	{
@@ -142,8 +142,8 @@ int	add_new_environment_variable(char ***envp, char ***var_val, int size)
 		new_envp[i] = ft_strdup((*envp)[i]);
 	}
 	temp = ft_strjoin((*var_val)[0], "=");
-	new_val = (*var_val)[1] ? ft_strjoin(temp, (*var_val)[1]) : ft_strjoin(temp,
-			"");
+	new_val = (*var_val)[1] ? ft_strjoin(temp, (*var_val)[1]) : ft_strjoin(temp,\
+	"");
 	free(temp);
 	if (!new_val)
 	{

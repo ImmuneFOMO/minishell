@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 23:30:37 by idlbltv           #+#    #+#             */
-/*   Updated: 2023/12/22 01:49:52 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/12/22 02:54:49 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,10 +70,20 @@ struct s_cmd	*parsepipe(char **ps, char *es, char **envp)
 	return (cmd);
 }
 
+void	parseredirs_error(char **ps, char *es)
+{
+	int		next_tok;
+	
+	next_tok = gettoken(ps, es, 0, 0);
+	if (next_tok == '>')
+		handle_error("syntax error near unexpected token `>'\n");
+	else
+		handle_error("syntax error near unexpected token `>>'\n");
+}
+
 struct s_cmd	*parseredirs(struct s_cmd *cmd, char **ps, char *es)
 {
 	int		tok;
-	int		next_tok;
 	char	*q;
 	char	*eq;
 
@@ -81,13 +91,7 @@ struct s_cmd	*parseredirs(struct s_cmd *cmd, char **ps, char *es)
 	{
 		tok = gettoken(ps, es, 0, 0);
 		if (peek(ps, es, ">"))
-		{
-			next_tok = gettoken(ps, es, 0, 0);
-			if (next_tok == '>')
-				handle_error("syntax error near unexpected token `>'\n");
-			else
-				handle_error("syntax error near unexpected token `>>'\n");
-		}
+			parseredirs_error(ps, es);
 		if (gettoken(ps, es, &q, &eq) != 'a')
 		{
 			write(2, "missing file or redirection\n", 29);
