@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 18:26:57 by azhadan           #+#    #+#             */
-/*   Updated: 2023/12/22 17:15:09 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/12/22 21:39:15 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ struct				s_semicoloncmd
 	struct s_cmd	*right;
 };
 
-/*builtins.c 5/5*/
+/*builtins.c 5/16*/
 int					ft_count_argc(char **ps, char *es);
 int					is_valid_number(char *str);
 void				builtin_exit_errors(int argc, char ***args);
@@ -102,18 +102,23 @@ char				*find_in_path(char *cmd);
 void				builtin_unset(char *var, char ***envp);
 char				*builtin_getenv(const char *var, char **envp);
 
-/*builtns_second 5/3*/
-int					builtin_export(char *var, char ***envp);
-void				ft_free_strs(char **strs);
+/*builtns_second 5/11*/
 int					is_valid_var_name(char *var_name);
-int					check_for_equal_sign(char *var);
-int					update_or_add_env_var(char ***envp, char ***var_val);
-int					update_environment_variable(char ***envp, char ***var_val,
-						int index, char ***env_var_val);
-int					add_new_environment_variable(char ***envp, char ***var_val,
-						int size);
 int					builtin_export_name_valid(int var_name_length, char **var,
 						char ***var_val);
+int					check_for_equal_sign(char *var);
+int					update_or_add_env_var(char ***envp, char ***var_val);
+char				*allocation_update_env_variable(char ***envp, int index,
+						char ***var_val);
+int					update_environment_variable(char ***envp, char ***var_val,
+						int index, char ***env_var_val);
+int					add_new_env_var_finish(char **new_val, char ***var_val,
+						char ***new_envp, int size);
+char				**add_new_new_envp(int size, char ***envp, char ***var_val);
+int					add_new_environment_variable(char ***envp, char ***var_val,
+						int size);
+int					builtin_export(char *var, char ***envp);
+void				ft_free_strs(char **strs);
 
 /*parsing.c 5/12*/
 struct s_cmd		*parsecmd(char *s, char **envp);

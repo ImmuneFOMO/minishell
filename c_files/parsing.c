@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 23:30:37 by idlbltv           #+#    #+#             */
-/*   Updated: 2023/12/22 02:54:49 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/12/22 17:44:52 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ struct s_cmd	*parsepipe(char **ps, char *es, char **envp)
 void	parseredirs_error(char **ps, char *es)
 {
 	int		next_tok;
-	
+
 	next_tok = gettoken(ps, es, 0, 0);
 	if (next_tok == '>')
 		handle_error("syntax error near unexpected token `>'\n");

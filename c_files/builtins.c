@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/08 13:30:35 by azhadan           #+#    #+#             */
-/*   Updated: 2023/12/22 17:16:12 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/12/22 17:51:45 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,15 +77,14 @@ int	builtin_exit(char *buf)
 		builtin_exit_errors(argc, &args);
 		return (1);
 	}
-	g_exit_code = (argc == 2) ? ft_atoi(args[1]) : g_exit_code;
-	if (g_exit_code < 0)
-	{
-		g_exit_code = (256 + g_exit_code) % 256;
-	}
+	if (argc == 2)
+		g_exit_code = ft_atoi(args[1]);
 	else
-	{
+		g_exit_code = g_exit_code;
+	if (g_exit_code < 0)
+		g_exit_code = (256 + g_exit_code) % 256;
+	else
 		g_exit_code %= 256;
-	}
 	ft_free_strs(args);
 	return (0);
 }
@@ -333,12 +332,14 @@ char	*builtin_getenv(const char *var, char **envp)
 	{
 		return (NULL);
 	}
-	for (i = 0; envp[i]; i++)
+	i = 0;
+	while (envp[i])
 	{
 		if (!strncmp(envp[i], var, strlen(var)) && envp[i][strlen(var)] == '=')
 		{
 			return (&envp[i][strlen(var) + 1]);
 		}
+		i++;
 	}
 	return (NULL);
 }
