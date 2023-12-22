@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 18:26:57 by azhadan           #+#    #+#             */
-/*   Updated: 2023/12/22 02:50:18 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/12/22 17:15:09 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,10 +82,23 @@ struct				s_semicoloncmd
 };
 
 /*builtins.c 5/5*/
-char				*find_in_path(char *cmnd);
-int					main_builtins(char *buf, char ***envp);
 int					ft_count_argc(char **ps, char *es);
+int					is_valid_number(char *str);
+void				builtin_exit_errors(int argc, char ***args);
+int					builtin_exit(char *buf);
+void				clean_builtin(char ***vars, char **processed_var);
+int					builtin_processing_unset(char **processed_var,
+						char ***envp);
+int					builtin_processing_export(char **processed_var,
+						char ***envp, char **var, int i);
+int					builtin_check_unset_export(char **processed_var,
+						char ***envp);
+int					main_builtins_check(char **processed_var, char ***envp);
+int					main_builtins(char *buf, char ***envp);
 char				**dup_envp(char **envp);
+char				*create_full_path(char *dir, char *command);
+char				*search_command_in_dirs(char *temp, char *command);
+char				*find_in_path(char *cmd);
 void				builtin_unset(char *var, char ***envp);
 char				*builtin_getenv(const char *var, char **envp);
 
