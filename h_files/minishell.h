@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 18:26:57 by azhadan           #+#    #+#             */
-/*   Updated: 2023/12/23 23:04:46 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/12/23 23:44:37 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,12 +81,13 @@ struct				s_semicoloncmd
 	struct s_cmd	*right;
 };
 
-/*builtins.c 5/16*/
+/*builtins_helper.c 5/5*/
 int					ft_count_argc(char **ps, char *es);
 int					is_valid_number(char *str);
 void				builtin_exit_errors(int argc, char ***args);
 int					builtin_exit(char *buf);
 void				clean_builtin(char ***vars, char **processed_var);
+/*builtins_in_main.c 5/5*/
 int					builtin_processing_unset(char **processed_var,
 						char ***envp);
 int					builtin_processing_export(char **processed_var,
@@ -95,14 +96,14 @@ int					builtin_check_unset_export(char **processed_var,
 						char ***envp);
 int					main_builtins_check(char **processed_var, char ***envp);
 int					main_builtins(char *buf, char ***envp);
+/*builtins.c 5/5*/
 char				**dup_envp(char **envp);
 char				*create_full_path(char *dir, char *command);
 char				*search_command_in_dirs(char *temp, char *command);
 char				*find_in_path(char *cmd);
 void				builtin_unset(char *var, char ***envp);
-char				*builtin_getenv(const char *var, char **envp);
 
-/*builtns_second 5/11*/
+/*builtins_second_helper 5/5*/
 int					is_valid_var_name(char *var_name);
 int					builtin_export_name_valid(int var_name_length, char **var,
 						char ***var_val);
@@ -110,6 +111,7 @@ int					check_for_equal_sign(char *var);
 int					update_or_add_env_var(char ***envp, char ***var_val);
 char				*allocation_update_env_variable(char ***envp, int index,
 						char ***var_val);
+/*builtns_second 5/6*/
 int					update_environment_variable(char ***envp, char ***var_val,
 						int index, char ***env_var_val);
 int					add_new_env_var_finish(char **new_val, char ***var_val,
@@ -118,6 +120,9 @@ char				**add_new_new_envp(int size, char ***envp, char ***var_val);
 int					add_new_environment_variable(char ***envp, char ***var_val,
 						int size);
 int					builtin_export(char *var, char ***envp);
+
+/*builtins_saver.c 5/2*/
+char				*builtin_getenv(const char *var, char **envp);
 void				ft_free_strs(char **strs);
 
 /*parsing.c 5/12*/
