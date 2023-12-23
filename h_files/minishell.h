@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 18:26:57 by azhadan           #+#    #+#             */
-/*   Updated: 2023/12/22 21:39:15 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/12/22 22:43:50 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -156,8 +156,10 @@ void				builtin_env(struct s_execcmd *ecmd, char **args);
 
 /*get_token.c 5/5*/
 int					is_whitespace(char c);
-int					gettoken(char **ps, char *es, char **q, char **eq);
 void				process_special_tokens(char **s, int *token);
+void				skip_non_special_tokens(char **s, char *es);
+int					gettoken(char **ps, char *es, char **q, char **eq);
+void				free_cmd_checker(struct s_cmd *command);
 void				free_cmd(struct s_cmd *command);
 void				free_envp(char **envp);
 
@@ -168,18 +170,20 @@ int					fork1(void);
 int					ft_cd_helper(char **envp);
 char				*mkcopy(char *s, char *es);
 
-/*cmnds1.c 5/5*/
+/*cmnds1.c 5/10*/
 int					checker_handle_heredoc(struct s_redircmd *rcmd,
 						int *pipefd);
 int					handle_heredoc_finish(int *pipefd);
 int					handle_heredoc(struct s_redircmd *rcmd);
 int					runcmd(struct s_cmd *cmd);
-void				pipe_command(struct s_pipecmd *pcmd);
 int					check_error(char *cmd);
 void				execute_command_run(char *full_path,
 						struct s_execcmd *ecmd);
 int					execute_command(struct s_cmd *cmd);
+int					checkes_redirect_command(int *flags,
+						struct s_redircmd *rcmd, int *fd_redirect);
 void				redirect_command(struct s_redircmd *rcmd);
+void				pipe_command(struct s_pipecmd *pcmd);
 
 /*help_function.c 5/1*/
 int					check_vars(char **vars);
