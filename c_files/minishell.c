@@ -6,13 +6,13 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 18:54:21 by azhadan           #+#    #+#             */
-/*   Updated: 2023/12/22 01:11:44 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/12/23 23:04:48 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../h_files/minishell.h"
 
-int	g_exit_code;
+int		g_exit_code;
 
 int	fork1(void)
 {
@@ -96,21 +96,55 @@ int	ft_cd(char *buf, char **envp)
 	return (0);
 }
 
+char	**start_main(char **argv, int argc, char ***envp,
+		struct s_cmd **parse_cmd)
+{
+	signal(SIGQUIT, SIG_IGN);
+	signal(SIGINT, handle_c);
+	(void)argc;
+	(void)argv;
+	g_exit_code = 0;
+	(*parse_cmd) = NULL;
+	return (dup_envp((*envp)));
+}
+
+int	child_main(struct s_cmd *parse_cmd, char ***copy_envp, char *buf)
+{
+	int	code;
+	int	exit_code;
+
+	add_history(buf);
+	code = main_builtins(buf, copy_envp);
+	if (code == 2)
+		return (1);
+	if (fork1() == 0)
+	{
+		parse_cmd = parsecmd(buf, (*copy_envp));
+		parse_cmd->envp = (*copy_envp);
+		exit_code = runcmd(parse_cmd);
+		free_cmd(parse_cmd);
+		exit(exit_code);
+	}
+	return (0);
+}
+
+void	finish_child_main(int r, char **buf)
+{
+	if (WIFSIGNALED(r))
+		g_exit_code = 127 + WTERMSIG(r);
+	else if (WIFEXITED(r))
+		g_exit_code = WEXITSTATUS(r);
+	free((*buf));
+}
+
 int	main(int argc, char **argv, char **envp)
 {
 	char			*buf;
 	char			**copy_envp;
 	int				r;
 	struct s_cmd	*parse_cmd;
-	int				code;
-	int				exit_code;
 
-	signal(SIGQUIT, SIG_IGN);
-	signal(SIGINT, handle_c);
-	(void)argc;
-	(void)argv;
-	g_exit_code = 0;
-	copy_envp = dup_envp(envp);
+	copy_envp = start_main(argv, argc, &envp, &parse_cmd);
 	while (1)
 	{
 		buf = readline("minishell: ");
@@ -121,24 +155,10 @@ int	main(int argc, char **argv, char **envp)
 			free(buf);
 			continue ;
 		}
-		add_history(buf);
-		code = main_builtins(buf, &copy_envp);
-		if (code == 2)
+		if (child_main(parse_cmd, &copy_envp, buf))
 			break ;
-		if (fork1() == 0)
-		{
-			parse_cmd = parsecmd(buf, copy_envp);
-			parse_cmd->envp = copy_envp;
-			exit_code = runcmd(parse_cmd);
-			free_cmd(parse_cmd);
-			exit(exit_code);
-		}
 		wait(&r);
-		if (WIFSIGNALED(r))
-			g_exit_code = 127 + WTERMSIG(r);
-		else if (WIFEXITED(r))
-			g_exit_code = WEXITSTATUS(r);
-		free(buf);
+		finish_child_main(r, &buf);
 	}
 	free_envp(copy_envp);
 	rl_clear_history();

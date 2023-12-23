@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 18:26:57 by azhadan           #+#    #+#             */
-/*   Updated: 2023/12/23 20:14:15 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/12/23 23:04:46 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -182,11 +182,17 @@ void				free_cmd(struct s_cmd *command);
 void				free_envp(char **envp);
 
 /*minishell.c 4/4*/
-int					ft_cd(char *buf, char **envp);
-int					peek(char **ps, char *es, char *toks);
 int					fork1(void);
-int					ft_cd_helper(char **envp);
+int					peek(char **ps, char *es, char *toks);
 char				*mkcopy(char *s, char *es);
+int					ft_cd_helper(char **envp);
+int					ft_cd(char *buf, char **envp);
+char				**start_main(char **argv, int argc, char ***envp,
+						struct s_cmd **parse_cmd);
+int					child_main(struct s_cmd *parse_cmd, char ***copy_envp,
+						char *buf);
+void				finish_child_main(int r, char **buf);
+/*main*/
 
 /*cmnds1.c 5/10*/
 int					checker_handle_heredoc(struct s_redircmd *rcmd,
