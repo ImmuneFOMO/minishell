@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 18:26:57 by azhadan           #+#    #+#             */
-/*   Updated: 2023/12/22 22:43:50 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/12/23 20:14:15 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,23 +121,41 @@ int					builtin_export(char *var, char ***envp);
 void				ft_free_strs(char **strs);
 
 /*parsing.c 5/12*/
+void				handle_error(const char *error_message);
 struct s_cmd		*parsecmd(char *s, char **envp);
 struct s_cmd		*parseline(char **ps, char *es, char **envp);
-struct s_cmd		*parsepipe(char **ps, char *es, char **envp);
-struct s_cmd		*parseredirs(struct s_cmd *cmd, char **ps, char *es);
-struct s_cmd		*parseexec(char **ps, char *es, char **envp);
 struct s_cmd		*parsesemicolon(char **ps, char *es, char **envp);
+struct s_cmd		*parsepipe(char **ps, char *es, char **envp);
+void				parseredirs_error(char **ps, char *es);
+struct s_cmd		*parseredirs(struct s_cmd *cmd, char **ps, char *es);
 int					count_quotes(char *arg, char quote_type);
 char				*handle_odd_quotes(char *arg, int quote_count,
 						char quote_type);
 char				*handle_env_var(char *arg, int *i, int *memory_allocated,
 						char **envp);
+void				calculate_buf_var_val(char **var_value, int *size,
+						int memory_allocated);
+int					calculate_buf_var_code_error(char **arg, int *i, int *size);
+void				calculate_buf_change_nums(int *i, int *size,
+						int *in_double_quotes, int flag);
+int					calculate_buf_if(int *i, int *in_double_quotes,
+						char quote_type, char *arg);
 int					calculate_buffer_size(char *arg, char quote_type,
 						int in_quotes, char **envp);
-char				*replace_env_vars(char *arg, char quote_type, int in_quotes,
+void				replace_env_vars_set(int *i, int *j, int *in_double_quotes);
+int					replace_env_vars_error(char **arg, int *i, int *is_itoa,
+						char **var_value);
+int					replace_env_vars_exit_code(int *is_itoa, char *arg, int *i,
+						char **var_value);
+int					re_e_v_ch_em(char *var_value, char **result, int *j);
+char				*replace_env_vars_return(char **result, int i);
+char				*replace_env_vars(char *arg, char q_ty, int in_q,
 						char **envp);
 char				*handle_quotes(char *arg, char quote_type, char **envp);
-void				parseredirs_error(char **ps, char *es);
+int					parseexec_count_argc(char **ps, char *es);
+int					parseexec_tok(char **q, char **eq, char **ps, char *es);
+char				*parseexec_arg_process(char **q, char **eq, char ***envp);
+struct s_cmd		*parseexec(char **ps, char *es, char **envp);
 
 /*cmnds2.c 5/6*/
 int					getcmd(char *buf, int nbuf);
