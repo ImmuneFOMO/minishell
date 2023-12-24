@@ -6,47 +6,11 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 23:30:14 by idlbltv           #+#    #+#             */
-/*   Updated: 2023/12/22 22:42:17 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/12/24 00:41:48 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../h_files/minishell.h"
-
-int	is_whitespace(char c)
-{
-	if (c == ' ' || c == '\t' || c == '\n' || c == '\v' || c == '\f'
-		|| c == '\r')
-		return (1);
-	return (0);
-}
-
-void	process_special_tokens(char **s, int *token)
-{
-	if (*token == '|')
-		(*s)++;
-	else if (*token == ';')
-		(*s)++;
-	else if (*token == '>')
-	{
-		(*s)++;
-		if (**s == '>')
-		{
-			*token = '+';
-			(*s)++;
-		}
-	}
-	else if (*token == '<')
-	{
-		(*s)++;
-		if (**s == '<')
-		{
-			*token = '%';
-			(*s)++;
-		}
-	}
-	else if (*token != '\0')
-		*token = 'a';
-}
 
 void	skip_non_special_tokens(char **s, char *es)
 {

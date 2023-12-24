@@ -6,34 +6,13 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 18:54:21 by azhadan           #+#    #+#             */
-/*   Updated: 2023/12/23 23:04:48 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/12/24 00:44:55 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../h_files/minishell.h"
 
 int		g_exit_code;
-
-int	fork1(void)
-{
-	int	pid;
-
-	pid = fork();
-	if (pid == -1)
-		perror("fork");
-	return (pid);
-}
-
-int	peek(char **ps, char *es, char *toks)
-{
-	char	*s;
-
-	s = *ps;
-	while (s < es && ft_strchr(" \t\r\n\v", *s))
-		s++;
-	*ps = s;
-	return (*s && ft_strchr(toks, *s));
-}
 
 char	*mkcopy(char *s, char *es)
 {
@@ -106,35 +85,6 @@ char	**start_main(char **argv, int argc, char ***envp,
 	g_exit_code = 0;
 	(*parse_cmd) = NULL;
 	return (dup_envp((*envp)));
-}
-
-int	child_main(struct s_cmd *parse_cmd, char ***copy_envp, char *buf)
-{
-	int	code;
-	int	exit_code;
-
-	add_history(buf);
-	code = main_builtins(buf, copy_envp);
-	if (code == 2)
-		return (1);
-	if (fork1() == 0)
-	{
-		parse_cmd = parsecmd(buf, (*copy_envp));
-		parse_cmd->envp = (*copy_envp);
-		exit_code = runcmd(parse_cmd);
-		free_cmd(parse_cmd);
-		exit(exit_code);
-	}
-	return (0);
-}
-
-void	finish_child_main(int r, char **buf)
-{
-	if (WIFSIGNALED(r))
-		g_exit_code = 127 + WTERMSIG(r);
-	else if (WIFEXITED(r))
-		g_exit_code = WEXITSTATUS(r);
-	free((*buf));
 }
 
 int	main(int argc, char **argv, char **envp)

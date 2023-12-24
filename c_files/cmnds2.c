@@ -6,50 +6,11 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/23 20:22:16 by idelibal          #+#    #+#             */
-/*   Updated: 2023/12/23 23:09:57 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/12/24 01:03:11 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../h_files/minishell.h"
-
-void	parent_process(int fd_pipe[2], int p_id, struct s_pipecmd *pcmd)
-{
-	int	status;
-
-	close(fd_pipe[1]);
-	dup2(fd_pipe[0], STDIN_FILENO);
-	close(fd_pipe[0]);
-	waitpid(p_id, &status, 0);
-	if (WIFSIGNALED(status))
-		g_exit_code = 127 + WTERMSIG(status);
-	else if (WIFEXITED(status))
-		g_exit_code = WEXITSTATUS(status);
-	pcmd->right->envp = dup_envp(pcmd->envp);
-	runcmd(pcmd->right);
-}
-
-void	create_pipe_process(struct s_pipecmd *pcmd, int fd_pipe[2])
-{
-	int	p_id;
-
-	p_id = fork();
-	if (p_id < 0)
-	{
-		write(2, "fork has failed\n", 16);
-		return ;
-	}
-	else if (p_id == 0)
-	{
-		close(fd_pipe[0]);
-		dup2(fd_pipe[1], STDOUT_FILENO);
-		close(fd_pipe[1]);
-		runcmd(pcmd->left);
-		free_cmd((struct s_cmd *)pcmd);
-		return ;
-	}
-	else
-		parent_process(fd_pipe, p_id, pcmd);
-}
 
 int	getcmd(char *buf, int nbuf)
 {

@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/23 10:51:06 by azhadan           #+#    #+#             */
-/*   Updated: 2023/12/21 02:54:59 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/12/24 00:40:45 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,19 +105,4 @@ int	builtins(struct s_execcmd *ecmd)
 		return (1);
 	}
 	return (0);
-}
-
-char	*trim_spaces(char *str)
-{
-	char	*end;
-
-	while (*str == ' ' || *str == '\t')
-		str++;
-	if (*str == 0)
-		return (str);
-	end = str + strlen(str) - 1;
-	while (end > str && (*end == ' ' || *end == '\t'))
-		end--;
-	end[1] = '\0';
-	return (str);
 }

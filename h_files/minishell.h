@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 18:26:57 by azhadan           #+#    #+#             */
-/*   Updated: 2023/12/24 00:10:26 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/12/24 01:10:36 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -170,24 +170,22 @@ int					replace_env_vars_exit_code(int *is_itoa, char *arg, int *i,
 int					re_e_v_ch_em(char *var_value, char **result, int *j);
 char				*replace_env_vars_return(char **result, int i);
 
-/*cmnds2.c 5/6*/
-int					getcmd(char *buf, int nbuf);
-void				create_pipe_process(struct s_pipecmd *pcmd, int fd_pipe[2]);
-struct s_cmd		*pipecmd(struct s_cmd *left, struct s_cmd *right);
-struct s_cmd		*redircmd(struct s_cmd *subcmd, char *file, int type);
-struct s_cmd		*execcmd(void);
-struct s_cmd		*semicoloncmd(struct s_cmd *left, struct s_cmd *right);
-
 /*signals.c 5/5*/
 void				handle_c(int signum);
-int					builtins(struct s_execcmd *ecmd);
+void				builtin_echo(char **args);
 void				builtin_pwd(void);
-char				*trim_spaces(char *str);
 void				builtin_env(struct s_execcmd *ecmd, char **args);
+int					builtins(struct s_execcmd *ecmd);
 
-/*get_token.c 5/5*/
+/*processing.c 5/5*/
+char				*trim_spaces(char *str);
 int					is_whitespace(char c);
 void				process_special_tokens(char **s, int *token);
+int					child_main(struct s_cmd *parse_cmd, char ***copy_envp,
+						char *buf);
+void				finish_child_main(int r, char **buf);
+
+/*get_token.c 5/5*/
 void				skip_non_special_tokens(char **s, char *es);
 int					gettoken(char **ps, char *es, char **q, char **eq);
 void				free_cmd_checker(struct s_cmd *command);
@@ -195,25 +193,21 @@ void				free_cmd(struct s_cmd *command);
 void				free_envp(char **envp);
 
 /*minishell.c 4/4*/
-int					fork1(void);
-int					peek(char **ps, char *es, char *toks);
 char				*mkcopy(char *s, char *es);
 int					ft_cd_helper(char **envp);
 int					ft_cd(char *buf, char **envp);
 char				**start_main(char **argv, int argc, char ***envp,
 						struct s_cmd **parse_cmd);
-int					child_main(struct s_cmd *parse_cmd, char ***copy_envp,
-						char *buf);
-void				finish_child_main(int r, char **buf);
 /*main*/
 
+/*cmnds2.c 5/5*/
+int					getcmd(char *buf, int nbuf);
+struct s_cmd		*execcmd(void);
+struct s_cmd		*redircmd(struct s_cmd *subcmd, char *file, int type);
+struct s_cmd		*pipecmd(struct s_cmd *left, struct s_cmd *right);
+struct s_cmd		*semicoloncmd(struct s_cmd *left, struct s_cmd *right);
+
 /*cmnds1.c 5/10*/
-int					checker_handle_heredoc(struct s_redircmd *rcmd,
-						int *pipefd);
-int					handle_heredoc_finish(int *pipefd);
-int					handle_heredoc(struct s_redircmd *rcmd);
-int					runcmd(struct s_cmd *cmd);
-int					check_error(char *cmd);
 void				execute_command_run(char *full_path,
 						struct s_execcmd *ecmd);
 int					execute_command(struct s_cmd *cmd);
@@ -222,7 +216,19 @@ int					checkes_redirect_command(int *flags,
 void				redirect_command(struct s_redircmd *rcmd);
 void				pipe_command(struct s_pipecmd *pcmd);
 
-/*help_function.c 5/1*/
+/*cmnds1_helper*/
+int					checker_handle_heredoc(struct s_redircmd *rcmd,
+						int *pipefd);
+int					handle_heredoc_finish(int *pipefd);
+int					handle_heredoc(struct s_redircmd *rcmd);
+int					runcmd(struct s_cmd *cmd);
+int					check_error(char *cmd);
+
+/*help_function.c 5/3*/
 int					check_vars(char **vars);
+int					fork1(void);
+int					peek(char **ps, char *es, char *toks);
+int					getcmd(char *buf, int nbuf);
+void				create_pipe_process(struct s_pipecmd *pcmd, int fd_pipe[2]);
 
 #endif
