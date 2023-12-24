@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_comands.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
+/*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/23 23:51:46 by azhadan           #+#    #+#             */
-/*   Updated: 2023/12/23 23:54:30 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/12/24 21:02:50 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,14 +58,27 @@ struct s_cmd	*parsesemicolon(char **ps, char *es, char **envp)
 struct s_cmd	*parsepipe(char **ps, char *es, char **envp)
 {
 	struct s_cmd	*cmd;
+	char			*prev;
 
 	cmd = parseexec(ps, es, envp);
-	if (peek(ps, es, "|"))
+	while (peek(ps, es, "|"))
 	{
+		prev = *ps;
 		gettoken(ps, es, 0, 0);
 		if (peek(ps, es, "|") || *ps == es)
+		{
+			if (*ps != prev + 1)
+				handle_error("syntax error near unexpected token `|'\n");
+			else
+			{
+				gettoken(ps, es, 0, 0);
+				if (peek(ps, es, "|")) 
+					handle_error("syntax error near unexpected token `|'\n");
+			}
+		}
+		else if (*ps == es)
 			handle_error("syntax error near unexpected token `|'\n");
-		cmd = pipecmd(cmd, parsepipe(ps, es, envp));
+		cmd = pipecmd(cmd, parseexec(ps, es, envp));
 	}
 	return (cmd);
 }
