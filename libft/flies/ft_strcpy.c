@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strcpy.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: idelibal <idelibal@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/21 16:54:52 by idelibal              #+#    #+#             */
-/*   Updated: 2023/11/21 16:54:52 by idelibal             ###   ########.fr       */
+/*   Created: 2023/12/21 02:49:15 by azhadan           #+#    #+#             */
+/*   Updated: 2023/12/21 02:50:24 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,8 @@
 
 char	*ft_strcpy(char *dst, const char *src)
 {
-	int i;
+	int	i;
+
 	i = 0;
 	while (src[i])
 	{
