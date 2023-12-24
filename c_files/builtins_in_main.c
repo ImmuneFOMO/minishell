@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins_in_main.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
+/*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/23 23:34:44 by azhadan           #+#    #+#             */
-/*   Updated: 2023/12/23 23:36:54 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/12/24 20:11:14 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,14 +112,10 @@ int	main_builtins(char *buf, char ***envp)
 {
 	char	*trimmed_buf;
 	char	*processed_var;
-	char	*temp;
 	int		res;
 
 	trimmed_buf = trim_spaces(buf);
-	processed_var = handle_quotes(trimmed_buf, '\'', *envp);
-	temp = processed_var;
-	processed_var = handle_quotes(processed_var, '\"', *envp);
-	free(temp);
+	processed_var = handle_all_quotes(trimmed_buf, (*envp));
 	res = main_builtins_check(&processed_var, envp);
 	if (res == 0)
 		return (0);

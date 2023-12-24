@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
+/*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 23:30:37 by idlbltv           #+#    #+#             */
-/*   Updated: 2023/12/24 00:10:51 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/12/24 20:35:27 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,15 +17,15 @@ char	*replace_env_vars(char *arg, char q_ty, int in_q, char **envp)
 	char	*var_val;
 	char	*result;
 	int		i[2];
-	int		ch_va[3];
+	int		ch_va[4];
 
 	result = malloc((calculate_buffer_size(arg, q_ty, 0, envp)) + 1);
 	if (!result)
 		return (NULL);
-	replace_env_vars_set(&i[0], &i[1], &ch_va[2]);
+	replace_env_vars_set(&i[0], &i[1], &ch_va[2], &ch_va[3]);
 	while (arg[i[0]] != '\0')
 	{
-		if (calculate_buf_if(&i[0], &ch_va[2], q_ty, arg))
+		if (calculate_buf_if(&i[0], &ch_va[2], &ch_va[3], q_ty, arg))
 			in_q = !in_q;
 		else if (arg[i[0]] == '$' && ((!in_q && q_ty == '\'') || (in_q
 					&& q_ty == '\"')))
@@ -81,13 +81,9 @@ char	*parseexec_arg_process(char **q, char **eq, char ***envp)
 {
 	char	*arg;
 	char	*processed_arg;
-	char	*temp;
 
 	arg = mkcopy((*q), (*eq));
-	processed_arg = handle_quotes(arg, '\'', (*envp));
-	temp = processed_arg;
-	processed_arg = handle_quotes(processed_arg, '\"', (*envp));
+	processed_arg = handle_all_quotes(arg, (*envp));
 	free(arg);
-	free(temp);
 	return (processed_arg);
 }
