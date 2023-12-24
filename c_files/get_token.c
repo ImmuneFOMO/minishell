@@ -3,52 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   get_token.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 23:30:14 by idlbltv           #+#    #+#             */
-/*   Updated: 2023/12/08 18:23:39 by root             ###   ########.fr       */
+/*   Updated: 2023/12/24 00:41:48 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../h_files/minishell.h"
-
-int	is_whitespace(char c)
-{
-	if (c == ' ' || c == '\t' || c == '\n' || c == '\v' || c == '\f'
-		|| c == '\r')
-		return (1);
-	return (0);
-}
-
-void	process_special_tokens(char **s, int *token)
-{
-	if (*token == '\0')
-		*token = '\0';
-	else if (*token == '|')
-		(*s)++;
-	else if (*token == ';')
-		(*s)++;
-	else if (*token == '>')
-	{
-		(*s)++;
-		if (**s == '>')
-		{
-			*token = '+';
-			(*s)++;
-		}
-	}
-	else if (*token == '<')
-	{
-		(*s)++;
-		if (**s == '<')
-		{
-			*token = '%';
-			(*s)++;
-		}
-	}
-	else
-		*token = 'a';
-}
 
 void	skip_non_special_tokens(char **s, char *es)
 {
@@ -93,12 +55,36 @@ int	gettoken(char **ps, char *es, char **q, char **eq)
 	return (token);
 }
 
-void	free_cmd(struct s_cmd *command)
+void	free_cmd_checker(struct s_cmd *command)
 {
-	struct s_pipecmd		*pcmd;
-	struct s_execcmd		*ecmd;
 	struct s_redircmd		*rcmd;
 	struct s_semicoloncmd	*scmd;
+	struct s_pipecmd		*pcmd;
+
+	if (command->type == '|')
+	{
+		pcmd = (struct s_pipecmd *)command;
+		free_cmd(pcmd->left);
+		free_cmd(pcmd->right);
+	}
+	else if (command->type == ';')
+	{
+		scmd = (struct s_semicoloncmd *)command;
+		free_cmd(scmd->left);
+		free_cmd(scmd->right);
+	}
+	else if (command->type == '>' || command->type == '<'
+		|| command->type == '+' || command->type == '%')
+	{
+		rcmd = (struct s_redircmd *)command;
+		free_cmd(rcmd->cmd);
+		free(rcmd->file);
+	}
+}
+
+void	free_cmd(struct s_cmd *command)
+{
+	struct s_execcmd	*ecmd;
 	int					i;
 
 	i = 0;
@@ -114,32 +100,15 @@ void	free_cmd(struct s_cmd *command)
 		}
 		free(ecmd->argv);
 	}
-	else if (command->type == '|')
-	{
-		pcmd = (struct s_pipecmd *)command;
-		free_cmd(pcmd->left);
-		free_cmd(pcmd->right);
-	}
-	else if (command->type == ';')
-	{
-		scmd = (struct s_semicoloncmd *)command;
-		free_cmd(scmd->left);
-		free_cmd(scmd->right);
-	}
-	else if (command->type == '>' || command->type == '<' || command->type == '+' || command->type == '%')
-	{
-		rcmd = (struct s_redircmd *)command;
-		free_cmd(rcmd->cmd);
-		free(rcmd->file);
-	}
+	free_cmd_checker(command);
 	if (command->envp)
 		free_envp(command->envp);
 	free(command);
 }
 
-void free_envp(char **envp)
+void	free_envp(char **envp)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	if (envp)
