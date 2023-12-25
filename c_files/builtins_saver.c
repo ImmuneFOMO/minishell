@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins_saver.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
+/*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/23 23:41:58 by azhadan           #+#    #+#             */
-/*   Updated: 2023/12/24 00:10:55 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/12/25 23:10:10 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,9 @@ char	*builtin_getenv(const char *var, char **envp)
 	i = 0;
 	while (envp[i])
 	{
-		if (!strncmp(envp[i], var, strlen(var)) && envp[i][strlen(var)] == '=')
+		if (!ft_strncmp(envp[i], var, ft_strlen(var)) && envp[i][ft_strlen(var)] == '=')
 		{
-			return (&envp[i][strlen(var) + 1]);
+			return (&envp[i][ft_strlen(var) + 1]);
 		}
 		i++;
 	}
