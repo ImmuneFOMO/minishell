@@ -6,22 +6,22 @@
 /*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/23 23:51:46 by azhadan           #+#    #+#             */
-/*   Updated: 2023/12/25 17:04:20 by root             ###   ########.fr       */
+/*   Updated: 2023/12/25 18:51:30 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../h_files/minishell.h"
 
-void handle_error(const char *error_message)
+void	handle_error(const char *error_message)
 {
 	write(2, error_message, ft_strlen(error_message));
 	exit(2);
 }
 
-struct s_cmd *parsecmd(char *s, char **envp)
+struct s_cmd	*parsecmd(char *s, char **envp)
 {
-	char *es;
-	struct s_cmd *cmd;
+	char			*es;
+	struct s_cmd 	*cmd;
 
 	es = s + ft_strlen(s);
 	cmd = parseline(&s, es, envp);
@@ -31,7 +31,7 @@ struct s_cmd *parsecmd(char *s, char **envp)
 	return (cmd);
 }
 
-struct s_cmd *parseline(char **ps, char *es, char **envp)
+struct s_cmd	*parseline(char **ps, char *es, char **envp)
 {
 	struct s_cmd *cmd;
 
@@ -39,10 +39,10 @@ struct s_cmd *parseline(char **ps, char *es, char **envp)
 	return (cmd);
 }
 
-struct s_cmd *parsesemicolon(char **ps, char *es, char **envp)
+struct s_cmd	*parsesemicolon(char **ps, char *es, char **envp)
 {
-	struct s_cmd *cmd;
-	int tok;
+	struct s_cmd	*cmd;
+	int 			tok;
 
 	cmd = parsepipe(ps, es, envp);
 	if (peek(ps, es, ";"))
@@ -55,10 +55,10 @@ struct s_cmd *parsesemicolon(char **ps, char *es, char **envp)
 	return (cmd);
 }
 
-struct s_cmd *parsepipe(char **ps, char *es, char **envp)
+struct s_cmd	*parsepipe(char **ps, char *es, char **envp)
 {
-	struct s_cmd *cmd;
-	char *prev;
+	struct s_cmd	*cmd;
+	char			*prev;
 
 	prev = NULL;
 

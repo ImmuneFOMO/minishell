@@ -6,7 +6,7 @@
 /*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/23 23:51:33 by azhadan           #+#    #+#             */
-/*   Updated: 2023/12/24 20:35:47 by root             ###   ########.fr       */
+/*   Updated: 2023/12/25 18:59:40 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,7 @@ char	*handle_env_var(char *arg, int *i, int *memory_allocated, char **envp)
 	}
 }
 
-char *process_quotes(char *arg, char quote1, char quote2, char **envp)
+char	*process_quotes(char *arg, char quote1, char quote2, char **envp)
 {
 	char *processed_arg;
 	char *temp;
@@ -103,13 +103,13 @@ char *process_quotes(char *arg, char quote1, char quote2, char **envp)
 	temp = processed_arg;
 	processed_arg = handle_quotes(processed_arg, quote2, envp);
 
-	if (temp != arg)
+	if (temp != arg && temp != processed_arg)
 		free(temp);
 
 	return (processed_arg);
 }
 
-char *handle_all_quotes(char *arg, char **envp)
+char	*handle_all_quotes(char *arg, char **envp)
 {
 	char *single_quote_ptr;
 	char *double_quote_ptr;
