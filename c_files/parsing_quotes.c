@@ -3,65 +3,34 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_quotes.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
+/*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/23 23:51:33 by azhadan           #+#    #+#             */
-/*   Updated: 2023/12/23 23:56:16 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/12/25 18:59:40 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../h_files/minishell.h"
-
-void	parseredirs_error(char **ps, char *es)
-{
-	int	next_tok;
-
-	next_tok = gettoken(ps, es, 0, 0);
-	if (next_tok == '>')
-		handle_error("syntax error near unexpected token `>'\n");
-	else
-		handle_error("syntax error near unexpected token `>>'\n");
-}
-
-struct s_cmd	*parseredirs(struct s_cmd *cmd, char **ps, char *es)
-{
-	int		tok;
-	char	*q;
-	char	*eq;
-
-	while (peek(ps, es, "<>"))
-	{
-		tok = gettoken(ps, es, 0, 0);
-		if (peek(ps, es, ">"))
-			parseredirs_error(ps, es);
-		if (gettoken(ps, es, &q, &eq) != 'a')
-		{
-			write(2, "missing file or redirection\n", 29);
-			g_exit_code = 2;
-			return (cmd);
-		}
-		if (tok == '<' || tok == '>' || tok == '+' || tok == '%')
-			cmd = redircmd(cmd, mkcopy(q, eq), tok);
-	}
-	return (cmd);
-}
 
 int	count_quotes(char *arg, char quote_type)
 {
 	int	quote_count;
 	int	i;
 	int	in_double_quotes;
+	int	in_single_quotes;
 
 	in_double_quotes = 0;
+	in_single_quotes = 0;
 	quote_count = 0;
 	i = 0;
 	while (arg[i] != '\0')
 	{
-		if (arg[i] == '\"')
-		{
+		if (arg[i] == '\"' && !in_single_quotes)
 			in_double_quotes = !in_double_quotes;
-		}
-		if (arg[i] == quote_type && (!in_double_quotes || quote_type == '\"'))
+		if (arg[i] == '\'' && !in_double_quotes)
+			in_single_quotes = !in_single_quotes;
+		if (arg[i] == quote_type && (!in_double_quotes || quote_type == '\"') && \
+			(!in_single_quotes || quote_type == '\''))
 			quote_count++;
 		i++;
 	}
@@ -123,4 +92,32 @@ char	*handle_env_var(char *arg, int *i, int *memory_allocated, char **envp)
 		*memory_allocated = 1;
 		return (NULL);
 	}
+}
+
+char	*process_quotes(char *arg, char quote1, char quote2, char **envp)
+{
+	char *processed_arg;
+	char *temp;
+
+	processed_arg = handle_quotes(arg, quote1, envp);
+	temp = processed_arg;
+	processed_arg = handle_quotes(processed_arg, quote2, envp);
+
+	if (temp != arg && temp != processed_arg)
+		free(temp);
+
+	return (processed_arg);
+}
+
+char	*handle_all_quotes(char *arg, char **envp)
+{
+	char *single_quote_ptr;
+	char *double_quote_ptr;
+
+	single_quote_ptr = ft_strchr(arg, '\'');
+	double_quote_ptr = ft_strchr(arg, '\"');
+	if (double_quote_ptr == NULL || (single_quote_ptr != NULL && single_quote_ptr < double_quote_ptr))
+		return (process_quotes(arg, '\"', '\'', envp));
+	else
+		return (process_quotes(arg, '\'', '\"', envp));
 }

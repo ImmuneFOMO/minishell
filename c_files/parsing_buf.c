@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_buf.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
+/*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/23 23:51:50 by azhadan           #+#    #+#             */
-/*   Updated: 2023/12/24 00:07:45 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/12/24 18:48:27 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,11 +34,12 @@ int	calculate_buf_var_code_error(char **arg, int *i, int *size)
 }
 
 void	calculate_buf_change_nums(int *i, int *size, int *in_double_quotes,
-		int flag)
+		int *in_single_quotes, int flag)
 {
 	if (flag == 1)
 	{
 		(*in_double_quotes) = 0;
+		(*in_single_quotes) = 0;
 		(*i) = 0;
 		(*size) = 0;
 	}
@@ -49,12 +50,15 @@ void	calculate_buf_change_nums(int *i, int *size, int *in_double_quotes,
 	}
 }
 
-int	calculate_buf_if(int *i, int *in_double_quotes, char quote_type, char *arg)
+int	calculate_buf_if(int *i, int *in_double_quotes, int *in_single_quotes,
+	char quote_type, char *arg)
 {
-	if (arg[(*i)] == '\"')
+	if (arg[(*i)] == '\"' && !(*in_single_quotes))
 		(*in_double_quotes) = !(*in_double_quotes);
+	if (arg[(*i)] == '\'' && !(*in_double_quotes))	
+		(*in_single_quotes) = !(*in_single_quotes);
 	if (arg[(*i)] == quote_type && (!(*in_double_quotes) || \
-	quote_type == '\"'))
+	quote_type == '\"') && (!(*in_single_quotes) || quote_type == '\''))
 	{
 		(*i)++;
 		return (1);
@@ -70,11 +74,12 @@ int	calculate_buffer_size(char *arg, char quote_type, int in_quotes,
 	int		size;
 	int		memory_allocated;
 	int		in_double_quotes;
+	int		in_single_quotes;
 
-	calculate_buf_change_nums(&i, &size, &in_double_quotes, 1);
+	calculate_buf_change_nums(&i, &size, &in_double_quotes, &in_single_quotes, 1);
 	while (arg[i] != '\0')
 	{
-		if (calculate_buf_if(&i, &in_double_quotes, quote_type, arg))
+		if (calculate_buf_if(&i, &in_double_quotes, &in_single_quotes, quote_type, arg))
 			in_quotes = !in_quotes;
 		else if (arg[i] == '$' && ((!in_quotes && quote_type == '\'')
 				|| (in_quotes && quote_type == '\"'))
@@ -84,7 +89,7 @@ int	calculate_buffer_size(char *arg, char quote_type, int in_quotes,
 			calculate_buf_var_val(&var_value, &size, memory_allocated);
 		}
 		else
-			calculate_buf_change_nums(&i, &size, &in_double_quotes, 2);
+			calculate_buf_change_nums(&i, &size, &in_double_quotes, &in_single_quotes, 2);
 	}
 	return (size + 1);
 }

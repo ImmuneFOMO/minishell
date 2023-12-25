@@ -3,18 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_env.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
+/*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/23 23:51:42 by azhadan           #+#    #+#             */
-/*   Updated: 2023/12/24 00:09:02 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/12/24 14:24:06 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../h_files/minishell.h"
 
-void	replace_env_vars_set(int *i, int *j, int *in_double_quotes)
+void	replace_env_vars_set(int *i, int *j, int *in_double_quotes, int *in_single_quotes)
 {
 	(*in_double_quotes) = 0;
+	(*in_single_quotes) = 0;
 	(*i) = 0;
 	(*j) = 0;
 }
