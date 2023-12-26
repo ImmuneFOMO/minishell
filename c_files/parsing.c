@@ -6,7 +6,7 @@
 /*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 23:30:37 by idlbltv           #+#    #+#             */
-/*   Updated: 2023/12/24 20:35:27 by root             ###   ########.fr       */
+/*   Updated: 2023/12/26 20:16:39 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,15 +43,10 @@ char	*replace_env_vars(char *arg, char q_ty, int in_q, char **envp)
 
 char	*handle_quotes(char *arg, char quote_type, char **envp)
 {
-	int		quote_count;
-	char	*new_arg;
 	char	*result;
+	
+	result = replace_env_vars(arg, quote_type, 0, envp);
 
-	quote_count = count_quotes(arg, quote_type);
-	new_arg = handle_odd_quotes(arg, quote_count, quote_type);
-	result = replace_env_vars(new_arg, quote_type, 0, envp);
-	if (new_arg != arg)
-		free(new_arg);
 	return (result);
 }
 

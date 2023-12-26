@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   processing.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
+/*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/24 00:21:19 by azhadan           #+#    #+#             */
-/*   Updated: 2023/12/24 00:43:15 by azhadan          ###   ########.fr       */
+/*   Updated: 2023/12/26 20:25:46 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,19 +67,27 @@ int	child_main(struct s_cmd *parse_cmd, char ***copy_envp, char *buf)
 {
 	int	code;
 	int	exit_code;
+	int	quote_count;
+    char	*processed_buf;
 
 	add_history(buf);
-	code = main_builtins(buf, copy_envp);
+	quote_count = count_quotes(buf, '\"');
+    processed_buf = handle_odd_quotes(buf, quote_count, '\"'); 
+    quote_count = count_quotes(processed_buf, '\''); 
+    processed_buf = handle_odd_quotes(processed_buf, quote_count, '\''); 
+	code = main_builtins(processed_buf, copy_envp);
 	if (code == 2)
 		return (1);
 	if (fork1() == 0)
 	{
-		parse_cmd = parsecmd(buf, (*copy_envp));
+		parse_cmd = parsecmd(processed_buf, (*copy_envp));
 		parse_cmd->envp = (*copy_envp);
 		exit_code = runcmd(parse_cmd);
 		free_cmd(parse_cmd);
 		exit(exit_code);
 	}
+	if (processed_buf != buf)
+		free(processed_buf);
 	return (0);
 }
 
