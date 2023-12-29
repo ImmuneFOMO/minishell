@@ -6,7 +6,7 @@
 /*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/23 23:51:33 by azhadan           #+#    #+#             */
-/*   Updated: 2023/12/25 18:59:40 by root             ###   ########.fr       */
+/*   Updated: 2023/12/27 22:58:56 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,9 +99,9 @@ char	*process_quotes(char *arg, char quote1, char quote2, char **envp)
 	char *processed_arg;
 	char *temp;
 
-	processed_arg = handle_quotes(arg, quote1, envp);
+	processed_arg = quotes_env_errors(arg, quote1, 0, envp);
 	temp = processed_arg;
-	processed_arg = handle_quotes(processed_arg, quote2, envp);
+	processed_arg = quotes_env_errors(processed_arg, quote2, 0, envp);
 
 	if (temp != arg && temp != processed_arg)
 		free(temp);

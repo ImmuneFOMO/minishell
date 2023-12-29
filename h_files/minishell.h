@@ -6,7 +6,7 @@
 /*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 18:26:57 by azhadan           #+#    #+#             */
-/*   Updated: 2023/12/24 20:41:25 by root             ###   ########.fr       */
+/*   Updated: 2023/12/27 23:07:57 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,10 +126,9 @@ char				*builtin_getenv(const char *var, char **envp);
 void				ft_free_strs(char **strs);
 struct s_cmd		*parseexec(char **ps, char *es, char **envp);
 
-/*parsing.c 5/6*/
-char				*replace_env_vars(char *arg, char q_ty, int in_q,
+/*parsing.c 4/4*/
+char				*quotes_env_errors(char *arg, char q_ty, int in_q,
 						char **envp);
-char				*handle_quotes(char *arg, char quote_type, char **envp);
 int					parseexec_count_argc(char **ps, char *es);
 int					parseexec_tok(char **q, char **eq, char **ps, char *es);
 char				*parseexec_arg_process(char **q, char **eq, char ***envp);
@@ -165,14 +164,12 @@ int					calculate_buf_if(int *i, int *in_double_quotes, int *in_single_quotes,
 int					calculate_buffer_size(char *arg, char quote_type,
 						int in_quotes, char **envp);
 
-/*parsing_env.c 5/5*/
-void				replace_env_vars_set(int *i, int *j, int *in_double_quotes, int *in_single_quotes);
-int					replace_env_vars_error(char **arg, int *i, int *is_itoa,
-						char **var_value);
-int					replace_env_vars_exit_code(int *is_itoa, char *arg, int *i,
+/*parsing_env.c 4/4*/
+void				quotes_env_errors_set(int *i, int *j, int *in_double_quotes, int *in_single_quotes);
+int					quotes_env_errors_exit_code(int *is_itoa, char *arg, int *i,
 						char **var_value);
 int					re_e_v_ch_em(char *var_value, char **result, int *j);
-char				*replace_env_vars_return(char **result, int i);
+char				*quotes_env_errors_return(char **result, int i);
 
 /*signals.c 5/5*/
 void				handle_c(int signum);
