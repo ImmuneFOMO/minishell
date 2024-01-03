@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/24 01:09:12 by azhadan           #+#    #+#             */
-/*   Updated: 2024/01/03 12:02:04 by azhadan          ###   ########.fr       */
+/*   Updated: 2024/01/03 20:00:56 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,17 +68,15 @@ int	handle_heredoc(struct s_redircmd *rcmd)
 	return (handle_heredoc_finish(pipefd));
 }
 
-int	runcmd(struct s_cmd *cmd)
+void	runcmd(struct s_cmd *cmd)
 {
 	char	type;
-	int		exit_code;
 
-	exit_code = 0;
 	type = cmd->type;
 	if (cmd == 0)
-		exit(0);
+		exit(1);
 	if (type == ' ')
-		exit_code = execute_command(cmd);
+		execute_command(cmd);
 	else if (type == '>' || type == '<' || type == '+' || type == '%')
 		redirect_command((struct s_redircmd *)cmd);
 	else if (type == '|')
@@ -93,7 +91,6 @@ int	runcmd(struct s_cmd *cmd)
 		write(2, "unknown runcmd\n", 15);
 		exit(1);
 	}
-	return (exit_code);
 }
 
 int	check_error(char *cmd)

@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/23 10:51:06 by azhadan           #+#    #+#             */
-/*   Updated: 2023/12/24 00:40:45 by azhadan          ###   ########.fr       */
+/*   Updated: 2024/01/03 15:22:05 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,6 @@ void	handle_c(int signum)
 		else
 			write(STDOUT_FILENO, "\n", 1);
 	}
-	if (signum == SIGQUIT)
-		write(STDOUT_FILENO, "Quit (core dumped)\n", 19);
 }
 
 void	builtin_echo(char **args)

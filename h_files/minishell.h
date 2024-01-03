@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 18:26:57 by azhadan           #+#    #+#             */
-/*   Updated: 2024/01/03 10:48:51 by azhadan          ###   ########.fr       */
+/*   Updated: 2024/01/03 20:01:24 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -222,7 +222,7 @@ int					checker_handle_heredoc(struct s_redircmd *rcmd,
 						int *pipefd);
 int					handle_heredoc_finish(int *pipefd);
 int					handle_heredoc(struct s_redircmd *rcmd);
-int					runcmd(struct s_cmd *cmd);
+void				runcmd(struct s_cmd *cmd);
 int					check_error(char *cmd);
 
 /*help_function.c 5/3*/

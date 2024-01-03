@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 18:54:21 by azhadan           #+#    #+#             */
-/*   Updated: 2024/01/03 12:05:31 by azhadan          ###   ########.fr       */
+/*   Updated: 2024/01/03 20:10:49 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,6 @@ int	main(int argc, char **argv, char **envp)
 {
 	char			*buf;
 	char			**copy_envp;
-	int				r;
 	struct s_cmd	*parse_cmd;
 
 	copy_envp = start_main(argv, argc, &envp, &parse_cmd);
@@ -107,8 +106,7 @@ int	main(int argc, char **argv, char **envp)
 		}
 		if (child_main(&parse_cmd, &copy_envp, buf))
 			break ;
-		wait(&r);
-		finish_child_main(r, &buf);
+		free(buf);
 	}
 	free_envp(copy_envp);
 	rl_clear_history();

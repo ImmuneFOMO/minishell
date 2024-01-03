@@ -29,7 +29,7 @@ re: fclean all
 test:
 	make re
 	clear
-	valgrind --leak-check=full --show-leak-kinds=all --suppressions=readline.supp -s ./minishell
+	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --suppressions=readline.supp -s ./minishell
 
 tests: $(NAME)
 	@./test_minishell.sh

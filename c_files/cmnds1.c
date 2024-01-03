@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 23:30:46 by idlbltv           #+#    #+#             */
-/*   Updated: 2024/01/03 12:04:05 by azhadan          ###   ########.fr       */
+/*   Updated: 2024/01/03 21:20:04 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,23 +14,46 @@
 
 void	execute_command_run(char *full_path, struct s_execcmd *ecmd)
 {
-	if (full_path)
+	pid_t	pid;
+	int		status;
+
+	if (!full_path && access(ecmd->argv[0], F_OK) != 0)
 	{
-		execve(full_path, ecmd->argv, ecmd->envp);
-		if (errno)
-			g_exit_code = check_error(ecmd->argv[0]);
+		g_exit_code = check_error(ecmd->argv[0]);
 		free(full_path);
+		return ;
+	}
+	pid = fork();
+	if (pid < 0)
+	{
+		perror("fork");
+		free(full_path);
+		exit(1);
+	}
+	else if (pid == 0)
+	{
+		signal(SIGQUIT, SIG_DFL);
+		if (full_path)
+		{
+			execve(full_path, ecmd->argv, ecmd->envp);
+			free(full_path);
+		}
+		else
+			execve(ecmd->argv[0], ecmd->argv, ecmd->envp);
+		exit(errno);
 	}
 	else
 	{
-		if (ft_strncmp(ecmd->argv[0], "cd", 3) != 0 && ft_strncmp(ecmd->argv[0],
-				"export", 7) != 0 && ft_strncmp(ecmd->argv[0], "unset", 6) != 0)
+		waitpid(pid, &status, 0);
+		if (WIFEXITED(status))
+			g_exit_code = WEXITSTATUS(status);
+		if (WIFSIGNALED(status) && WTERMSIG(status) == SIGQUIT)
 		{
-			execve(ecmd->argv[0], ecmd->argv, ecmd->envp);
-			if (errno)
-				g_exit_code = check_error(ecmd->argv[0]);
+			write(STDOUT_FILENO, "Quit (core dumped)\n", 19);
+			g_exit_code = 131;
 		}
 	}
+	free(full_path);
 }
 
 int	execute_command(struct s_cmd *cmd)

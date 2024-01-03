@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/24 00:21:19 by azhadan           #+#    #+#             */
-/*   Updated: 2024/01/03 11:08:40 by azhadan          ###   ########.fr       */
+/*   Updated: 2024/01/03 20:10:58 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,6 @@ char *process_odd_quotes(char *buf)
 int	child_main(struct s_cmd **parse_cmd, char ***copy_envp, char *buf)
 {
 	int	code;
-	int	exit_code;
     char	*processed_buf;
 
 	add_history(buf);
@@ -105,16 +104,14 @@ int	child_main(struct s_cmd **parse_cmd, char ***copy_envp, char *buf)
 	code = main_builtins(processed_buf, copy_envp);
 	if (code == 2)
 		return (1);
-	if (fork1() == 0)
-	{
-		(*parse_cmd) = parsecmd(processed_buf, (*copy_envp));
-		(*parse_cmd)->envp = (*copy_envp);
-		exit_code = runcmd((*parse_cmd));
-		free_cmd((*parse_cmd));
-		exit(exit_code);
-	}
+	signal(SIGQUIT, SIG_DFL);
+	signal(SIGINT, SIG_DFL);
+	(*parse_cmd) = parsecmd(processed_buf, (*copy_envp));
 	if (processed_buf != buf)
 		free(processed_buf);
+	(*parse_cmd)->envp = (*copy_envp);
+	runcmd((*parse_cmd));
+	free_cmd((*parse_cmd));
 	return (0);
 }
 

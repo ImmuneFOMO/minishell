@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 23:30:14 by idlbltv           #+#    #+#             */
-/*   Updated: 2023/12/24 00:41:48 by azhadan          ###   ########.fr       */
+/*   Updated: 2024/01/03 20:36:21 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,8 +101,6 @@ void	free_cmd(struct s_cmd *command)
 		free(ecmd->argv);
 	}
 	free_cmd_checker(command);
-	if (command->envp)
-		free_envp(command->envp);
 	free(command);
 }
 
