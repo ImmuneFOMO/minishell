@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/24 01:09:12 by azhadan           #+#    #+#             */
-/*   Updated: 2023/12/24 01:10:04 by azhadan          ###   ########.fr       */
+/*   Updated: 2024/01/03 12:02:04 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ int	runcmd(struct s_cmd *cmd)
 	exit_code = 0;
 	type = cmd->type;
 	if (cmd == 0)
-		return (0);
+		exit(0);
 	if (type == ' ')
 		exit_code = execute_command(cmd);
 	else if (type == '>' || type == '<' || type == '+' || type == '%')
@@ -91,7 +91,7 @@ int	runcmd(struct s_cmd *cmd)
 	else
 	{
 		write(2, "unknown runcmd\n", 15);
-		return (1);
+		exit(1);
 	}
 	return (exit_code);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 18:26:57 by azhadan           #+#    #+#             */
-/*   Updated: 2023/12/27 23:07:57 by root             ###   ########.fr       */
+/*   Updated: 2024/01/03 10:48:51 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -182,7 +182,7 @@ int					builtins(struct s_execcmd *ecmd);
 char				*trim_spaces(char *str);
 int					is_whitespace(char c);
 void				process_special_tokens(char **s, int *token);
-int					child_main(struct s_cmd *parse_cmd, char ***copy_envp,
+int					child_main(struct s_cmd **parse_cmd, char ***copy_envp,
 						char *buf);
 void				finish_child_main(int r, char **buf);
 

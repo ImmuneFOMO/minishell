@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/25 17:05:15 by azhadan           #+#    #+#             */
-/*   Updated: 2023/12/24 01:03:16 by azhadan          ###   ########.fr       */
+/*   Updated: 2024/01/03 12:05:03 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ void	create_pipe_process(struct s_pipecmd *pcmd, int fd_pipe[2])
 	if (p_id < 0)
 	{
 		write(2, "fork has failed\n", 16);
-		return ;
+		exit(1);
 	}
 	else if (p_id == 0)
 	{
@@ -82,7 +82,7 @@ void	create_pipe_process(struct s_pipecmd *pcmd, int fd_pipe[2])
 		close(fd_pipe[1]);
 		runcmd(pcmd->left);
 		free_cmd((struct s_cmd *)pcmd);
-		return ;
+		exit(0);
 	}
 	else
 		parent_process(fd_pipe, p_id, pcmd);

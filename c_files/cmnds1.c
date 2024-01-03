@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 23:30:46 by idlbltv           #+#    #+#             */
-/*   Updated: 2023/12/24 01:09:58 by azhadan          ###   ########.fr       */
+/*   Updated: 2024/01/03 12:04:05 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ int	execute_command(struct s_cmd *cmd)
 
 	ecmd = (struct s_execcmd *)cmd;
 	if (ecmd->argv[0] == 0)
-		return (0);
+		exit(0);
 	if (ft_strncmp(ecmd->argv[0], "cd", 3) == 0 || ft_strncmp(ecmd->argv[0],
 			"export", 7) == 0 || ft_strncmp(ecmd->argv[0], "unset", 6) == 0)
 		return (g_exit_code);
@@ -84,13 +84,13 @@ void	redirect_command(struct s_redircmd *rcmd)
 	{
 		perror("open");
 		close(fd_redirect);
-		return ;
+		exit(1);
 	}
 	if (dup2(fd_redirect, rcmd->fd) < 0)
 	{
 		perror("dup2");
 		close(fd_redirect);
-		return ;
+		exit(1);
 	}
 	rcmd->cmd->envp = dup_envp(rcmd->envp);
 	runcmd(rcmd->cmd);
@@ -104,7 +104,7 @@ void	pipe_command(struct s_pipecmd *pcmd)
 	if (pipe(fd_pipe) < 0)
 	{
 		write(2, "pipe has failed\n", 14);
-		return ;
+		exit(1);
 	}
 	create_pipe_process(pcmd, fd_pipe);
 }

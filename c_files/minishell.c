@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 18:54:21 by azhadan           #+#    #+#             */
-/*   Updated: 2023/12/24 00:44:55 by azhadan          ###   ########.fr       */
+/*   Updated: 2024/01/03 12:05:31 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ char	*mkcopy(char *s, char *es)
 	if (c == NULL)
 	{
 		write(2, "Memory allocation failed.\n", 25);
-		return (NULL);
+		exit(1);
 	}
 	ft_strncpy(c, s, n);
 	c[n] = 0;
@@ -105,7 +105,7 @@ int	main(int argc, char **argv, char **envp)
 			free(buf);
 			continue ;
 		}
-		if (child_main(parse_cmd, &copy_envp, buf))
+		if (child_main(&parse_cmd, &copy_envp, buf))
 			break ;
 		wait(&r);
 		finish_child_main(r, &buf);
