@@ -6,34 +6,56 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/24 01:09:12 by azhadan           #+#    #+#             */
-/*   Updated: 2024/01/03 20:00:56 by azhadan          ###   ########.fr       */
+/*   Updated: 2024/01/04 20:29:42 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../h_files/minishell.h"
 
-int	checker_handle_heredoc(struct s_redircmd *rcmd, int *pipefd)
+int	read_heredoc_input(const char *delimiter, int write_fd)
 {
-	if (rcmd == NULL || rcmd->file == NULL)
+	char	buffer[1024];
+	size_t	delimiter_length;
+	ssize_t	read_len;
+
+	delimiter_length = ft_strlen(delimiter);
+	while (1)
 	{
-		write(STDERR_FILENO, "Invalid command\n", 16);
-		return (1);
+		write(STDERR_FILENO, ">", 1);
+		read_len = read(STDIN_FILENO, buffer, sizeof(buffer) - 1);
+		if (read_len <= 0)
+			break ;
+		buffer[read_len] = '\0';
+		if (ft_strncmp(buffer, delimiter, delimiter_length) == 0
+			&& (buffer[delimiter_length] == '\n'
+				|| buffer[delimiter_length] == '\0'))
+			break ;
+		write(write_fd, buffer, read_len);
 	}
+	return (1);
+}
+
+int	double_redirect_left(struct s_redircmd *rcmd)
+{
+	int	pipefd[2];
+
 	if (pipe(pipefd) == -1)
 	{
 		perror("pipe");
-		return (1);
+		return (0);
 	}
-	return (0);
-}
-
-int	handle_heredoc_finish(int *pipefd)
-{
+	if (!read_heredoc_input(rcmd->file, pipefd[1]))
+	{
+		close(pipefd[0]);
+		close(pipefd[1]);
+		return (0);
+	}
 	close(pipefd[1]);
 	if (dup2(pipefd[0], STDIN_FILENO) == -1)
 	{
 		perror("dup2");
 		close(pipefd[0]);
+		g_exit_code = 1;
 		return (0);
 	}
 	close(pipefd[0]);
@@ -42,30 +64,23 @@ int	handle_heredoc_finish(int *pipefd)
 
 int	handle_heredoc(struct s_redircmd *rcmd)
 {
-	char	buffer[1024];
-	int		pipefd[2];
-	int		delimiter_length;
-	ssize_t	read_len;
+	int	original_stdin;
+	int	pipe_read_end;
 
-	if (checker_handle_heredoc(rcmd, pipefd))
+	original_stdin = dup(STDIN_FILENO);
+	pipe_read_end = double_redirect_left(rcmd);
+	if (pipe_read_end < 0)
 	{
+		perror("double_redirect_left");
+		dup2(original_stdin, STDIN_FILENO);
+		close(original_stdin);
+		g_exit_code = 1;
 		return (0);
 	}
-	delimiter_length = ft_strlen(rcmd->file);
-	while (1)
-	{
-		write(STDERR_FILENO, ">", 1);
-		read_len = read(STDIN_FILENO, buffer, sizeof(buffer) - 1);
-		if (read_len <= 0)
-			break ;
-		buffer[read_len] = '\0';
-		if (ft_strncmp(buffer, rcmd->file, delimiter_length) == 0
-			&& (buffer[delimiter_length] == '\n'
-				|| buffer[delimiter_length] == '\0'))
-			break ;
-		write(pipefd[1], buffer, read_len);
-	}
-	return (handle_heredoc_finish(pipefd));
+	runcmd(rcmd->cmd);
+	dup2(original_stdin, STDIN_FILENO);
+	close(original_stdin);
+	return (1);
 }
 
 void	runcmd(struct s_cmd *cmd)

@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 18:26:57 by azhadan           #+#    #+#             */
-/*   Updated: 2024/01/03 20:01:24 by azhadan          ###   ########.fr       */
+/*   Updated: 2024/01/04 20:30:53 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -218,10 +218,9 @@ void				redirect_command(struct s_redircmd *rcmd);
 void				pipe_command(struct s_pipecmd *pcmd);
 
 /*cmnds1_helper*/
-int					checker_handle_heredoc(struct s_redircmd *rcmd,
-						int *pipefd);
-int					handle_heredoc_finish(int *pipefd);
 int					handle_heredoc(struct s_redircmd *rcmd);
+int					double_redirect_left(struct s_redircmd *rcmd);
+int					read_heredoc_input(const char *delimiter, int write_fd);
 void				runcmd(struct s_cmd *cmd);
 int					check_error(char *cmd);
 
