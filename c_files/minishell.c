@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 18:54:21 by azhadan           #+#    #+#             */
-/*   Updated: 2024/01/03 20:10:49 by azhadan          ###   ########.fr       */
+/*   Updated: 2024/01/04 22:20:00 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,7 +108,7 @@ int	main(int argc, char **argv, char **envp)
 			break ;
 		free(buf);
 	}
-	free_envp(copy_envp);
+	ft_free_strs(copy_envp);
 	rl_clear_history();
 	exit(g_exit_code);
 	return (0);
