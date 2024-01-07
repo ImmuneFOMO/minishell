@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 18:26:57 by azhadan           #+#    #+#             */
-/*   Updated: 2023/12/27 23:07:57 by root             ###   ########.fr       */
+/*   Updated: 2024/01/04 20:30:53 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -182,7 +182,7 @@ int					builtins(struct s_execcmd *ecmd);
 char				*trim_spaces(char *str);
 int					is_whitespace(char c);
 void				process_special_tokens(char **s, int *token);
-int					child_main(struct s_cmd *parse_cmd, char ***copy_envp,
+int					child_main(struct s_cmd **parse_cmd, char ***copy_envp,
 						char *buf);
 void				finish_child_main(int r, char **buf);
 
@@ -218,11 +218,10 @@ void				redirect_command(struct s_redircmd *rcmd);
 void				pipe_command(struct s_pipecmd *pcmd);
 
 /*cmnds1_helper*/
-int					checker_handle_heredoc(struct s_redircmd *rcmd,
-						int *pipefd);
-int					handle_heredoc_finish(int *pipefd);
 int					handle_heredoc(struct s_redircmd *rcmd);
-int					runcmd(struct s_cmd *cmd);
+int					double_redirect_left(struct s_redircmd *rcmd);
+int					read_heredoc_input(const char *delimiter, int write_fd);
+void				runcmd(struct s_cmd *cmd);
 int					check_error(char *cmd);
 
 /*help_function.c 5/3*/

@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 23:30:46 by idlbltv           #+#    #+#             */
-/*   Updated: 2023/12/24 01:09:58 by azhadan          ###   ########.fr       */
+/*   Updated: 2024/01/04 20:03:44 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,23 +14,46 @@
 
 void	execute_command_run(char *full_path, struct s_execcmd *ecmd)
 {
-	if (full_path)
+	pid_t	pid;
+	int		status;
+
+	if (!full_path && access(ecmd->argv[0], F_OK) != 0)
 	{
-		execve(full_path, ecmd->argv, ecmd->envp);
-		if (errno)
-			g_exit_code = check_error(ecmd->argv[0]);
+		g_exit_code = check_error(ecmd->argv[0]);
 		free(full_path);
+		return ;
+	}
+	pid = fork();
+	if (pid < 0)
+	{
+		perror("fork");
+		free(full_path);
+		exit(1);
+	}
+	else if (pid == 0)
+	{
+		signal(SIGQUIT, SIG_DFL);
+		if (full_path)
+		{
+			execve(full_path, ecmd->argv, ecmd->envp);
+			free(full_path);
+		}
+		else
+			execve(ecmd->argv[0], ecmd->argv, ecmd->envp);
+		exit(errno);
 	}
 	else
 	{
-		if (ft_strncmp(ecmd->argv[0], "cd", 3) != 0 && ft_strncmp(ecmd->argv[0],
-				"export", 7) != 0 && ft_strncmp(ecmd->argv[0], "unset", 6) != 0)
+		waitpid(pid, &status, 0);
+		if (WIFEXITED(status))
+			g_exit_code = WEXITSTATUS(status);
+		if (WIFSIGNALED(status) && WTERMSIG(status) == SIGQUIT)
 		{
-			execve(ecmd->argv[0], ecmd->argv, ecmd->envp);
-			if (errno)
-				g_exit_code = check_error(ecmd->argv[0]);
+			write(STDOUT_FILENO, "Quit (core dumped)\n", 19);
+			g_exit_code = 131;
 		}
 	}
+	free(full_path);
 }
 
 int	execute_command(struct s_cmd *cmd)
@@ -40,7 +63,7 @@ int	execute_command(struct s_cmd *cmd)
 
 	ecmd = (struct s_execcmd *)cmd;
 	if (ecmd->argv[0] == 0)
-		return (0);
+		exit(0);
 	if (ft_strncmp(ecmd->argv[0], "cd", 3) == 0 || ft_strncmp(ecmd->argv[0],
 			"export", 7) == 0 || ft_strncmp(ecmd->argv[0], "unset", 6) == 0)
 		return (g_exit_code);
@@ -63,38 +86,50 @@ int	checkes_redirect_command(int *flags, struct s_redircmd *rcmd,
 		(*fd_redirect) = handle_heredoc(rcmd);
 		if ((*fd_redirect) == 0)
 		{
-			perror("double_redirect_left");
+			perror("Heredoc");
 			return (1);
 		}
-		runcmd(rcmd->cmd);
 		return (1);
 	}
 	return (0);
 }
 
-void	redirect_command(struct s_redircmd *rcmd)
+void redirect_command(struct s_redircmd *rcmd)
 {
-	int	fd_redirect;
-	int	flags;
+    int fd_redirect;
+    int saved_fd;
+    int flags;
 
-	if (checkes_redirect_command(&flags, rcmd, &fd_redirect))
-		return ;
-	fd_redirect = open(rcmd->file, flags, 0666);
-	if (fd_redirect < 0)
+    if (checkes_redirect_command(&flags, rcmd, &fd_redirect))
+        return ;
+    saved_fd = dup(rcmd->fd);
+    if(saved_fd < 0)
 	{
-		perror("open");
-		close(fd_redirect);
-		return ;
-	}
-	if (dup2(fd_redirect, rcmd->fd) < 0)
-	{
-		perror("dup2");
-		close(fd_redirect);
-		return ;
-	}
-	rcmd->cmd->envp = dup_envp(rcmd->envp);
-	runcmd(rcmd->cmd);
-	close(fd_redirect);
+        perror("dup");
+        exit(1);
+    }
+    fd_redirect = open(rcmd->file, flags, 0666);
+    if (fd_redirect < 0)
+    {
+        perror("open");
+        close(fd_redirect);
+        exit(1);
+    }
+    if (dup2(fd_redirect, rcmd->fd) < 0)
+    {
+        perror("dup2");
+        close(fd_redirect);
+        close(saved_fd);
+        exit(1);
+    }
+    runcmd(rcmd->cmd);
+    close(fd_redirect);
+    if (dup2(saved_fd, rcmd->fd) < 0)
+    {
+        perror("dup2 restore");
+        exit(1);
+    }
+    close(saved_fd);
 }
 
 void	pipe_command(struct s_pipecmd *pcmd)
@@ -104,7 +139,7 @@ void	pipe_command(struct s_pipecmd *pcmd)
 	if (pipe(fd_pipe) < 0)
 	{
 		write(2, "pipe has failed\n", 14);
-		return ;
+		exit(1);
 	}
 	create_pipe_process(pcmd, fd_pipe);
 }
