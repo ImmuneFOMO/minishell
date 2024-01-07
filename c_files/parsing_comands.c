@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_comands.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/23 23:51:46 by azhadan           #+#    #+#             */
-/*   Updated: 2023/12/25 18:51:30 by root             ###   ########.fr       */
+/*   Updated: 2024/01/03 19:22:27 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,12 @@ struct s_cmd	*parsecmd(char *s, char **envp)
 	cmd = parseline(&s, es, envp);
 	peek(&s, es, "");
 	if (s != es)
-		handle_error("leftovers: \n");
+	{
+		write(2, "leftovers: %s\n", 14);
+		free(s);
+		free(cmd);
+		return (NULL);
+	}
 	return (cmd);
 }
 
