@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
+/*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 18:26:57 by azhadan           #+#    #+#             */
-/*   Updated: 2024/01/04 20:30:53 by azhadan          ###   ########.fr       */
+/*   Updated: 2024/01/09 21:58:21 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -156,7 +156,7 @@ char				*handle_all_quotes(char *arg, char **envp);
 /*parsing_buf.c 5/5*/
 void				calculate_buf_var_val(char **var_value, int *size,
 						int memory_allocated);
-int					calculate_buf_var_code_error(char **arg, int *i, int *size);
+// int					calculate_buf_var_code_error(char **arg, int *i, int *size);
 void				calculate_buf_change_nums(int *i, int *size,
 						int *in_double_quotes, int *in_single_quotes, int flag);
 int					calculate_buf_if(int *i, int *in_double_quotes, int *in_single_quotes,
@@ -184,7 +184,7 @@ int					is_whitespace(char c);
 void				process_special_tokens(char **s, int *token);
 int					child_main(struct s_cmd **parse_cmd, char ***copy_envp,
 						char *buf);
-void				finish_child_main(int r, char **buf);
+// void				finish_child_main(int r, char **buf);
 
 /*get_token.c 5/5*/
 void				skip_non_special_tokens(char **s, char *es);
@@ -202,7 +202,7 @@ char				**start_main(char **argv, int argc, char ***envp,
 /*main*/
 
 /*cmnds2.c 5/5*/
-int					getcmd(char *buf, int nbuf);
+// int					getcmd(char *buf, int nbuf);
 struct s_cmd		*execcmd(void);
 struct s_cmd		*redircmd(struct s_cmd *subcmd, char *file, int type);
 struct s_cmd		*pipecmd(struct s_cmd *left, struct s_cmd *right);
@@ -228,9 +228,7 @@ int					check_error(char *cmd);
 int					check_vars(char **vars);
 int					fork1(void);
 int					peek(char **ps, char *es, char *toks);
-int					getcmd(char *buf, int nbuf);
+// int					getcmd(char *buf, int nbuf);
 void				create_pipe_process(struct s_pipecmd *pcmd, int fd_pipe[2]);
-
-char				*handle_all_quotes(char *arg, char **envp);
 
 #endif

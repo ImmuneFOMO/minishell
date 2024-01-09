@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   processing.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
+/*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/24 00:21:19 by azhadan           #+#    #+#             */
-/*   Updated: 2024/01/04 22:29:57 by azhadan          ###   ########.fr       */
+/*   Updated: 2024/01/09 21:57:18 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,11 +115,11 @@ int	child_main(struct s_cmd **parse_cmd, char ***copy_envp, char *buf)
 	return (0);
 }
 
-void	finish_child_main(int r, char **buf)
-{
-	if (WIFSIGNALED(r))
-		g_exit_code = 127 + WTERMSIG(r);
-	else if (WIFEXITED(r))
-		g_exit_code = WEXITSTATUS(r);
-	free((*buf));
-}
+// void	finish_child_main(int r, char **buf)
+// {
+// 	if (WIFSIGNALED(r))
+// 		g_exit_code = 127 + WTERMSIG(r);
+// 	else if (WIFEXITED(r))
+// 		g_exit_code = WEXITSTATUS(r);
+// 	free((*buf));
+// }
