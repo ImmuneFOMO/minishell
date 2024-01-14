@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   processing.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: idelibal <idelibal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/24 00:21:19 by azhadan           #+#    #+#             */
-/*   Updated: 2024/01/09 21:57:18 by root             ###   ########.fr       */
+/*   Updated: 2024/01/14 00:22:43 by idelibal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ char	*trim_spaces(char *str)
 		str++;
 	if (*str == 0)
 		return (str);
-	end = str + strlen(str) - 1;
+	end = str + ft_strlen(str) - 1;
 	while (end > str && (*end == ' ' || *end == '\t'))
 		end--;
 	end[1] = '\0';
