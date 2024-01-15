@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmnds1.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: idelibal <idelibal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/10/20 23:30:46 by idlbltv           #+#    #+#             */
-/*   Updated: 2024/01/08 22:32:38 by root             ###   ########.fr       */
+/*   Created: 2023/10/20 23:30:46 by idelibal          #+#    #+#             */
+/*   Updated: 2024/01/14 17:45:49 by idelibal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ int	execute_command(struct s_cmd *cmd)
 
 	ecmd = (struct s_execcmd *)cmd;
 	if (ecmd->argv[0] == 0)
-		exit(0);
+		return (g_exit_code);
 	if (ft_strncmp(ecmd->argv[0], "cd", 3) == 0 || ft_strncmp(ecmd->argv[0],
 			"export", 7) == 0 || ft_strncmp(ecmd->argv[0], "unset", 6) == 0)
 		return (g_exit_code);

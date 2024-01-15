@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmnds1_helper.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
+/*   By: idelibal <idelibal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/24 01:09:12 by azhadan           #+#    #+#             */
-/*   Updated: 2024/01/04 20:29:42 by azhadan          ###   ########.fr       */
+/*   Updated: 2024/01/14 00:22:48 by idelibal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,13 +112,13 @@ int	check_error(char *cmd)
 {
 	if (errno == EACCES)
 	{
-		write(2, cmd, strlen(cmd));
+		write(2, cmd, ft_strlen(cmd));
 		write(2, ": permission denied\n", 20);
 		return (126);
 	}
 	else if (errno == ENOENT)
 	{
-		write(2, cmd, strlen(cmd));
+		write(2, cmd, ft_strlen(cmd));
 		write(2, ": command not found\n", 20);
 		return (127);
 	}

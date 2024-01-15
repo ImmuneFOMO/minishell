@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: idelibal <idelibal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 18:26:57 by azhadan           #+#    #+#             */
-/*   Updated: 2024/01/09 21:58:21 by root             ###   ########.fr       */
+/*   Updated: 2024/01/15 00:11:52 by idelibal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,13 +134,15 @@ int					parseexec_tok(char **q, char **eq, char **ps, char *es);
 char				*parseexec_arg_process(char **q, char **eq, char ***envp);
 
 /*parsing_commands.c 5/5*/
-void				handle_error(const char *error_message);
 struct s_cmd		*parsecmd(char *s, char **envp);
 struct s_cmd		*parseline(char **ps, char *es, char **envp);
 struct s_cmd		*parsesemicolon(char **ps, char *es, char **envp);
-struct s_cmd		*parsepipe(char **ps, char *es, char **envp);
+struct s_cmd		*handle_pipe_errors(char **ps, char *es, struct s_cmd *cmd);
+struct s_cmd		*parsepipe_errors(char **ps, char *es, struct s_cmd *cmd);
 
-/*parsing_commands2.c 2/2*/
+	/*parsing_commands2.c 4/4*/
+void				handle_error(const char *error_message);
+struct s_cmd		*parsepipe(char **ps, char *es, char **envp);
 void				parseredirs_error(char **ps, char *es);
 struct s_cmd		*parseredirs(struct s_cmd *cmd, char **ps, char *es);
 

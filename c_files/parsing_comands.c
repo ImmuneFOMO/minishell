@@ -3,20 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_comands.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
+/*   By: idelibal <idelibal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/23 23:51:46 by azhadan           #+#    #+#             */
-/*   Updated: 2024/01/03 19:22:27 by azhadan          ###   ########.fr       */
+/*   Updated: 2024/01/15 00:11:11 by idelibal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../h_files/minishell.h"
-
-void	handle_error(const char *error_message)
-{
-	write(2, error_message, ft_strlen(error_message));
-	exit(2);
-}
 
 struct s_cmd	*parsecmd(char *s, char **envp)
 {
@@ -29,8 +23,7 @@ struct s_cmd	*parsecmd(char *s, char **envp)
 	if (s != es)
 	{
 		write(2, "leftovers: %s\n", 14);
-		free(s);
-		free(cmd);
+		free_cmd(cmd);
 		return (NULL);
 	}
 	return (cmd);
@@ -54,38 +47,44 @@ struct s_cmd	*parsesemicolon(char **ps, char *es, char **envp)
 	{
 		tok = gettoken(ps, es, 0, 0);
 		if (tok == ';' && peek(ps, es, ";"))
+		{
 			handle_error("syntax error near unexpected token `;;'\n");
+			free_cmd(cmd);
+			while (*ps != es && **ps == ';')
+				gettoken(ps, es, 0, 0);
+			return (NULL);	
+		}
 		cmd = semicoloncmd(cmd, parsesemicolon(ps, es, envp));
 	}
 	return (cmd);
 }
 
-struct s_cmd	*parsepipe(char **ps, char *es, char **envp)
+struct s_cmd *handle_pipe_errors(char **ps, char *es, struct s_cmd *cmd)
 {
-	struct s_cmd	*cmd;
-	char			*prev;
+	handle_error("syntax error near unexpected token `|'\n");
+	free_cmd(cmd);
+	while (*ps != es)
+		gettoken(ps, es, 0, 0);
+	return (NULL);
+}
 
-	prev = NULL;
-
-	cmd = parseexec(ps, es, envp);
+struct s_cmd *parsepipe_errors(char **ps, char *es, struct s_cmd *cmd)
+{
+	char *prev;
+	prev = *ps;
+	gettoken(ps, es, 0, 0);
 	while (peek(ps, es, "|"))
 	{
-		prev = *ps;
-		gettoken(ps, es, 0, 0);
-		while (peek(ps, es, "|"))
+		if (*ps != prev + 1)
+			return handle_pipe_errors(ps, es, cmd);
+		else
 		{
-			if (*ps != prev + 1)
-				handle_error("syntax error near unexpected token `|'\n");
-			else
-			{
-				gettoken(ps, es, 0, 0);
-				if (peek(ps, es, "|"))
-					handle_error("syntax error near unexpected token `|'\n");
-			}
+			gettoken(ps, es, 0, 0);
+			if (peek(ps, es, "|"))
+				return handle_pipe_errors(ps, es, cmd);
 		}
-		if (*ps == es)
-			handle_error("syntax error near unexpected token `|'\n");
-		cmd = pipecmd(cmd, parseexec(ps, es, envp));
 	}
+	if (*ps == es)
+		return handle_pipe_errors(ps, es, cmd);
 	return (cmd);
 }
