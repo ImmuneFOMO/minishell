@@ -6,7 +6,7 @@
 /*   By: idelibal <idelibal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/24 00:21:19 by azhadan           #+#    #+#             */
-/*   Updated: 2024/01/14 00:22:43 by idelibal         ###   ########.fr       */
+/*   Updated: 2024/01/14 17:53:54 by idelibal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,6 +109,8 @@ int	child_main(struct s_cmd **parse_cmd, char ***copy_envp, char *buf)
 	(*parse_cmd) = parsecmd(processed_buf, (*copy_envp));
 	if (processed_buf != buf)
 		free(processed_buf);
+	if ((*parse_cmd) == NULL)
+		return 0;
 	(*parse_cmd)->envp = (*copy_envp);
 	runcmd((*parse_cmd));
 	free_cmd((*parse_cmd));
