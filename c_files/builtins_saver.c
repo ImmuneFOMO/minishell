@@ -6,7 +6,7 @@
 /*   By: idelibal <idelibal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/23 23:41:58 by azhadan           #+#    #+#             */
-/*   Updated: 2024/01/14 00:24:17 by idelibal         ###   ########.fr       */
+/*   Updated: 2024/01/16 23:35:36 by idelibal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ struct s_cmd	*parseexec(char **ps, char *es, char **envp)
 	argc = parseexec_count_argc(ps, es);
 	cmd->argv = (char **)malloc(sizeof(char *) * (argc + 1));
 	argc = 0;
-	while (!peek(ps, es, "|") && !peek(ps, es, ";"))
+	while (!peek(ps, es, "|") && !peek(ps, es, ";") && !peek(ps, es, "<>"))
 	{
 		if (parseexec_tok(&q, &eq, ps, es))
 			break ;
