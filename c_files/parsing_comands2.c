@@ -6,7 +6,7 @@
 /*   By: idelibal <idelibal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/24 20:34:15 by idelibal          #+#    #+#             */
-/*   Updated: 2024/01/15 00:11:15 by idelibal         ###   ########.fr       */
+/*   Updated: 2024/01/16 23:35:07 by idelibal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,8 @@ struct s_cmd	*parseredirs(struct s_cmd *cmd, char **ps, char *es)
 		if (peek(ps, es, ">"))
 		{
 			parseredirs_error(ps, es);
+			while (*ps != es)
+				gettoken(ps, es, 0, 0);
 			return (NULL);
 		}
 		if (gettoken(ps, es, &q, &eq) != 'a')
