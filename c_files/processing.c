@@ -6,7 +6,7 @@
 /*   By: idelibal <idelibal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/24 00:21:19 by azhadan           #+#    #+#             */
-/*   Updated: 2024/01/14 17:53:54 by idelibal         ###   ########.fr       */
+/*   Updated: 2024/01/22 21:05:42 by idelibal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,8 +71,8 @@ char *process_odd_quotes(char *buf)
     char *temp_buf;
 	int quote_count;
 
-    single_quote_ptr = strchr(buf, '\'');
-    double_quote_ptr = strchr(buf, '\"');
+    single_quote_ptr = ft_strchr(buf, '\'');
+    double_quote_ptr = ft_strchr(buf, '\"');
     if (double_quote_ptr == NULL || (single_quote_ptr != NULL && single_quote_ptr < double_quote_ptr))
     {
         quote_count = count_quotes(buf, '\"');
