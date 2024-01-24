@@ -6,7 +6,7 @@
 /*   By: idelibal <idelibal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/23 23:41:58 by azhadan           #+#    #+#             */
-/*   Updated: 2024/01/20 22:33:53 by idelibal         ###   ########.fr       */
+/*   Updated: 2024/01/24 17:46:04 by idelibal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,8 @@ char	*builtin_getenv(const char *var, char **envp)
 	i = 0;
 	while (envp[i])
 	{
-		if (!ft_strncmp(envp[i], var, ft_strlen(var)) && envp[i][ft_strlen(var)] == '=')
+		if (!ft_strncmp(envp[i], var, ft_strlen(var)) \
+			&& envp[i][ft_strlen(var)] == '=')
 		{
 			return (&envp[i][ft_strlen(var) + 1]);
 		}
@@ -45,9 +46,9 @@ void	ft_free_strs(char **strs)
 	free(strs);
 }
 
-void free_cmd_argv(struct s_execcmd *cmd, int argc)
+void	free_cmd_argv(struct s_execcmd *cmd, int argc)
 {
-	int i;
+	int	i;
 
 	i = 0;
 

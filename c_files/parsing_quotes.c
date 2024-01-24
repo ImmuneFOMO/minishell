@@ -6,7 +6,7 @@
 /*   By: idelibal <idelibal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/23 23:51:33 by azhadan           #+#    #+#             */
-/*   Updated: 2024/01/14 00:28:20 by idelibal         ###   ########.fr       */
+/*   Updated: 2024/01/24 18:14:17 by idelibal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,8 @@ int	count_quotes(char *arg, char quote_type)
 			in_double_quotes = !in_double_quotes;
 		if (arg[i] == '\'' && !in_double_quotes)
 			in_single_quotes = !in_single_quotes;
-		if (arg[i] == quote_type && (!in_double_quotes || quote_type == '\"') && \
+		if (arg[i] == quote_type && \
+		(!in_double_quotes || quote_type == '\"') && \
 			(!in_single_quotes || quote_type == '\''))
 			quote_count++;
 		i++;
@@ -96,8 +97,8 @@ char	*handle_env_var(char *arg, int *i, int *memory_allocated, char **envp)
 
 char	*process_quotes(char *arg, char quote1, char quote2, char **envp)
 {
-	char *processed_arg;
-	char *temp;
+	char	*processed_arg;
+	char	*temp;
 
 	processed_arg = quotes_env_errors(arg, quote1, 0, envp);
 	temp = processed_arg;
@@ -111,12 +112,13 @@ char	*process_quotes(char *arg, char quote1, char quote2, char **envp)
 
 char	*handle_all_quotes(char *arg, char **envp)
 {
-	char *single_quote_ptr;
-	char *double_quote_ptr;
+	char	*single_quote_ptr;
+	char	*double_quote_ptr;
 
 	single_quote_ptr = ft_strchr(arg, '\'');
 	double_quote_ptr = ft_strchr(arg, '\"');
-	if (double_quote_ptr == NULL || (single_quote_ptr != NULL && single_quote_ptr < double_quote_ptr))
+	if (double_quote_ptr == NULL || (single_quote_ptr != NULL \
+	&& single_quote_ptr < double_quote_ptr))
 		return (process_quotes(arg, '\"', '\'', envp));
 	else
 		return (process_quotes(arg, '\'', '\"', envp));

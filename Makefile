@@ -9,7 +9,7 @@ CFILES = c_files/cmnds1.c c_files/cmnds2.c c_files/get_token.c c_files/minishell
 OFILES = $(CFILES:.c=.o)
 
 CC = cc
-CFLAGS = -Wall -Wextra -Werror 
+CFLAGS = -Wall -Wextra -Werror -g
 LIBFT = libft/libft.a
 
 all: $(NAME)

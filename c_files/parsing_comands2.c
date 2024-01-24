@@ -6,21 +6,22 @@
 /*   By: idelibal <idelibal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/24 20:34:15 by idelibal          #+#    #+#             */
-/*   Updated: 2024/01/16 23:35:07 by idelibal         ###   ########.fr       */
+/*   Updated: 2024/01/24 17:55:36 by idelibal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../h_files/minishell.h"
 
-void handle_error(const char *error_message)
+void	handle_error(const char *error_message)
 {
 	write(2, error_message, ft_strlen(error_message));
 	g_exit_code = 2;
 }
 
-struct s_cmd *parsepipe(char **ps, char *es, char **envp)
+struct s_cmd	*parsepipe(char **ps, char *es, char **envp)
 {
-	struct s_cmd *cmd;
+	struct s_cmd	*cmd;
+
 	cmd = parseexec(ps, es, envp);
 	while (peek(ps, es, "|"))
 	{
@@ -29,7 +30,7 @@ struct s_cmd *parsepipe(char **ps, char *es, char **envp)
 		{
 			while (*ps != es)
 				gettoken(ps, es, 0, 0);
-			free_cmd(cmd);	
+			free_cmd(cmd);
 			return (NULL);
 		}
 		cmd = pipecmd(cmd, parseexec(ps, es, envp));

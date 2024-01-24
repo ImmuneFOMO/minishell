@@ -6,7 +6,7 @@
 /*   By: idelibal <idelibal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 23:30:46 by idelibal          #+#    #+#             */
-/*   Updated: 2024/01/14 17:45:49 by idelibal         ###   ########.fr       */
+/*   Updated: 2024/01/24 17:47:49 by idelibal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,42 +95,42 @@ int	checkes_redirect_command(int *flags, struct s_redircmd *rcmd,
 	return (0);
 }
 
-void redirect_command(struct s_redircmd *rcmd)
+void	redirect_command(struct s_redircmd *rcmd)
 {
-    int fd_redirect;
-    int saved_fd;
-    int flags;
+	int	fd_redirect;
+	int	saved_fd;
+	int	flags;
 
-    if (checkes_redirect_command(&flags, rcmd, &fd_redirect))
-        return ;
-    saved_fd = dup(rcmd->fd);
-    if(saved_fd < 0)
+	if (checkes_redirect_command(&flags, rcmd, &fd_redirect))
+		return ;
+	saved_fd = dup(rcmd->fd);
+	if (saved_fd < 0)
 	{
-        perror("dup");
-        exit(1);
-    }
-    fd_redirect = open(rcmd->file, flags, 0666);
-    if (fd_redirect < 0)
-    {
-        perror("open");
-        close(fd_redirect);
-        exit(1);
-    }
-    if (dup2(fd_redirect, rcmd->fd) < 0)
-    {
-        perror("dup2");
-        close(fd_redirect);
-        close(saved_fd);
-        exit(1);
-    }
-    runcmd(rcmd->cmd);
-    close(fd_redirect);
-    if (dup2(saved_fd, rcmd->fd) < 0)
-    {
-        perror("dup2 restore");
-        exit(1);
-    }
-    close(saved_fd);
+		perror("dup");
+		exit(1);
+	}
+	fd_redirect = open(rcmd->file, flags, 0666);
+	if (fd_redirect < 0)
+	{
+		perror("open");
+		close(fd_redirect);
+		exit(1);
+	}
+	if (dup2(fd_redirect, rcmd->fd) < 0)
+	{
+		perror("dup2");
+		close(fd_redirect);
+		close(saved_fd);
+		exit(1);
+	}
+	runcmd(rcmd->cmd);
+	close(fd_redirect);
+	if (dup2(saved_fd, rcmd->fd) < 0)
+	{
+		perror("dup2 restore");
+		exit(1);
+	}
+	close(saved_fd);
 }
 
 void	pipe_command(struct s_pipecmd *pcmd)
