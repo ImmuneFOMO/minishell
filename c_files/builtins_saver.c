@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins_saver.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: idelibal <idelibal@student.42.fr>          +#+  +:+       +#+        */
+/*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/23 23:41:58 by azhadan           #+#    #+#             */
-/*   Updated: 2024/01/24 17:46:04 by idelibal         ###   ########.fr       */
+/*   Updated: 2024/01/30 22:26:18 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,6 @@ void	free_cmd_argv(struct s_execcmd *cmd, int argc)
 	int	i;
 
 	i = 0;
-
 	while (i < argc)
 	{
 		free(cmd->argv[i]);

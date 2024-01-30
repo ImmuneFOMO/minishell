@@ -6,7 +6,7 @@
 /*   By: idelibal <idelibal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/24 00:21:19 by azhadan           #+#    #+#             */
-/*   Updated: 2024/01/24 18:16:13 by idelibal         ###   ########.fr       */
+/*   Updated: 2024/01/30 22:29:12 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,8 +73,8 @@ char	*process_odd_quotes(char *buf)
 
 	single_quote_ptr = ft_strchr(buf, '\'');
 	double_quote_ptr = ft_strchr(buf, '\"');
-	if (double_quote_ptr == NULL || (single_quote_ptr != NULL \
-	&& single_quote_ptr < double_quote_ptr))
+	if (double_quote_ptr == NULL || (single_quote_ptr != NULL
+			&& single_quote_ptr < double_quote_ptr))
 	{
 		quote_count = count_quotes(buf, '\"');
 		temp_buf = handle_odd_quotes(buf, quote_count, '\"');
@@ -99,7 +99,7 @@ int	child_main(struct s_cmd **parse_cmd, char ***copy_envp, char *buf)
 	char	*processed_buf;
 
 	add_history(buf);
-	processed_buf = process_odd_quotes(buf); 
+	processed_buf = process_odd_quotes(buf);
 	code = main_builtins(processed_buf, copy_envp);
 	if (code == 2)
 		return (1);

@@ -6,7 +6,7 @@
 /*   By: idelibal <idelibal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 18:26:57 by azhadan           #+#    #+#             */
-/*   Updated: 2024/01/15 00:11:52 by idelibal         ###   ########.fr       */
+/*   Updated: 2024/01/30 22:21:18 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,7 +140,7 @@ struct s_cmd		*parsesemicolon(char **ps, char *es, char **envp);
 struct s_cmd		*handle_pipe_errors(char **ps, char *es, struct s_cmd *cmd);
 struct s_cmd		*parsepipe_errors(char **ps, char *es, struct s_cmd *cmd);
 
-	/*parsing_commands2.c 4/4*/
+/*parsing_commands2.c 4/4*/
 void				handle_error(const char *error_message);
 struct s_cmd		*parsepipe(char **ps, char *es, char **envp);
 void				parseredirs_error(char **ps, char *es);
@@ -152,22 +152,25 @@ char				*handle_odd_quotes(char *arg, int quote_count,
 						char quote_type);
 char				*handle_env_var(char *arg, int *i, int *memory_allocated,
 						char **envp);
-char				*process_quotes(char *arg, char quote1, char quote2, char **envp);
+char				*process_quotes(char *arg, char quote1, char quote2,
+						char **envp);
 char				*handle_all_quotes(char *arg, char **envp);
 
 /*parsing_buf.c 5/5*/
 void				calculate_buf_var_val(char **var_value, int *size,
 						int memory_allocated);
-// int					calculate_buf_var_code_error(char **arg, int *i, int *size);
+// int					calculate_buf_var_code_error(char **arg, int *i,
+//						int *size);
 void				calculate_buf_change_nums(int *i, int *size,
 						int *in_double_quotes, int *in_single_quotes, int flag);
-int					calculate_buf_if(int *i, int *in_double_quotes, int *in_single_quotes,
-						char quote_type, char *arg);
+int					calculate_buf_if(int *i, int *in_double_quotes,
+						int *in_single_quotes, char quote_type, char *arg);
 int					calculate_buffer_size(char *arg, char quote_type,
 						int in_quotes, char **envp);
 
 /*parsing_env.c 4/4*/
-void				quotes_env_errors_set(int *i, int *j, int *in_double_quotes, int *in_single_quotes);
+void				quotes_env_errors_set(int *i, int *j, int *in_double_quotes,
+						int *in_single_quotes);
 int					quotes_env_errors_exit_code(int *is_itoa, char *arg, int *i,
 						char **var_value);
 int					re_e_v_ch_em(char *var_value, char **result, int *j);
