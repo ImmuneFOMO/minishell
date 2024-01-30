@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins_helper.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
+/*   By: idelibal <idelibal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/23 23:29:02 by azhadan           #+#    #+#             */
-/*   Updated: 2024/01/03 11:59:57 by azhadan          ###   ########.fr       */
+/*   Updated: 2024/01/24 17:17:42 by idelibal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,8 +79,8 @@ int	builtin_exit(char *buf)
 	}
 	if (argc == 2)
 		g_exit_code = ft_atoi(args[1]);
-	else
-		g_exit_code = g_exit_code;
+	// else
+	// 	g_exit_code = g_exit_code;
 	if (g_exit_code < 0)
 		g_exit_code = (256 + g_exit_code) % 256;
 	else

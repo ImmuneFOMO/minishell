@@ -6,7 +6,7 @@
 /*   By: idelibal <idelibal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/23 23:51:50 by azhadan           #+#    #+#             */
-/*   Updated: 2024/01/14 00:27:37 by idelibal         ###   ########.fr       */
+/*   Updated: 2024/01/24 17:48:35 by idelibal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ int	calculate_buf_if(int *i, int *in_double_quotes, int *in_single_quotes,
 {
 	if (arg[(*i)] == '\"' && !(*in_single_quotes))
 		(*in_double_quotes) = !(*in_double_quotes);
-	if (arg[(*i)] == '\'' && !(*in_double_quotes))	
+	if (arg[(*i)] == '\'' && !(*in_double_quotes))
 		(*in_single_quotes) = !(*in_single_quotes);
 	if (arg[(*i)] == quote_type && (!(*in_double_quotes) || \
 	quote_type == '\"') && (!(*in_single_quotes) || quote_type == '\''))
