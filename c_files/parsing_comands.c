@@ -6,7 +6,7 @@
 /*   By: idelibal <idelibal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/23 23:51:46 by azhadan           #+#    #+#             */
-/*   Updated: 2024/01/24 17:52:46 by idelibal         ###   ########.fr       */
+/*   Updated: 2024/01/30 22:21:48 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,6 @@ struct s_cmd	*parsepipe_errors(char **ps, char *es, struct s_cmd *cmd)
 	char	*prev;
 
 	prev = *ps;
-
 	gettoken(ps, es, 0, 0);
 	while (peek(ps, es, "|"))
 	{

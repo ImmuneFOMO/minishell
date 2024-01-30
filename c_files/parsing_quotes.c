@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_quotes.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: idelibal <idelibal@student.42.fr>          +#+  +:+       +#+        */
+/*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/23 23:51:33 by azhadan           #+#    #+#             */
-/*   Updated: 2024/01/24 18:14:17 by idelibal         ###   ########.fr       */
+/*   Updated: 2024/01/30 22:26:50 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,10 +103,8 @@ char	*process_quotes(char *arg, char quote1, char quote2, char **envp)
 	processed_arg = quotes_env_errors(arg, quote1, 0, envp);
 	temp = processed_arg;
 	processed_arg = quotes_env_errors(processed_arg, quote2, 0, envp);
-
 	if (temp != arg && temp != processed_arg)
 		free(temp);
-
 	return (processed_arg);
 }
 
