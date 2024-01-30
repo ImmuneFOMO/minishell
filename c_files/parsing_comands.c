@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_comands.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
+/*   By: idelibal <idelibal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/23 23:51:46 by azhadan           #+#    #+#             */
 /*   Updated: 2024/01/30 22:21:48 by azhadan          ###   ########.fr       */
