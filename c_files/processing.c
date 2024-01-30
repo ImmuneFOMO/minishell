@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/24 00:21:19 by azhadan           #+#    #+#             */
-/*   Updated: 2024/01/30 21:36:33 by azhadan          ###   ########.fr       */
+/*   Updated: 2024/01/30 22:29:12 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ char	*trim_spaces(char *str)
 		str++;
 	if (*str == 0)
 		return (str);
-	end = str + strlen(str) - 1;
+	end = str + ft_strlen(str) - 1;
 	while (end > str && (*end == ' ' || *end == '\t'))
 		end--;
 	end[1] = '\0';
@@ -71,8 +71,8 @@ char	*process_odd_quotes(char *buf)
 	char	*temp_buf;
 	int		quote_count;
 
-	single_quote_ptr = strchr(buf, '\'');
-	double_quote_ptr = strchr(buf, '\"');
+	single_quote_ptr = ft_strchr(buf, '\'');
+	double_quote_ptr = ft_strchr(buf, '\"');
 	if (double_quote_ptr == NULL || (single_quote_ptr != NULL
 			&& single_quote_ptr < double_quote_ptr))
 	{
@@ -103,20 +103,24 @@ int	child_main(struct s_cmd **parse_cmd, char ***copy_envp, char *buf)
 	code = main_builtins(processed_buf, copy_envp);
 	if (code == 2)
 		return (1);
+	signal(SIGQUIT, SIG_DFL);
+	signal(SIGINT, SIG_DFL);
 	(*parse_cmd) = parsecmd(processed_buf, (*copy_envp));
 	if (processed_buf != buf)
 		free(processed_buf);
+	if ((*parse_cmd) == NULL)
+		return (0);
 	(*parse_cmd)->envp = (*copy_envp);
 	runcmd((*parse_cmd));
 	free_cmd((*parse_cmd));
 	return (0);
 }
 
-void	finish_child_main(int r, char **buf)
-{
-	if (WIFSIGNALED(r))
-		g_exit_code = 127 + WTERMSIG(r);
-	else if (WIFEXITED(r))
-		g_exit_code = WEXITSTATUS(r);
-	free((*buf));
-}
+// void	finish_child_main(int r, char **buf)
+// {
+// 	if (WIFSIGNALED(r))
+// 		g_exit_code = 127 + WTERMSIG(r);
+// 	else if (WIFEXITED(r))
+// 		g_exit_code = WEXITSTATUS(r);
+// 	free((*buf));
+// }

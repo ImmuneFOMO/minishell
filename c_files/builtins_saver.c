@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/23 23:41:58 by azhadan           #+#    #+#             */
-/*   Updated: 2024/01/30 21:41:04 by azhadan          ###   ########.fr       */
+/*   Updated: 2024/01/30 22:26:18 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ char	*builtin_getenv(const char *var, char **envp)
 	i = 0;
 	while (envp[i])
 	{
-		if (!ft_strncmp(envp[i], var, ft_strlen(var))
+		if (!ft_strncmp(envp[i], var, ft_strlen(var)) \
 			&& envp[i][ft_strlen(var)] == '=')
 		{
 			return (&envp[i][ft_strlen(var) + 1]);
@@ -46,6 +46,20 @@ void	ft_free_strs(char **strs)
 	free(strs);
 }
 
+void	free_cmd_argv(struct s_execcmd *cmd, int argc)
+{
+	int	i;
+
+	i = 0;
+	while (i < argc)
+	{
+		free(cmd->argv[i]);
+		i++;
+	}
+	free(cmd->argv);
+	free(cmd);
+}
+
 struct s_cmd	*parseexec(char **ps, char *es, char **envp)
 {
 	char				*q;
@@ -57,10 +71,15 @@ struct s_cmd	*parseexec(char **ps, char *es, char **envp)
 	ret = execcmd();
 	cmd = (struct s_execcmd *)ret;
 	ret = parseredirs(ret, ps, es);
+	if (ret == NULL)
+	{
+		free(cmd);
+		return (NULL);
+	}
 	argc = parseexec_count_argc(ps, es);
 	cmd->argv = (char **)malloc(sizeof(char *) * (argc + 1));
 	argc = 0;
-	while (!peek(ps, es, "|") && !peek(ps, es, ";"))
+	while (!peek(ps, es, "|") && !peek(ps, es, ";") && !peek(ps, es, "<>"))
 	{
 		if (parseexec_tok(&q, &eq, ps, es))
 			break ;
@@ -69,5 +88,10 @@ struct s_cmd	*parseexec(char **ps, char *es, char **envp)
 		ret = parseredirs(ret, ps, es);
 	}
 	cmd->argv[argc] = 0;
+	if (ret == NULL)
+	{
+		free_cmd_argv(cmd, argc);
+		return (NULL);
+	}
 	return (ret);
 }

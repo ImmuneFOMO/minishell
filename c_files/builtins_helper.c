@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/23 23:29:02 by azhadan           #+#    #+#             */
-/*   Updated: 2024/01/03 11:59:57 by azhadan          ###   ########.fr       */
+/*   Updated: 2024/01/30 22:28:50 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,8 +79,6 @@ int	builtin_exit(char *buf)
 	}
 	if (argc == 2)
 		g_exit_code = ft_atoi(args[1]);
-	else
-		g_exit_code = g_exit_code;
 	if (g_exit_code < 0)
 		g_exit_code = (256 + g_exit_code) % 256;
 	else

@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/23 23:51:50 by azhadan           #+#    #+#             */
-/*   Updated: 2024/01/30 21:41:29 by azhadan          ###   ########.fr       */
+/*   Updated: 2024/01/30 22:25:53 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,16 +22,16 @@ void	calculate_buf_var_val(char **var_value, int *size, int memory_allocated)
 	}
 }
 
-int	calculate_buf_var_code_error(char **arg, int *i, int *size)
-{
-	if (ft_strncmp((*arg) + (*i), "$?", 2) == 0)
-	{
-		(*size) += 3;
-		(*i) += 2;
-		return (0);
-	}
-	return (1);
-}
+// int	calculate_buf_var_code_error(char **arg, int *i, int *size)
+// {
+// 	if (ft_strncmp((*arg) + (*i), "$?", 2) == 0)
+// 	{
+// 		(*size) += 3;
+// 		(*i) += 2;
+// 		return (0);
+// 	}
+// 	return (1);
+// }
 
 void	calculate_buf_change_nums(int *i, int *size, int *in_double_quotes,
 		int *in_single_quotes, int flag)
@@ -84,8 +84,7 @@ int	calculate_buffer_size(char *arg, char quote_type, int in_quotes,
 				quote_type, arg))
 			in_quotes = !in_quotes;
 		else if (arg[i] == '$' && ((!in_quotes && quote_type == '\'')
-				|| (in_quotes && quote_type == '\"'))
-			&& calculate_buf_var_code_error(&arg, &i, &size))
+				|| (in_quotes && quote_type == '\"')))
 		{
 			var_value = handle_env_var(arg, &i, &memory_allocated, envp);
 			calculate_buf_var_val(&var_value, &size, memory_allocated);

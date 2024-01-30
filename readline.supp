@@ -10,6 +10,7 @@
     ...
     fun:add_history
 }
+
 {
     leak readline_internal_char
     Memcheck:Leak

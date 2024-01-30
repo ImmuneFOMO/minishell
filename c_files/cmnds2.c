@@ -3,25 +3,25 @@
 /*                                                        :::      ::::::::   */
 /*   cmnds2.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
+/*   By: idelibal <idelibal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/23 20:22:16 by idelibal          #+#    #+#             */
-/*   Updated: 2023/12/24 01:03:11 by azhadan          ###   ########.fr       */
+/*   Updated: 2024/01/14 00:26:05 by idelibal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../h_files/minishell.h"
 
-int	getcmd(char *buf, int nbuf)
-{
-	if (isatty(fileno(stdin)))
-		write(2, "minishell: ", 11);
-	ft_memset(buf, 0, nbuf);
-	fgets(buf, nbuf, stdin);
-	if (buf[0] == 0)
-		return (-1);
-	return (0);
-}
+// int	getcmd(char *buf, int nbuf)
+// {
+// 	if (isatty(fileno(stdin)))
+// 		write(2, "minishell: ", 11);
+// 	ft_memset(buf, 0, nbuf);
+// 	fgets(buf, nbuf, stdin);
+// 	if (buf[0] == 0)
+// 		return (-1);
+// 	return (0);
+// }
 
 struct s_cmd	*execcmd(void)
 {

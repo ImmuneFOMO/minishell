@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/23 23:51:33 by azhadan           #+#    #+#             */
-/*   Updated: 2024/01/30 21:41:39 by azhadan          ###   ########.fr       */
+/*   Updated: 2024/01/30 22:26:50 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,9 @@ int	count_quotes(char *arg, char quote_type)
 			in_double_quotes = !in_double_quotes;
 		if (arg[i] == '\'' && !in_double_quotes)
 			in_single_quotes = !in_single_quotes;
-		if (arg[i] == quote_type && (!in_double_quotes || quote_type == '\"')
-			&& (!in_single_quotes || quote_type == '\''))
+		if (arg[i] == quote_type && \
+		(!in_double_quotes || quote_type == '\"') && \
+			(!in_single_quotes || quote_type == '\''))
 			quote_count++;
 		i++;
 	}
@@ -114,8 +115,8 @@ char	*handle_all_quotes(char *arg, char **envp)
 
 	single_quote_ptr = ft_strchr(arg, '\'');
 	double_quote_ptr = ft_strchr(arg, '\"');
-	if (double_quote_ptr == NULL || (single_quote_ptr != NULL
-			&& single_quote_ptr < double_quote_ptr))
+	if (double_quote_ptr == NULL || (single_quote_ptr != NULL \
+	&& single_quote_ptr < double_quote_ptr))
 		return (process_quotes(arg, '\"', '\'', envp));
 	else
 		return (process_quotes(arg, '\'', '\"', envp));

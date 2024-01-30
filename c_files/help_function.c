@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   help_function.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
+/*   By: idelibal <idelibal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/25 17:05:15 by azhadan           #+#    #+#             */
-/*   Updated: 2024/01/07 15:27:44 by azhadan          ###   ########.fr       */
+/*   Updated: 2024/01/24 17:39:56 by idelibal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,21 +49,21 @@ int	peek(char **ps, char *es, char *toks)
 	return (*s && ft_strchr(toks, *s));
 }
 
-void	parent_process(int fd_pipe[2], int p_id, struct s_pipecmd *pcmd)
-{
-	int	status;
+// void	parent_process(int fd_pipe[2], int p_id, struct s_pipecmd *pcmd)
+// {
+// 	int	status;
 
-	close(fd_pipe[1]);
-	dup2(fd_pipe[0], STDIN_FILENO);
-	close(fd_pipe[0]);
-	waitpid(p_id, &status, 0);
-	if (WIFSIGNALED(status))
-		g_exit_code = 127 + WTERMSIG(status);
-	else if (WIFEXITED(status))
-		g_exit_code = WEXITSTATUS(status);
-	pcmd->right->envp = dup_envp(pcmd->envp);
-	runcmd(pcmd->right);
-}
+// 	close(fd_pipe[1]);
+// 	dup2(fd_pipe[0], STDIN_FILENO);
+// 	close(fd_pipe[0]);
+// 	waitpid(p_id, &status, 0);
+// 	if (WIFSIGNALED(status))
+// 		g_exit_code = 127 + WTERMSIG(status);
+// 	else if (WIFEXITED(status))
+// 		g_exit_code = WEXITSTATUS(status);
+// 	pcmd->right->envp = dup_envp(pcmd->envp);
+// 	runcmd(pcmd->right);
+// }
 
 pid_t	execute_left_command(struct s_pipecmd *pcmd, int pipefd[])
 {
