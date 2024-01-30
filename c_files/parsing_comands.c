@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/23 23:51:46 by azhadan           #+#    #+#             */
-/*   Updated: 2024/01/03 19:22:27 by azhadan          ###   ########.fr       */
+/*   Updated: 2024/01/30 21:35:46 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void	handle_error(const char *error_message)
 struct s_cmd	*parsecmd(char *s, char **envp)
 {
 	char			*es;
-	struct s_cmd 	*cmd;
+	struct s_cmd	*cmd;
 
 	es = s + ft_strlen(s);
 	cmd = parseline(&s, es, envp);
@@ -38,7 +38,7 @@ struct s_cmd	*parsecmd(char *s, char **envp)
 
 struct s_cmd	*parseline(char **ps, char *es, char **envp)
 {
-	struct s_cmd *cmd;
+	struct s_cmd	*cmd;
 
 	cmd = parsesemicolon(ps, es, envp);
 	return (cmd);
@@ -47,7 +47,7 @@ struct s_cmd	*parseline(char **ps, char *es, char **envp)
 struct s_cmd	*parsesemicolon(char **ps, char *es, char **envp)
 {
 	struct s_cmd	*cmd;
-	int 			tok;
+	int				tok;
 
 	cmd = parsepipe(ps, es, envp);
 	if (peek(ps, es, ";"))
@@ -66,7 +66,6 @@ struct s_cmd	*parsepipe(char **ps, char *es, char **envp)
 	char			*prev;
 
 	prev = NULL;
-
 	cmd = parseexec(ps, es, envp);
 	while (peek(ps, es, "|"))
 	{

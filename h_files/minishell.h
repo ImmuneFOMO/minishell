@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 18:26:57 by azhadan           #+#    #+#             */
-/*   Updated: 2024/01/04 20:30:53 by azhadan          ###   ########.fr       */
+/*   Updated: 2024/01/30 21:37:52 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,7 +150,8 @@ char				*handle_odd_quotes(char *arg, int quote_count,
 						char quote_type);
 char				*handle_env_var(char *arg, int *i, int *memory_allocated,
 						char **envp);
-char				*process_quotes(char *arg, char quote1, char quote2, char **envp);
+char				*process_quotes(char *arg, char quote1, char quote2,
+						char **envp);
 char				*handle_all_quotes(char *arg, char **envp);
 
 /*parsing_buf.c 5/5*/
@@ -159,13 +160,14 @@ void				calculate_buf_var_val(char **var_value, int *size,
 int					calculate_buf_var_code_error(char **arg, int *i, int *size);
 void				calculate_buf_change_nums(int *i, int *size,
 						int *in_double_quotes, int *in_single_quotes, int flag);
-int					calculate_buf_if(int *i, int *in_double_quotes, int *in_single_quotes,
-						char quote_type, char *arg);
+int					calculate_buf_if(int *i, int *in_double_quotes,
+						int *in_single_quotes, char quote_type, char *arg);
 int					calculate_buffer_size(char *arg, char quote_type,
 						int in_quotes, char **envp);
 
 /*parsing_env.c 4/4*/
-void				quotes_env_errors_set(int *i, int *j, int *in_double_quotes, int *in_single_quotes);
+void				quotes_env_errors_set(int *i, int *j, int *in_double_quotes,
+						int *in_single_quotes);
 int					quotes_env_errors_exit_code(int *is_itoa, char *arg, int *i,
 						char **var_value);
 int					re_e_v_ch_em(char *var_value, char **result, int *j);

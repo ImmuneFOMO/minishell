@@ -3,16 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_env.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/23 23:51:42 by azhadan           #+#    #+#             */
-/*   Updated: 2023/12/27 23:08:22 by root             ###   ########.fr       */
+/*   Updated: 2024/01/30 21:38:26 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../h_files/minishell.h"
 
-void	quotes_env_errors_set(int *i, int *j, int *in_double_quotes, int *in_single_quotes)
+void	quotes_env_errors_set(int *i, int *j, int *in_double_quotes,
+		int *in_single_quotes)
 {
 	(*in_double_quotes) = 0;
 	(*in_single_quotes) = 0;

@@ -6,7 +6,7 @@
 /*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/24 00:21:19 by azhadan           #+#    #+#             */
-/*   Updated: 2024/01/04 22:29:57 by azhadan          ###   ########.fr       */
+/*   Updated: 2024/01/30 21:36:33 by azhadan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,49 +63,46 @@ void	process_special_tokens(char **s, int *token)
 		*token = 'a';
 }
 
-char *process_odd_quotes(char *buf)
+char	*process_odd_quotes(char *buf)
 {
-    char *single_quote_ptr;
-    char *double_quote_ptr;
-    char *processed_buf;
-    char *temp_buf;
-	int quote_count;
+	char	*single_quote_ptr;
+	char	*double_quote_ptr;
+	char	*processed_buf;
+	char	*temp_buf;
+	int		quote_count;
 
-    single_quote_ptr = strchr(buf, '\'');
-    double_quote_ptr = strchr(buf, '\"');
-    if (double_quote_ptr == NULL || (single_quote_ptr != NULL && single_quote_ptr < double_quote_ptr))
-    {
-        quote_count = count_quotes(buf, '\"');
-        temp_buf = handle_odd_quotes(buf, quote_count, '\"');
-        quote_count = count_quotes(temp_buf, '\'');
-        processed_buf = handle_odd_quotes(temp_buf, quote_count, '\'');
-    }
-    else
-    {
-        quote_count = count_quotes(buf, '\'');
-        temp_buf = handle_odd_quotes(buf, quote_count, '\'');
-        quote_count = count_quotes(temp_buf, '\"');
-        processed_buf = handle_odd_quotes(temp_buf, quote_count, '\"');
-    }
-
-    if (temp_buf != buf && temp_buf != processed_buf)
-        free(temp_buf);
-
-    return (processed_buf);
+	single_quote_ptr = strchr(buf, '\'');
+	double_quote_ptr = strchr(buf, '\"');
+	if (double_quote_ptr == NULL || (single_quote_ptr != NULL
+			&& single_quote_ptr < double_quote_ptr))
+	{
+		quote_count = count_quotes(buf, '\"');
+		temp_buf = handle_odd_quotes(buf, quote_count, '\"');
+		quote_count = count_quotes(temp_buf, '\'');
+		processed_buf = handle_odd_quotes(temp_buf, quote_count, '\'');
+	}
+	else
+	{
+		quote_count = count_quotes(buf, '\'');
+		temp_buf = handle_odd_quotes(buf, quote_count, '\'');
+		quote_count = count_quotes(temp_buf, '\"');
+		processed_buf = handle_odd_quotes(temp_buf, quote_count, '\"');
+	}
+	if (temp_buf != buf && temp_buf != processed_buf)
+		free(temp_buf);
+	return (processed_buf);
 }
 
 int	child_main(struct s_cmd **parse_cmd, char ***copy_envp, char *buf)
 {
-	int	code;
-    char	*processed_buf;
+	int		code;
+	char	*processed_buf;
 
 	add_history(buf);
-    processed_buf = process_odd_quotes(buf); 
+	processed_buf = process_odd_quotes(buf);
 	code = main_builtins(processed_buf, copy_envp);
 	if (code == 2)
 		return (1);
-	signal(SIGQUIT, SIG_DFL);
-	signal(SIGINT, SIG_DFL);
 	(*parse_cmd) = parsecmd(processed_buf, (*copy_envp));
 	if (processed_buf != buf)
 		free(processed_buf);
