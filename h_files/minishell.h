@@ -6,7 +6,7 @@
 /*   By: idelibal <idelibal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 18:26:57 by azhadan           #+#    #+#             */
-/*   Updated: 2024/01/31 19:44:43 by idelibal         ###   ########.fr       */
+/*   Updated: 2024/01/31 21:00:57 by idelibal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -162,8 +162,8 @@ void				calculate_buf_var_val(char **var_value, int *size,
 // int					calculate_buf_var_code_error(char **arg, int *i,
 //						int *size);
 void				calculate_buf_change_nums(int *params, int flag);
-int					calculate_buf_if(int *i, int *in_double_quotes,
-						int *in_single_quotes, char quote_type, char *arg);
+int					calculate_buf_if(int *in_double_quotes,
+						int *in_single_quotes, char quote_type, char arg);
 int					calculate_buffer_size(char *arg, char quote_type,
 						int in_quotes, char **envp);
 

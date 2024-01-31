@@ -6,7 +6,7 @@
 /*   By: idelibal <idelibal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 23:30:37 by idelibal          #+#    #+#             */
-/*   Updated: 2024/01/14 00:28:40 by idelibal         ###   ########.fr       */
+/*   Updated: 2024/01/31 21:03:24 by idelibal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,11 @@ char	*quotes_env_errors(char *arg, char q_ty, int in_q, char **envp)
 	quotes_env_errors_set(&i[0], &i[1], &ch_va[2], &ch_va[3]);
 	while (arg[i[0]] != '\0')
 	{
-		if (calculate_buf_if(&i[0], &ch_va[2], &ch_va[3], q_ty, arg))
+		if (calculate_buf_if(&ch_va[2], &ch_va[3], q_ty, arg[i[0]]))
+		{
 			in_q = !in_q;
+			i[0] = i[0] + 1;
+		}
 		else if (arg[i[0]] == '$' && ((!in_q && q_ty == '\'') || (in_q
 					&& q_ty == '\"')))
 		{
