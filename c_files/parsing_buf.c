@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_buf.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: azhadan <azhadan@student.42lisboa.com>     +#+  +:+       +#+        */
+/*   By: idelibal <idelibal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/23 23:51:50 by azhadan           #+#    #+#             */
-/*   Updated: 2024/01/30 22:25:53 by azhadan          ###   ########.fr       */
+/*   Updated: 2024/01/31 19:28:23 by idelibal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,17 +21,6 @@ void	calculate_buf_var_val(char **var_value, int *size, int memory_allocated)
 			free((*var_value));
 	}
 }
-
-// int	calculate_buf_var_code_error(char **arg, int *i, int *size)
-// {
-// 	if (ft_strncmp((*arg) + (*i), "$?", 2) == 0)
-// 	{
-// 		(*size) += 3;
-// 		(*i) += 2;
-// 		return (0);
-// 	}
-// 	return (1);
-// }
 
 void	calculate_buf_change_nums(int *i, int *size, int *in_double_quotes,
 		int *in_single_quotes, int flag)
@@ -73,14 +62,13 @@ int	calculate_buffer_size(char *arg, char quote_type, int in_quotes,
 	int		i;
 	int		size;
 	int		memory_allocated;
-	int		in_double_quotes;
-	int		in_single_quotes;
+	int		qoutes[2];
 
-	calculate_buf_change_nums(&i, &size, &in_double_quotes, &in_single_quotes,
+	calculate_buf_change_nums(&i, &size, &qoutes[0], &qoutes[1],
 		1);
 	while (arg[i] != '\0')
 	{
-		if (calculate_buf_if(&i, &in_double_quotes, &in_single_quotes,
+		if (calculate_buf_if(&i, &qoutes[0], &qoutes[1],
 				quote_type, arg))
 			in_quotes = !in_quotes;
 		else if (arg[i] == '$' && ((!in_quotes && quote_type == '\'')
@@ -90,8 +78,8 @@ int	calculate_buffer_size(char *arg, char quote_type, int in_quotes,
 			calculate_buf_var_val(&var_value, &size, memory_allocated);
 		}
 		else
-			calculate_buf_change_nums(&i, &size, &in_double_quotes,
-				&in_single_quotes, 2);
+			calculate_buf_change_nums(&i, &size, &qoutes[0],
+				&qoutes[1], 2);
 	}
 	return (size + 1);
 }

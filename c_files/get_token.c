@@ -6,7 +6,7 @@
 /*   By: idelibal <idelibal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 23:30:14 by idlbltv           #+#    #+#             */
-/*   Updated: 2024/01/14 18:42:42 by idelibal         ###   ########.fr       */
+/*   Updated: 2024/01/31 19:24:01 by idelibal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,67 +55,38 @@ int	gettoken(char **ps, char *es, char **q, char **eq)
 	return (token);
 }
 
-void	free_cmd_checker(struct s_cmd *command)
+void	process_special_tokens(char **s, int *token)
 {
-	struct s_redircmd		*rcmd;
-	struct s_semicoloncmd	*scmd;
-	struct s_pipecmd		*pcmd;
-
-	if (command->type == '|')
+	if (*token == '|')
+		(*s)++;
+	else if (*token == ';')
+		(*s)++;
+	else if (*token == '>')
 	{
-		pcmd = (struct s_pipecmd *)command;
-		free_cmd(pcmd->left);
-		free_cmd(pcmd->right);
+		(*s)++;
+		if (**s == '>')
+		{
+			*token = '+';
+			(*s)++;
+		}
 	}
-	else if (command->type == ';')
+	else if (*token == '<')
 	{
-		scmd = (struct s_semicoloncmd *)command;
-		free_cmd(scmd->left);
-		free_cmd(scmd->right);
+		(*s)++;
+		if (**s == '<')
+		{
+			*token = '%';
+			(*s)++;
+		}
 	}
-	else if (command->type == '>' || command->type == '<'
-		|| command->type == '+' || command->type == '%')
-	{
-		rcmd = (struct s_redircmd *)command;
-		free_cmd(rcmd->cmd);
-		free(rcmd->file);
-	}
+	else if (*token != '\0')
+		*token = 'a';
 }
 
-void	free_cmd(struct s_cmd *command)
+int	is_whitespace(char c)
 {
-	struct s_execcmd	*ecmd;
-	int					i;
-
-	i = 0;
-	if (!command)
-		return ;
-	if (command->type == ' ')
-	{
-		ecmd = (struct s_execcmd *)command;
-		while (ecmd->argv[i])
-		{
-			free(ecmd->argv[i]);
-			i++;
-		}
-		free(ecmd->argv);
-	}
-	free_cmd_checker(command);
-	free(command);
-}
-
-void	free_envp(char **envp)
-{
-	int	i;
-
-	i = 0;
-	if (envp)
-	{
-		while (envp[i])
-		{
-			free(envp[i]);
-			i++;
-		}
-		free(envp);
-	}
+	if (c == ' ' || c == '\t' || c == '\n' || c == '\v' || c == '\f'
+		|| c == '\r')
+		return (1);
+	return (0);
 }
