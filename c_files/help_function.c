@@ -6,27 +6,11 @@
 /*   By: idelibal <idelibal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/25 17:05:15 by azhadan           #+#    #+#             */
-/*   Updated: 2024/01/31 21:04:08 by idelibal         ###   ########.fr       */
+/*   Updated: 2024/01/31 21:44:30 by idelibal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../h_files/minishell.h"
-
-int	check_vars(char **vars)
-{
-	int	i;
-
-	i = 0;
-	while (vars[i])
-	{
-		if (!ft_strcmp(vars[i], "|") || !ft_strcmp(vars[i], ">")
-			|| !ft_strcmp(vars[i], "<") || !ft_strcmp(vars[i], "<<")
-			|| !ft_strcmp(vars[i], ">>"))
-			return (1);
-		i++;
-	}
-	return (0);
-}
 
 int	fork1(void)
 {

@@ -6,7 +6,7 @@
 /*   By: idelibal <idelibal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 23:30:14 by idlbltv           #+#    #+#             */
-/*   Updated: 2024/01/31 19:24:01 by idelibal         ###   ########.fr       */
+/*   Updated: 2024/01/31 21:44:39 by idelibal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,5 +88,21 @@ int	is_whitespace(char c)
 	if (c == ' ' || c == '\t' || c == '\n' || c == '\v' || c == '\f'
 		|| c == '\r')
 		return (1);
+	return (0);
+}
+
+int	check_vars(char **vars)
+{
+	int	i;
+
+	i = 0;
+	while (vars[i])
+	{
+		if (!ft_strcmp(vars[i], "|") || !ft_strcmp(vars[i], ">")
+			|| !ft_strcmp(vars[i], "<") || !ft_strcmp(vars[i], "<<")
+			|| !ft_strcmp(vars[i], ">>"))
+			return (1);
+		i++;
+	}
 	return (0);
 }

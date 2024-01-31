@@ -5,7 +5,7 @@ CFILES = c_files/cmnds1.c c_files/cmnds2.c c_files/get_token.c c_files/minishell
 		c_files/builtins_helper.c c_files/builtins_in_main.c c_files/builtins_second_helper.c \
 		c_files/builtins_saver.c c_files/parsing_buf.c c_files/parsing_env.c c_files/parsing_comands.c \
 		c_files/parsing_comands2.c c_files/parsing_quotes.c c_files/processing.c c_files/cmnds1_helper.c \
-		c_files/parseexec.c c_files/free.c
+		c_files/parseexec.c c_files/free.c c_files/cmnds1_second.c
 
 OFILES = $(CFILES:.c=.o)
 
